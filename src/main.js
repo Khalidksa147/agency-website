@@ -1,4 +1,4 @@
-import { FogSphere } from './orb/FogSphere.js';
+import { HeroOrb } from './orb/HeroOrb.js';
 
 const copy = {
   en: {
@@ -149,7 +149,7 @@ function initMenu() {
 
 const canvas = document.querySelector('#orb-canvas');
 const hero = document.querySelector('.hero');
-const fogSphere = new FogSphere(canvas, { hero });
+const orb = new HeroOrb(canvas, { hero });
 
 document.querySelectorAll('.lang-btn').forEach((btn) => {
   btn.addEventListener('click', () => applyLanguage(btn.dataset.lang));
@@ -170,5 +170,5 @@ initNav();
 initMenu();
 
 if (import.meta.hot) {
-  import.meta.hot.dispose(() => fogSphere.dispose());
+  import.meta.hot.dispose(() => orb.dispose());
 }
