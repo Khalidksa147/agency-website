@@ -241,10 +241,7 @@ p {
 
 .hero-orb {
   position: absolute;
-  top: 0;
-  right: 0;
-  width: 48%;
-  height: 100%;
+  inset: 0;
   z-index: 1;
   pointer-events: none;
   overflow: hidden;
@@ -602,8 +599,6 @@ html[dir='rtl'] .nav-links a.is-active::after {
   }
 
   .hero-orb {
-    width: 70%;
-    right: -2%;
     opacity: 0.9;
   }
 
@@ -635,9 +630,9 @@ html[dir='rtl'] .nav-links a.is-active::after {
 
   .hero-orb {
     position: relative;
+    inset: auto;
     order: 2;
     width: 100%;
-    right: 0;
     height: min(88vw, 26rem);
     margin: 0.4rem 0 1.5rem;
     opacity: 1;

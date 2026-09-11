@@ -352,6 +352,10 @@ uniform float uPulse;
 uniform float uDashCount;
 uniform float uCorePower;
 uniform float uWhiteMix;
+uniform float uBead0;
+uniform float uBead1;
+uniform float uBead2;
+uniform float uBeadCount;
 
 varying vec2 vUv;
 varying vec3 vNormal;
@@ -388,6 +392,23 @@ void main() {
 
   // Only the very peak of the travelling head goes white-hot.
   tint = mix(tint, C_WHITE, uWhiteMix * pow(pulse, 4.0));
+
+  // A small local lift where a bead is traveling, so the line feels energized
+  // around the electron without becoming a giant light trail.
+  float bead = 0.0;
+  if (uBeadCount > 0.5) {
+    float d0 = min(abs(vUv.x - uBead0), 1.0 - abs(vUv.x - uBead0));
+    bead += exp(-d0 * d0 * 220.0);
+  }
+  if (uBeadCount > 1.5) {
+    float d1 = min(abs(vUv.x - uBead1), 1.0 - abs(vUv.x - uBead1));
+    bead += exp(-d1 * d1 * 220.0);
+  }
+  if (uBeadCount > 2.5) {
+    float d2 = min(abs(vUv.x - uBead2), 1.0 - abs(vUv.x - uBead2));
+    bead += exp(-d2 * d2 * 220.0);
+  }
+  lum += bead * 0.32;
 
   vec3 col = tint * uIntensity * lum * body * uPulse;
   gl_FragColor = vec4(col, clamp(max(max(col.r, col.g), col.b), 0.0, 1.0));
@@ -469,6 +490,7 @@ ${PALETTE}
 
 uniform vec3 uColor;
 uniform float uIntensity;
+uniform float uPulse;
 
 varying vec3 vNormal;
 varying vec3 vView;
@@ -480,11 +502,13 @@ void main() {
 
   vec3 key = normalize(vec3(-0.4, 0.8, 0.7));
   float rim = pow(1.0 - ndv, 2.4);
+  float halo = pow(1.0 - ndv, 1.35);
+  float face = pow(ndv, 2.4);
   vec3 hv = normalize(key + v);
-  float spec = pow(max(dot(n, hv), 0.0), 48.0);
+  float spec = pow(max(dot(n, hv), 0.0), 56.0);
 
-  vec3 col = uColor * (0.10 + rim * 1.5) * uIntensity;
-  col += C_WHITE * spec * 1.1 * uIntensity;
+  vec3 col = uColor * (0.16 + face * 0.7 + rim * 1.35 + halo * 0.28) * uIntensity * uPulse;
+  col += C_WHITE * spec * 1.25 * uIntensity * uPulse;
   gl_FragColor = vec4(col, clamp(max(max(col.r, col.g), col.b), 0.0, 1.0));
 }
 `;

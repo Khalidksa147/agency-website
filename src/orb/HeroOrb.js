@@ -3,8 +3,6 @@ import { EffectComposer } from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examp
 import { RenderPass } from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/postprocessing/UnrealBloomPass.js';
 import { ShaderPass } from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/postprocessing/ShaderPass.js';
-import gsap from '/node_modules/gsap/index.js';
-import { ScrollTrigger } from '/node_modules/gsap/ScrollTrigger.js';
 import {
   shellVertex,
   shellFragment,
@@ -20,8 +18,6 @@ import {
   gradeFragment,
   alphaRestoreFragment,
 } from './shaders.js';
-
-gsap.registerPlugin(ScrollTrigger);
 
 // Raw display-space colours. Colour management is disabled below so what the
 // shaders write is what the screen shows, with no sRGB round trip.
@@ -60,9 +56,9 @@ const SHELLS = [
     intensity: 0.58,
     bias: [DEEP_TEAL, 0.25],
     key: [-0.3, 0.5, 0.8],
-    flow: 0.22,
+    flow: 0.16,
     spin: [0.006, 0.013, -0.004],
-    pulse: [0.17, 0.0],
+    pulse: [0.14, 0.0],
   },
   {
     radius: 0.95,
@@ -82,9 +78,9 @@ const SHELLS = [
     // Violet iridescence catching the upper-left shell edges.
     bias: [VIOLET, 0.5],
     key: [-0.82, 0.52, 0.24],
-    flow: 0.3,
+    flow: 0.24,
     spin: [-0.009, 0.017, 0.006],
-    pulse: [0.21, 1.7],
+    pulse: [0.18, 1.7],
   },
   {
     radius: 0.87,
@@ -103,9 +99,9 @@ const SHELLS = [
     intensity: 0.85,
     bias: [BLUE, 0.32],
     key: [0.18, -0.72, 0.66],
-    flow: 0.36,
+    flow: 0.34,
     spin: [0.011, -0.021, -0.008],
-    pulse: [0.25, 3.1],
+    pulse: [0.21, 3.1],
   },
   {
     radius: 0.8,
@@ -126,7 +122,7 @@ const SHELLS = [
     key: [0.76, 0.28, 0.55],
     flow: 0.42,
     spin: [-0.014, 0.024, 0.009],
-    pulse: [0.29, 4.4],
+    pulse: [0.24, 4.4],
   },
   {
     // The bright lime crescent. It sits just outside the core so its narrow
@@ -148,9 +144,9 @@ const SHELLS = [
     intensity: 1.55,
     bias: [LIME, 0.55],
     key: [0.64, 0.62, 0.45],
-    flow: 0.48,
+    flow: 0.58,
     spin: [0.016, -0.028, 0.011],
-    pulse: [0.33, 5.6],
+    pulse: [0.28, 5.6],
   },
   {
     radius: 0.70,
@@ -169,9 +165,9 @@ const SHELLS = [
     intensity: 0.44,
     bias: [MINT, 0.25],
     key: [-0.5, -0.62, 0.6],
-    flow: 0.55,
+    flow: 0.5,
     spin: [-0.019, 0.031, -0.013],
-    pulse: [0.37, 2.3],
+    pulse: [0.26, 2.3],
   },
   {
     // Second lime crescent, keyed low-left. The reference carries the
@@ -193,9 +189,9 @@ const SHELLS = [
     intensity: 1.05,
     bias: [LIME, 0.48],
     key: [-0.62, -0.55, 0.56],
-    flow: 0.4,
+    flow: 0.54,
     spin: [0.013, 0.022, -0.01],
-    pulse: [0.27, 0.8],
+    pulse: [0.22, 0.8],
   },
 ];
 
@@ -237,14 +233,18 @@ const FILAMENTS = [
 ];
 
 const ORBITS = [
-  { rx: 1.66, rz: 1.2, tilt: [0.2, 0.1, -0.36], colors: [LIME, WHITE, LIME], intensity: 1.5, speed: 0.012, dash: 0, pearls: 1, white: 0.6, width: 0.0048 },
-  { rx: 1.48, rz: 1.52, tilt: [-1.18, 0.55, 0.2], colors: [MINT, MINT, BLUE], intensity: 1.15, speed: -0.009, dash: 0, pearls: 1, white: 0.4, width: 0.0044 },
-  { rx: 1.58, rz: 1.02, tilt: [0.78, -0.86, 0.55], colors: [LIME, LIME, WHITE], intensity: 1.3, speed: 0.015, dash: 0, pearls: 1, white: 0.5, width: 0.0046 },
-  { rx: 1.36, rz: 1.4, tilt: [-0.35, 1.25, -0.72], colors: [BLUE, MINT, BLUE], intensity: 0.62, speed: -0.011, dash: 118, pearls: 1, white: 0.3, width: 0.0042 },
-  { rx: 1.7, rz: 0.9, tilt: [1.34, 0.3, 0.15], colors: [VIOLET, BLUE, VIOLET], intensity: 0.82, speed: 0.008, dash: 0, pearls: 0, white: 0.2, width: 0.004 },
-  { rx: 1.28, rz: 1.3, tilt: [0.45, -0.3, 1.1], colors: [MINT, BLUE, MINT], intensity: 0.58, speed: -0.014, dash: 136, pearls: 1, white: 0.25, width: 0.004 },
-  { rx: 1.62, rz: 1.44, tilt: [-0.62, -1.05, -0.25], colors: [LIME, MINT, LIME], intensity: 0.88, speed: 0.01, dash: 0, pearls: 1, white: 0.35, width: 0.0042 },
+  { rx: 1.66, rz: 1.2, tilt: [0.2, 0.1, -0.36], colors: [LIME, WHITE, LIME], intensity: 1.5, speed: 0.012, dash: 0, pearls: 3, tints: [LIME, WHITE, MINT], white: 0.6, width: 0.0048 },
+  { rx: 1.48, rz: 1.52, tilt: [-1.18, 0.55, 0.2], colors: [MINT, MINT, BLUE], intensity: 1.15, speed: -0.009, dash: 0, pearls: 2, tints: [MINT, BLUE], white: 0.4, width: 0.0044 },
+  { rx: 1.58, rz: 1.02, tilt: [0.78, -0.86, 0.55], colors: [LIME, LIME, WHITE], intensity: 1.3, speed: 0.015, dash: 0, pearls: 2, tints: [LIME, WHITE], white: 0.5, width: 0.0046 },
+  { rx: 1.36, rz: 1.4, tilt: [-0.35, 1.25, -0.72], colors: [BLUE, MINT, BLUE], intensity: 0.62, speed: -0.011, dash: 118, pearls: 1, tints: [BLUE], white: 0.3, width: 0.0042 },
+  { rx: 1.7, rz: 0.9, tilt: [1.34, 0.3, 0.15], colors: [VIOLET, BLUE, VIOLET], intensity: 0.82, speed: 0.008, dash: 0, pearls: 2, tints: [VIOLET, BLUE], white: 0.2, width: 0.004 },
+  { rx: 1.28, rz: 1.3, tilt: [0.45, -0.3, 1.1], colors: [MINT, BLUE, MINT], intensity: 0.58, speed: -0.014, dash: 136, pearls: 2, tints: [MINT, WHITE], white: 0.25, width: 0.004 },
+  { rx: 1.62, rz: 1.44, tilt: [-0.62, -1.05, -0.25], colors: [LIME, MINT, LIME], intensity: 0.88, speed: 0.01, dash: 0, pearls: 2, tints: [LIME, MINT], white: 0.35, width: 0.0042 },
 ];
+
+// Distinct orbital speeds so the beads never march in lockstep. All stay
+// slow; the variation is what makes the field feel organic.
+const PEARL_SPEEDS = [0.018, 0.024, 0.015, 0.029, 0.021, 0.016, 0.027, 0.019, 0.023, 0.014, 0.031, 0.017, 0.026, 0.022];
 
 // Both path types are analytic rather than splines fitted through sampled
 // points. A CatmullRom through 16-48 controls carries small curvature ripples
@@ -291,9 +291,9 @@ function atmosphereTexture() {
   const ctx = canvas.getContext('2d');
   const g = ctx.createRadialGradient(128, 128, 4, 128, 128, 128);
   g.addColorStop(0.0, 'rgba(120, 210, 175, 0.30)');
-  g.addColorStop(0.22, 'rgba(70, 160, 140, 0.16)');
-  g.addColorStop(0.48, 'rgba(40, 90, 90, 0.06)');
-  g.addColorStop(0.74, 'rgba(20, 40, 45, 0.018)');
+  g.addColorStop(0.18, 'rgba(70, 160, 140, 0.16)');
+  g.addColorStop(0.40, 'rgba(40, 90, 90, 0.06)');
+  g.addColorStop(0.68, 'rgba(20, 40, 45, 0.018)');
   g.addColorStop(1.0, 'rgba(0, 0, 0, 0)');
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, 256, 256);
@@ -350,7 +350,6 @@ export class HeroOrb {
     this.canvas = canvas;
     this.hero = hero;
 
-    this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     this.mobile = window.matchMedia('(max-width: 720px)').matches;
     this.lowPower = this.mobile
       || (navigator.hardwareConcurrency || 8) <= 4
@@ -362,7 +361,7 @@ export class HeroOrb {
 
     this.pointer = new THREE.Vector2(0, 0);
     this.damped = new THREE.Vector2(0, 0);
-    this.scroll = { lift: 0, spin: 0, scale: 1, speed: 1 };
+    this.pocketX = 0;
 
     this.shells = [];
     this.filaments = [];
@@ -379,7 +378,6 @@ export class HeroOrb {
     this.initFlares();
     this.initPost();
     this.initEvents();
-    this.initScroll();
     this.setSize();
     this.start();
   }
@@ -410,8 +408,8 @@ export class HeroOrb {
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(30, 1, 0.1, 40);
 
-    // Nested groups keep the responsibilities separate: root carries scroll
-    // and breathing, tilt carries the pointer, spin carries the slow drift.
+    // Nested groups keep the responsibilities separate: root carries the
+    // breathing scale, tilt carries the pointer, spin carries the slow drift.
     this.root = new THREE.Group();
     this.tilt = new THREE.Group();
     this.spin = new THREE.Group();
@@ -428,7 +426,7 @@ export class HeroOrb {
       blending: THREE.AdditiveBlending,
       opacity: 0.42,
     }));
-    glow.scale.set(3.4, 3.4, 1);
+    glow.scale.set(7.4, 7.4, 1);
     glow.renderOrder = -1;
     this.root.add(glow);
     this.glow = glow;
@@ -492,6 +490,10 @@ export class HeroOrb {
         uDashCount: { value: cfg.dash ?? 0 },
         uCorePower: { value: layer.power },
         uWhiteMix: { value: cfg.white * layer.gain },
+        uBead0: { value: -1 },
+        uBead1: { value: -1 },
+        uBead2: { value: -1 },
+        uBeadCount: { value: 0 },
       };
 
       const mesh = new THREE.Mesh(geo, new THREE.ShaderMaterial({
@@ -578,7 +580,7 @@ export class HeroOrb {
       uAmp: { value: 0.07 },
       uFreq: { value: 1.9 },
       uSeed: { value: 11.3 },
-      uFlow: { value: 0.26 },
+      uFlow: { value: 0.32 },
       uSquash: { value: new THREE.Vector3(1.0, 0.97, 1.0) },
       uPointer: { value: new THREE.Vector2(0, 0) },
       uCoreDark: { value: v3(CORE_DARK) },
@@ -620,17 +622,13 @@ export class HeroOrb {
   }
 
   initOrbits() {
-    const pearlGeo = new THREE.SphereGeometry(1, 20, 16);
+    const pearlGeo = new THREE.SphereGeometry(1, 24, 18);
     this.disposables.push(pearlGeo);
 
     const sparkPositions = [];
     const sparkSizes = [];
     const sparkPhases = [];
     const sparkTints = [];
-
-    // Mostly cyan, pale green and white, with lime kept rare so it stays a
-    // highlight rather than becoming the particle colour.
-    const PEARL_TINTS = [MINT, WHITE, MINT, BLUE, LIME, MINT];
 
     ORBITS.forEach((cfg, i) => {
       const group = new THREE.Group();
@@ -643,14 +641,17 @@ export class HeroOrb {
         group,
         30 + i * 2,
       );
-      this.orbits.push({ group, layers, speed: cfg.speed });
 
-      for (let p = 0; p < cfg.pearls; p += 1) {
-        const tint = PEARL_TINTS[(i + p) % PEARL_TINTS.length];
+      const count = this.lowPower ? Math.min(cfg.pearls, 2) : cfg.pearls;
+      const orbitPearls = [];
+
+      for (let p = 0; p < count; p += 1) {
+        const tint = cfg.tints[p % cfg.tints.length];
         const pearl = new THREE.Mesh(pearlGeo, new THREE.ShaderMaterial({
           uniforms: {
             uColor: { value: v3(tint) },
-            uIntensity: { value: 1.5 },
+            uIntensity: { value: 1.85 },
+            uPulse: { value: 1 },
           },
           vertexShader: pearlVertex,
           fragmentShader: pearlFragment,
@@ -659,25 +660,35 @@ export class HeroOrb {
           depthWrite: false,
           depthTest: true,
         }));
-        pearl.scale.setScalar(0.013 + (i % 3) * 0.004);
+        // Tiny luminous bead: visible while watching, never large enough to
+        // compete with the glass. Size variation is per-bead, not per-orbit.
+        const size = 0.024 + (p % 3) * 0.004;
+        pearl.scale.setScalar(size);
         pearl.renderOrder = 48;
         group.add(pearl);
-        this.pearls.push({
+        const bead = {
           mesh: pearl,
+          size,
           rx: cfg.rx,
           rz: cfg.rz,
-          t: (p / Math.max(cfg.pearls, 1)) + i * 0.17,
-          speed: 0.018 + i * 0.004,
-        });
+          t: ((p / count) + i * 0.11) % 1,
+          speed: PEARL_SPEEDS[(i * 3 + p) % PEARL_SPEEDS.length],
+          pulse: 0.11 + (i + p) * 0.017,
+          phase: i * 1.3 + p * 2.1,
+        };
+        orbitPearls.push(bead);
+        this.pearls.push(bead);
         this.disposables.push(pearl.material);
       }
 
+      this.orbits.push({ group, layers, speed: cfg.speed, pearls: orbitPearls });
+
       // Tiny sparkles sitting on the same paths, in the orbit's own space so
       // they inherit its tilt and drift.
-      const count = this.lowPower ? 2 : 3;
+      const sparkCount = this.lowPower ? 2 : 3;
       const euler = new THREE.Euler(...cfg.tilt);
-      for (let s = 0; s < count; s += 1) {
-        const a = ((s + 0.5) / count) * Math.PI * 2 + i;
+      for (let s = 0; s < sparkCount; s += 1) {
+        const a = ((s + 0.5) / sparkCount) * Math.PI * 2 + i;
         // Bake the orbit tilt in, since all sparks share one Points object.
         const at = new THREE.Vector3(Math.cos(a) * cfg.rx, 0, Math.sin(a) * cfg.rz)
           .applyEuler(euler);
@@ -780,7 +791,6 @@ export class HeroOrb {
 
   initEvents() {
     this.onPointerMove = (event) => {
-      if (this.reducedMotion) return;
       const rect = this.canvas.getBoundingClientRect();
       if (!rect.width || !rect.height) return;
       this.pointer.set(
@@ -800,23 +810,6 @@ export class HeroOrb {
     document.addEventListener('visibilitychange', this.onVisibility);
   }
 
-  initScroll() {
-    if (!this.hero) return;
-    this.scrollTween = gsap.to(this.scroll, {
-      lift: 0.34,
-      spin: 0.55,
-      scale: 0.9,
-      speed: 1.75,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: this.hero,
-        start: 'top top',
-        end: 'bottom top',
-        scrub: 1.1,
-      },
-    });
-  }
-
   setSize() {
     const parent = this.canvas.parentElement;
     const width = Math.max(parent.clientWidth, 1);
@@ -828,11 +821,28 @@ export class HeroOrb {
 
     this.camera.aspect = width / height;
 
-    // Frame to whichever axis is tighter so the orbital paths never clip,
-    // and the sculpture fills the canvas on both portrait and landscape.
     const vFov = THREE.MathUtils.degToRad(this.camera.fov);
     const hFov = 2 * Math.atan(Math.tan(vFov / 2) * this.camera.aspect);
-    this.camera.position.z = 1.72 / Math.tan(Math.min(vFov, hFov) / 2);
+    const mobile = window.matchMedia('(max-width: 720px)').matches;
+    const tablet = window.matchMedia('(max-width: 1100px)').matches;
+
+    if (mobile) {
+      // Stacked below the copy: the canvas IS the pocket, so frame to it.
+      this.camera.position.z = 1.72 / Math.tan(Math.min(vFov, hFov) / 2);
+      this.pocketX = 0;
+    } else {
+      // Canvas covers the whole hero so bloom can travel anywhere in it.
+      // Frame as if the canvas were still the original right-hand pocket so
+      // the sculpture does not grow, then sit it in that pocket.
+      const pocket = tablet ? 0.70 : 0.48;
+      const pocketAspect = (width * pocket) / height;
+      const pocketHFov = 2 * Math.atan(Math.tan(vFov / 2) * pocketAspect);
+      this.camera.position.z = 1.72 / Math.tan(Math.min(vFov, pocketHFov) / 2);
+      const halfW = Math.tan(hFov / 2) * this.camera.position.z;
+      const center = tablet ? 0.67 : 0.76;
+      this.pocketX = (center * 2 - 1) * halfW;
+    }
+
     this.camera.updateProjectionMatrix();
   }
 
@@ -841,13 +851,11 @@ export class HeroOrb {
     this.frame = requestAnimationFrame(this.tick);
 
     const delta = Math.min(this.clock.getDelta(), 0.05);
-    const motion = this.reducedMotion ? 0 : 1;
-    const rate = this.scroll.speed;
 
-    // Reduced motion freezes the clock, but we still redraw every frame: the
-    // drawing buffer is not preserved across composites, so a render-once
-    // approach leaves the canvas blank.
-    if (motion) this.time += delta * rate;
+    // Always advance. The earlier reduced-motion gate froze this.time at 0,
+    // which is why the sculpture could look completely still on Windows
+    // machines with “Animation effects” turned off.
+    this.time += delta;
 
     this.damped.x += (this.pointer.x - this.damped.x) * 0.045;
     this.damped.y += (this.pointer.y - this.damped.y) * 0.045;
@@ -855,61 +863,72 @@ export class HeroOrb {
     const t = this.time;
 
     this.shells.forEach((s) => {
-      s.group.rotation.x += delta * s.spin[0] * motion * rate;
-      s.group.rotation.y += delta * s.spin[1] * motion * rate;
-      s.group.rotation.z += delta * s.spin[2] * motion * rate;
+      s.group.rotation.x += delta * s.spin[0];
+      s.group.rotation.y += delta * s.spin[1];
+      s.group.rotation.z += delta * s.spin[2];
       s.uniforms.uTime.value = t;
-      s.uniforms.uPulse.value = 1 + Math.sin(t * s.pulseRate + s.pulsePhase) * 0.18;
+      s.uniforms.uPulse.value = 1 + Math.sin(t * s.pulseRate + s.pulsePhase) * 0.08;
       s.uniforms.uPointer.value.set(this.damped.x, this.damped.y);
     });
 
     this.coreUniforms.uTime.value = t;
-    this.coreUniforms.uPulse.value = 1 + Math.sin(t * 0.23 + 0.9) * 0.14;
+    this.coreUniforms.uPulse.value = 1 + Math.sin(t * 0.19 + 0.9) * 0.1;
     this.coreUniforms.uPointer.value.set(this.damped.x, this.damped.y);
-    this.coreGroup.rotation.y += delta * 0.012 * motion * rate;
+    this.coreGroup.rotation.y += delta * 0.012;
     this.coreGroup.rotation.x = Math.sin(t * 0.09) * 0.08 + this.damped.y * 0.05;
 
     this.filaments.forEach((f) => {
-      const pulse = 1 + Math.sin(t * 0.31 + f.drift * 40) * 0.16;
+      const pulse = 1 + Math.sin(t * 0.31 + f.drift * 40) * 0.12;
       f.layers.forEach((u) => {
         u.uTime.value = t;
         u.uPulse.value = pulse;
       });
-      f.group.rotation.y += delta * f.drift * motion * rate;
-      f.group.rotation.z += delta * f.drift * 0.4 * motion * rate;
+      f.group.rotation.y += delta * f.drift;
+      f.group.rotation.z += delta * f.drift * 0.4;
     });
 
     this.orbits.forEach((o) => {
-      o.layers.forEach((u) => { u.uTime.value = t; });
-      o.group.rotation.y += delta * o.speed * motion * rate;
-    });
-
-    this.pearls.forEach((p) => {
-      p.t = (p.t + delta * p.speed * motion * rate) % 1;
-      const a = p.t * Math.PI * 2;
-      p.mesh.position.set(Math.cos(a) * p.rx, 0, Math.sin(a) * p.rz);
+      o.group.rotation.y += delta * o.speed;
+      o.pearls.forEach((p) => {
+        p.t = (p.t + delta * p.speed) % 1;
+        const a = p.t * Math.PI * 2;
+        // Local to the orbit group, so tilt and group rotation stay attached.
+        p.mesh.position.set(Math.cos(a) * p.rx, 0, Math.sin(a) * p.rz);
+        const breath = 1 + Math.sin(t * p.pulse + p.phase) * 0.04;
+        p.mesh.scale.setScalar(p.size * breath);
+        p.mesh.material.uniforms.uPulse.value = breath;
+      });
+      o.layers.forEach((u) => {
+        u.uTime.value = t;
+        u.uBeadCount.value = o.pearls.length;
+        u.uBead0.value = o.pearls[0]?.t ?? -1;
+        u.uBead1.value = o.pearls[1]?.t ?? -1;
+        u.uBead2.value = o.pearls[2]?.t ?? -1;
+      });
     });
 
     this.sparkUniforms.uTime.value = t;
 
     this.flares.forEach((f) => {
-      const beat = 1 + Math.sin(t * 0.34 + f.phase) * 0.22;
+      const beat = 1 + Math.sin(t * 0.34 + f.phase) * 0.14;
       f.sprite.scale.setScalar(f.base * beat);
       f.sprite.material.opacity = 0.58 * beat;
     });
 
-    // Pointer tilt, slow drift, scroll lift and a very shallow breathing
-    // scale. All deliberately small so nothing reads as mechanical.
+    // Pointer tilt and a very shallow breathing scale. All deliberately
+    // small so nothing reads as mechanical. Page scroll never enters here.
     this.tilt.rotation.y = this.damped.x * 0.26;
     this.tilt.rotation.x = this.damped.y * 0.18;
     // ~2 minutes per revolution: perceptible within a few seconds of looking
     // at it, without ever reading as spinning.
-    this.spin.rotation.y = t * 0.052 + this.scroll.spin;
+    this.spin.rotation.y = t * 0.052;
     this.spin.rotation.x = Math.sin(t * 0.055) * 0.09;
 
     const breathe = 1 + Math.sin(t * 0.16) * 0.014;
-    this.root.scale.setScalar(breathe * this.scroll.scale);
-    this.root.position.y = Math.sin(t * 0.12) * 0.02 + this.scroll.lift;
+    this.root.scale.setScalar(breathe);
+    const rtl = document.documentElement.dir === 'rtl' ? -1 : 1;
+    this.root.position.x = this.pocketX * rtl;
+    this.root.position.y = Math.sin(t * 0.12) * 0.02;
     this.glow.material.opacity = 0.42 * (1 + Math.sin(t * 0.19) * 0.12);
 
     this.composer.render();
@@ -933,8 +952,6 @@ export class HeroOrb {
     window.removeEventListener('pointermove', this.onPointerMove);
     document.removeEventListener('visibilitychange', this.onVisibility);
     this.resizeObserver?.disconnect();
-    this.scrollTween?.scrollTrigger?.kill();
-    this.scrollTween?.kill();
     this.disposables.forEach((d) => d.dispose?.());
     this.composer?.dispose();
     this.renderer.dispose();
