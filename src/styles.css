@@ -87,8 +87,8 @@ p {
   inset: 0;
   z-index: 0;
   background:
-    radial-gradient(ellipse 62% 52% at 72% 48%, rgba(88, 140, 70, 0.11), transparent 64%),
-    radial-gradient(ellipse 36% 28% at 78% 42%, rgba(100, 240, 221, 0.04), transparent 70%);
+    radial-gradient(ellipse 46% 40% at 74% 50%, rgba(96, 132, 112, 0.05), transparent 68%),
+    radial-gradient(ellipse 28% 22% at 78% 44%, rgba(140, 125, 255, 0.022), transparent 72%);
 }
 
 .nav {
@@ -243,10 +243,11 @@ p {
   position: absolute;
   top: 0;
   right: 0;
-  width: 54%;
+  width: 48%;
   height: 100%;
   z-index: 1;
   pointer-events: none;
+  overflow: hidden;
 }
 
 .hero-orb canvas {
@@ -601,9 +602,9 @@ html[dir='rtl'] .nav-links a.is-active::after {
   }
 
   .hero-orb {
-    width: 78%;
-    right: -6%;
-    opacity: 0.92;
+    width: 70%;
+    right: -2%;
+    opacity: 0.9;
   }
 
   .hero-copy {
@@ -637,7 +638,7 @@ html[dir='rtl'] .nav-links a.is-active::after {
     order: 2;
     width: 100%;
     right: 0;
-    height: min(78vw, 28rem);
+    height: min(88vw, 26rem);
     margin: 0.4rem 0 1.5rem;
     opacity: 1;
   }
