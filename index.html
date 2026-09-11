@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QIRAM — Digital studio for the Gulf</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14.5' fill='none' stroke='%23D7FF4D' stroke-width='1.4'/%3E%3Ctext x='16' y='21' text-anchor='middle' font-size='14' fill='%23D7FF4D' font-family='Georgia,serif'%3EQ%3C/text%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="/src/styles.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+          "gsap": "/node_modules/gsap/index.js",
+          "gsap/ScrollTrigger": "/node_modules/gsap/ScrollTrigger.js"
+        }
+      }
+    </script>
+    <meta
+      name="description"
+      content="QIRAM is a boutique digital studio for websites, web apps, UX/UI and brand systems — designed with the same level of detail in Arabic and English."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&family=Outfit:wght@200;300;400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="grain" aria-hidden="true"></div>
+
+    <header class="nav">
+      <a class="logo" href="#top" aria-label="QIRAM home">
+        <span class="logo-mark" aria-hidden="true">Q</span>
+        <span class="logo-word">QIRAM</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#top" class="is-active" data-i18n="nav.home">Home</a>
+        <a href="#services" data-i18n="nav.services">Services</a>
+        <a href="#work" data-i18n="nav.work">Work</a>
+        <a href="#about" data-i18n="nav.about">About</a>
+        <a href="#contact" data-i18n="nav.contact">Contact</a>
+      </nav>
+
+      <div class="nav-end">
+        <div class="lang" role="group" aria-label="Language">
+          <button type="button" class="lang-btn is-active" data-lang="en">EN</button>
+          <span class="lang-sep">/</span>
+          <button type="button" class="lang-btn" data-lang="ar">العربية</button>
+        </div>
+        <button class="menu-btn" type="button" aria-label="Open menu" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </header>
+
+    <div class="mobile-menu" hidden>
+      <a href="#top" data-i18n="nav.home">Home</a>
+      <a href="#services" data-i18n="nav.services">Services</a>
+      <a href="#work" data-i18n="nav.work">Work</a>
+      <a href="#about" data-i18n="nav.about">About</a>
+      <a href="#contact" data-i18n="nav.contact">Contact</a>
+    </div>
+
+    <main>
+      <section class="hero" id="top">
+        <div class="atmosphere" aria-hidden="true"></div>
+        <div class="hero-orb">
+          <canvas id="orb-canvas"></canvas>
+        </div>
+
+        <div class="hero-copy">
+          <p class="eyebrow">
+            <span data-i18n="hero.eyebrow">Digital studio for the Gulf</span>
+            <span class="eyebrow-line" aria-hidden="true"></span>
+          </p>
+          <h1>
+            <span data-i18n="hero.line1">We build</span>
+            <span class="accent" data-i18n="hero.line2">digital experiences</span>
+            <span data-i18n="hero.line3">made for the Gulf.</span>
+          </h1>
+          <p class="lede" data-i18n="hero.lede">
+            QIRAM is a boutique agency for websites, web apps, UX/UI and brand systems — designed with the same level of detail in Arabic and English.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#contact">
+              <span data-i18n="hero.cta">Tell us what you’re building</span>
+              <span class="btn-arrow" aria-hidden="true">→</span>
+            </a>
+            <a class="btn btn-ghost" href="#work" data-i18n="hero.secondary">See our work</a>
+          </div>
+        </div>
+
+        <aside class="hero-meta" aria-hidden="true">
+          <span class="meta-index">01</span>
+          <span>Web</span>
+          <span>Apps</span>
+          <span>UX/UI</span>
+          <span>Brand</span>
+        </aside>
+
+        <div class="hero-footer">
+          <a class="scroll-hint" href="#services">
+            <span class="scroll-track" aria-hidden="true"></span>
+            <span data-i18n="hero.scroll">Scroll</span>
+          </a>
+          <p class="hero-tags">Ideas × Design × Development</p>
+        </div>
+      </section>
+
+      <section class="section" id="services">
+        <div class="section-head">
+          <p class="eyebrow"><span data-i18n="services.kicker">Capabilities</span></p>
+          <h2 data-i18n="services.title">Quiet craft. Precise systems.</h2>
+        </div>
+        <div class="service-grid">
+          <article class="service-card">
+            <span>01</span>
+            <h3 data-i18n="services.web.title">Websites</h3>
+            <p data-i18n="services.web.body">Editorial marketing sites with bilingual structure, motion, and the restraint of a luxury brand.</p>
+          </article>
+          <article class="service-card">
+            <span>02</span>
+            <h3 data-i18n="services.apps.title">Web apps</h3>
+            <p data-i18n="services.apps.body">Product interfaces that feel considered — clear hierarchy, calm interaction, and production-grade engineering.</p>
+          </article>
+          <article class="service-card">
+            <span>03</span>
+            <h3 data-i18n="services.ux.title">UX / UI</h3>
+            <p data-i18n="services.ux.body">Research-led flows and visual systems designed for both Arabic and English from the first frame.</p>
+          </article>
+          <article class="service-card">
+            <span>04</span>
+            <h3 data-i18n="services.brand.title">Brand systems</h3>
+            <p data-i18n="services.brand.body">Identity, type, and digital language that can live across campaigns, products, and the region.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="work">
+        <div class="section-head">
+          <p class="eyebrow"><span data-i18n="work.kicker">Selected work</span></p>
+          <h2 data-i18n="work.title">A few recent engagements.</h2>
+        </div>
+        <div class="work-list">
+          <article class="work-row">
+            <p class="work-index">01</p>
+            <div>
+              <h3 data-i18n="work.a.title">Maison Nur — private membership</h3>
+              <p data-i18n="work.a.body">A bilingual digital house for a Gulf hospitality brand. Site, booking, and identity system.</p>
+            </div>
+            <p class="work-tag">Brand + Web</p>
+          </article>
+          <article class="work-row">
+            <p class="work-index">02</p>
+            <div>
+              <h3 data-i18n="work.b.title">Hayy Finance — product OS</h3>
+              <p data-i18n="work.b.body">A calm wealth platform with Arabic-first navigation and a glass-led visual language.</p>
+            </div>
+            <p class="work-tag">UX + App</p>
+          </article>
+          <article class="work-row">
+            <p class="work-index">03</p>
+            <div>
+              <h3 data-i18n="work.c.title">Noor Labs — research studio</h3>
+              <p data-i18n="work.c.body">An editorial presence for a climate studio, built to hold long-form work in two languages.</p>
+            </div>
+            <p class="work-tag">Web + Editorial</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section about" id="about">
+        <div class="section-head">
+          <p class="eyebrow"><span data-i18n="about.kicker">Studio</span></p>
+          <h2 data-i18n="about.title">Built for the Gulf, in both languages.</h2>
+        </div>
+        <p class="about-copy" data-i18n="about.body">
+          QIRAM is a small digital studio working with ambitious teams across the GCC. We design and build websites, products, and brand systems with the same level of care in Arabic and English — quiet, precise, and made to last.
+        </p>
+      </section>
+
+      <section class="section" id="contact">
+        <div class="section-head">
+          <p class="eyebrow"><span data-i18n="contact.kicker">Contact</span></p>
+          <h2 data-i18n="contact.title">Tell us what you’re building.</h2>
+        </div>
+        <form class="contact-form" action="#" method="post">
+          <label>
+            <span data-i18n="contact.name">Name</span>
+            <input type="text" name="name" autocomplete="name" required />
+          </label>
+          <label>
+            <span data-i18n="contact.email">Email</span>
+            <input type="email" name="email" autocomplete="email" required />
+          </label>
+          <label class="full">
+            <span data-i18n="contact.message">Project</span>
+            <textarea name="message" rows="4" required></textarea>
+          </label>
+          <button class="btn btn-primary" type="submit">
+            <span data-i18n="contact.send">Send a note</span>
+            <span class="btn-arrow" aria-hidden="true">→</span>
+          </button>
+        </form>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>© QIRAM</span>
+      <span data-i18n="footer.mark">Digital studio for the Gulf</span>
+    </footer>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

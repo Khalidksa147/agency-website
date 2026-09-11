@@ -1,0 +1,19 @@
+{
+  "name": "qiram",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node server.mjs",
+    "start": "node server.mjs",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "gsap": "^3.12.7",
+    "three": "^0.170.0"
+  },
+  "devDependencies": {
+    "vite": "^6.0.3"
+  }
+}
