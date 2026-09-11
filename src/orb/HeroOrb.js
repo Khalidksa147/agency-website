@@ -25,11 +25,12 @@ gsap.registerPlugin(ScrollTrigger);
 
 // Raw display-space colours. Colour management is disabled below so what the
 // shaders write is what the screen shows, with no sRGB round trip.
-const LIME = [0.843, 1.0, 0.302];
-const MINT = [0.392, 0.941, 0.867];
-const BLUE = [0.467, 0.812, 1.0];
-const VIOLET = [0.596, 0.467, 1.0];
-const DARK_GREEN = [0.063, 0.165, 0.133];
+const LIME = [0.843, 1.0, 0.302];       // #D7FF4D
+const MINT = [0.392, 0.941, 0.867];     // #64F0DD
+const BLUE = [0.475, 0.812, 1.0];       // #79CFFF
+const VIOLET = [0.596, 0.467, 1.0];     // #9877FF
+const WHITE = [0.953, 1.0, 0.945];      // #F3FFF1
+const DARK_GREEN = [0.063, 0.137, 0.114]; // #10231D
 const DEEP_TEAL = [0.027, 0.243, 0.22];
 const CORE_DARK = [0.024, 0.098, 0.086];
 
@@ -44,6 +45,12 @@ const SHELLS = [
     freq: 0.75,
     offset: [0.0, 0.0, 0.0],
     edge: [9.0, 0.75],
+    // [specPower, specGain, streakGain, refractGain] — the outer shell is the
+    // most polished, so it takes the tightest specular and the most refraction.
+    glass: [240.0, 0.26, 0.18, 0.26],
+    // Silhouette segments. Shells whose rims use a high uEdgePower need the
+    // denser mesh, since a narrow rim on a coarse outline reads as facets.
+    segs: 144,
     squash: [1.0, 0.94, 1.02],
     tint: DEEP_TEAL,
     hue: 0.02,
@@ -63,6 +70,8 @@ const SHELLS = [
     freq: 0.95,
     offset: [-0.24, 0.15, 0.09],
     edge: [11.0, 1.15],
+    glass: [190.0, 0.36, 0.2, 0.24],
+    segs: 168,
     squash: [0.96, 1.06, 0.93],
     tint: DARK_GREEN,
     hue: 0.03,
@@ -83,6 +92,8 @@ const SHELLS = [
     freq: 1.1,
     offset: [0.19, -0.23, -0.08],
     edge: [12.0, 0.85],
+    glass: [150.0, 0.3, 0.16, 0.2],
+    segs: 168,
     squash: [1.05, 0.9, 1.0],
     tint: DEEP_TEAL,
     hue: 0.22,
@@ -102,13 +113,15 @@ const SHELLS = [
     freq: 1.25,
     offset: [0.26, 0.12, 0.15],
     edge: [13.0, 0.95],
+    glass: [130.0, 0.32, 0.13, 0.2],
+    segs: 200,
     squash: [0.92, 1.04, 1.06],
     tint: DEEP_TEAL,
     hue: 0.44,
     spread: -0.18,
     fresnel: 1.8,
     band: 6.0,
-    intensity: 0.95,
+    intensity: 0.68,
     bias: [MINT, 0.36],
     key: [0.76, 0.28, 0.55],
     flow: 0.42,
@@ -124,13 +137,15 @@ const SHELLS = [
     freq: 1.35,
     offset: [0.15, 0.21, -0.12],
     edge: [16.0, 4.2],
+    glass: [95.0, 0.5, 0.11, 0.16],
+    segs: 232,
     squash: [1.04, 0.95, 0.92],
     tint: DARK_GREEN,
     hue: 0.62,
     spread: 0.3,
     fresnel: 1.6,
     band: 4.0,
-    intensity: 1.2,
+    intensity: 1.55,
     bias: [LIME, 0.55],
     key: [0.64, 0.62, 0.45],
     flow: 0.48,
@@ -143,13 +158,15 @@ const SHELLS = [
     freq: 1.55,
     offset: [-0.17, -0.14, 0.18],
     edge: [14.0, 0.8],
+    glass: [115.0, 0.24, 0.12, 0.18],
+    segs: 200,
     squash: [0.95, 1.03, 1.04],
     tint: DEEP_TEAL,
     hue: 0.36,
     spread: -0.25,
     fresnel: 2.1,
     band: 7.0,
-    intensity: 0.64,
+    intensity: 0.44,
     bias: [MINT, 0.25],
     key: [-0.5, -0.62, 0.6],
     flow: 0.55,
@@ -165,13 +182,15 @@ const SHELLS = [
     freq: 1.15,
     offset: [-0.21, -0.18, 0.08],
     edge: [18.0, 3.1],
+    glass: [85.0, 0.4, 0.1, 0.15],
+    segs: 232,
     squash: [0.98, 1.02, 0.96],
     tint: DARK_GREEN,
     hue: 0.66,
     spread: 0.24,
     fresnel: 1.7,
     band: 5.0,
-    intensity: 0.8,
+    intensity: 1.05,
     bias: [LIME, 0.48],
     key: [-0.62, -0.55, 0.56],
     flow: 0.4,
@@ -180,47 +199,90 @@ const SHELLS = [
   },
 ];
 
+// Trail geometry. The core tube is intentionally ~5 device pixels across and
+// the shader concentrates its brightness into the middle ~1.5; a genuinely
+// sub-pixel tube cannot be filtered and disintegrates into a dotted line.
+// The intensity numbers in the tables below are relative weights within their
+// own system; these set the level the grade shoulder actually sees. Keeping
+// them separate means rebalancing overall exposure does not mean touching
+// nineteen individual values.
+const SHELL_LEVEL = 1.8;
+const TRAIL_LEVEL = 1.4;
+
+const TRAIL = {
+  segments: 440,
+  segmentsLow: 180,
+  // Sized and shaped together. The core lands near three CSS pixels across and
+  // corePower spreads the falloff over most of that width, leaving about a
+  // pixel of gradient on each side. A much higher exponent looks superb at
+  // device pixel ratio 2 but collapses to a single hard-edged pixel at ratio 1,
+  // where there are half as many samples to spend on the gradient.
+  coreScale: 1.3,
+  corePower: 4.0,
+  glowScale: 3.4,
+  glowPower: 1.3,
+  glowGain: 0.075,
+  radialCore: 14,
+  radialGlow: 10,
+  radialCoreLow: 8,
+  radialGlowLow: 6,
+};
+
 const FILAMENTS = [
-  { radius: 1.02, wobble: 0.3, lift: 0.62, seed: 0.4, tilt: [0.5, 0.2, -0.3], a: LIME, b: MINT, intensity: 0.85, speed: 0.035, tail: 0.4, floor: 0.1 },
-  { radius: 0.9, wobble: 0.36, lift: 0.52, seed: 2.1, tilt: [-0.7, 1.1, 0.4], a: MINT, b: BLUE, intensity: 0.72, speed: -0.028, tail: 0.34, floor: 0.09 },
-  { radius: 1.1, wobble: 0.24, lift: 0.7, seed: 3.7, tilt: [1.2, -0.5, 0.8], a: LIME, b: MINT, intensity: 0.78, speed: 0.022, tail: 0.46, floor: 0.08 },
-  { radius: 0.78, wobble: 0.42, lift: 0.44, seed: 5.2, tilt: [0.2, 0.9, 1.3], a: BLUE, b: VIOLET, intensity: 0.62, speed: -0.034, tail: 0.3, floor: 0.08 },
-  { radius: 0.96, wobble: 0.33, lift: 0.58, seed: 6.6, tilt: [-0.4, -1.0, -0.6], a: MINT, b: LIME, intensity: 0.7, speed: 0.03, tail: 0.38, floor: 0.09 },
+  { radius: 1.02, wobble: 0.3, lift: 0.62, seed: 0.4, tilt: [0.5, 0.2, -0.3], colors: [LIME, WHITE, MINT], intensity: 1.05, speed: 0.035, tail: 0.4, floor: 0.1, white: 0.55, width: 0.0058 },
+  { radius: 0.9, wobble: 0.36, lift: 0.52, seed: 2.1, tilt: [-0.7, 1.1, 0.4], colors: [MINT, BLUE, MINT], intensity: 0.88, speed: -0.028, tail: 0.34, floor: 0.09, white: 0.35, width: 0.0052 },
+  { radius: 1.1, wobble: 0.24, lift: 0.7, seed: 3.7, tilt: [1.2, -0.5, 0.8], colors: [LIME, LIME, MINT], intensity: 0.95, speed: 0.022, tail: 0.46, floor: 0.08, white: 0.5, width: 0.0055 },
+  { radius: 0.78, wobble: 0.42, lift: 0.44, seed: 5.2, tilt: [0.2, 0.9, 1.3], colors: [BLUE, VIOLET, BLUE], intensity: 0.72, speed: -0.034, tail: 0.3, floor: 0.08, white: 0.22, width: 0.0046 },
+  { radius: 0.96, wobble: 0.33, lift: 0.58, seed: 6.6, tilt: [-0.4, -1.0, -0.6], colors: [MINT, WHITE, LIME], intensity: 0.85, speed: 0.03, tail: 0.38, floor: 0.09, white: 0.45, width: 0.005 },
 ];
 
 const ORBITS = [
-  { rx: 1.66, rz: 1.2, tilt: [0.2, 0.1, -0.36], tint: LIME, intensity: 1.55, speed: 0.012, dash: 0, pearls: 2 },
-  { rx: 1.48, rz: 1.52, tilt: [-1.18, 0.55, 0.2], tint: MINT, intensity: 1.15, speed: -0.009, dash: 0, pearls: 1 },
-  { rx: 1.58, rz: 1.02, tilt: [0.78, -0.86, 0.55], tint: LIME, intensity: 1.3, speed: 0.015, dash: 0, pearls: 1 },
-  { rx: 1.36, rz: 1.4, tilt: [-0.35, 1.25, -0.72], tint: BLUE, intensity: 0.95, speed: -0.011, dash: 118, pearls: 1 },
-  { rx: 1.7, rz: 0.9, tilt: [1.34, 0.3, 0.15], tint: VIOLET, intensity: 0.8, speed: 0.008, dash: 0, pearls: 1 },
-  { rx: 1.28, rz: 1.3, tilt: [0.45, -0.3, 1.1], tint: MINT, intensity: 0.9, speed: -0.014, dash: 136, pearls: 1 },
-  { rx: 1.62, rz: 1.44, tilt: [-0.62, -1.05, -0.25], tint: LIME, intensity: 0.85, speed: 0.01, dash: 0, pearls: 1 },
+  { rx: 1.66, rz: 1.2, tilt: [0.2, 0.1, -0.36], colors: [LIME, WHITE, LIME], intensity: 1.5, speed: 0.012, dash: 0, pearls: 1, white: 0.6, width: 0.0048 },
+  { rx: 1.48, rz: 1.52, tilt: [-1.18, 0.55, 0.2], colors: [MINT, MINT, BLUE], intensity: 1.15, speed: -0.009, dash: 0, pearls: 1, white: 0.4, width: 0.0044 },
+  { rx: 1.58, rz: 1.02, tilt: [0.78, -0.86, 0.55], colors: [LIME, LIME, WHITE], intensity: 1.3, speed: 0.015, dash: 0, pearls: 1, white: 0.5, width: 0.0046 },
+  { rx: 1.36, rz: 1.4, tilt: [-0.35, 1.25, -0.72], colors: [BLUE, MINT, BLUE], intensity: 0.62, speed: -0.011, dash: 118, pearls: 1, white: 0.3, width: 0.0042 },
+  { rx: 1.7, rz: 0.9, tilt: [1.34, 0.3, 0.15], colors: [VIOLET, BLUE, VIOLET], intensity: 0.82, speed: 0.008, dash: 0, pearls: 0, white: 0.2, width: 0.004 },
+  { rx: 1.28, rz: 1.3, tilt: [0.45, -0.3, 1.1], colors: [MINT, BLUE, MINT], intensity: 0.58, speed: -0.014, dash: 136, pearls: 1, white: 0.25, width: 0.004 },
+  { rx: 1.62, rz: 1.44, tilt: [-0.62, -1.05, -0.25], colors: [LIME, MINT, LIME], intensity: 0.88, speed: 0.01, dash: 0, pearls: 1, white: 0.35, width: 0.0042 },
 ];
 
-function organicCurve({ radius, wobble, lift, seed }) {
-  const pts = [];
-  const n = 16;
-  for (let i = 0; i < n; i += 1) {
-    const a = (i / n) * Math.PI * 2;
+// Both path types are analytic rather than splines fitted through sampled
+// points. A CatmullRom through 16-48 controls carries small curvature ripples
+// between knots, and TubeGeometry bakes those in as visible kinks along an
+// otherwise smooth trail. Evaluating the closed form at every tube segment
+// gives a mathematically exact path with no angular transitions at all.
+class OrganicCurve extends THREE.Curve {
+  constructor({ radius, wobble, lift, seed }) {
+    super();
+    this.radius = radius;
+    this.wobble = wobble;
+    this.lift = lift;
+    this.seed = seed;
+  }
+
+  getPoint(t, target = new THREE.Vector3()) {
+    const { radius, wobble, lift, seed } = this;
+    const a = t * Math.PI * 2;
     const r = radius * (1 + Math.sin(a * 1.7 + seed) * wobble + Math.cos(a * 2.6 - seed * 1.4) * wobble * 0.4);
-    pts.push(new THREE.Vector3(
+    return target.set(
       Math.cos(a) * r,
       Math.sin(a * 0.8 + seed * 1.3) * radius * lift * 0.55,
       Math.sin(a) * r * (0.82 + Math.cos(a * 1.3 + seed) * 0.16),
-    ));
+    );
   }
-  return new THREE.CatmullRomCurve3(pts, true, 'catmullrom', 0.5);
 }
 
-function ellipseCurve(rx, rz) {
-  const pts = [];
-  const n = 48;
-  for (let i = 0; i < n; i += 1) {
-    const a = (i / n) * Math.PI * 2;
-    pts.push(new THREE.Vector3(Math.cos(a) * rx, 0, Math.sin(a) * rz));
+class EllipsePath extends THREE.Curve {
+  constructor(rx, rz) {
+    super();
+    this.rx = rx;
+    this.rz = rz;
   }
-  return new THREE.CatmullRomCurve3(pts, true, 'catmullrom', 0.5);
+
+  getPoint(t, target = new THREE.Vector3()) {
+    const a = t * Math.PI * 2;
+    return target.set(Math.cos(a) * this.rx, 0, Math.sin(a) * this.rz);
+  }
 }
 
 function atmosphereTexture() {
@@ -271,11 +333,14 @@ function flareTexture() {
   return new THREE.CanvasTexture(canvas);
 }
 
+// Placed on the upper-left edge, upper centre, right edge and the lower cyan
+// region, so the glare sits in a few concentrated spots rather than lighting
+// the sphere evenly.
 const FLARES = [
-  { at: [-1.02, 0.02, 0.35], scale: 0.34 },
-  { at: [0.62, 0.66, 0.2], scale: 0.26 },
-  { at: [0.28, -0.92, 0.3], scale: 0.22 },
-  { at: [1.04, -0.34, -0.2], scale: 0.2 },
+  { at: [-0.78, 0.58, 0.3], scale: 0.36 },
+  { at: [0.05, 0.98, 0.15], scale: 0.24 },
+  { at: [1.0, 0.12, -0.1], scale: 0.26 },
+  { at: [-0.35, -0.85, 0.25], scale: 0.2 },
 ];
 
 export class HeroOrb {
@@ -330,7 +395,14 @@ export class HeroOrb {
     this.renderer.toneMapping = THREE.NoToneMapping;
     this.renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
 
-    this.pixelRatio = Math.min(window.devicePixelRatio || 1, this.lowPower ? 1.25 : 1.6);
+    // Note the floor, not just the cap. On a ratio-1 display a three-pixel
+    // trail has only three samples to spend, so its shoulders step abruptly
+    // however the shader shapes the falloff; rendering above CSS resolution and
+    // letting the browser downscale supersamples that edge properly. Retina
+    // displays already have the samples and just take the 2.0 cap.
+    this.pixelRatio = this.lowPower
+      ? Math.min(window.devicePixelRatio || 1, 1.5)
+      : Math.min(Math.max(window.devicePixelRatio || 1, 1.6), 2);
     this.renderer.setPixelRatio(this.pixelRatio);
   }
 
@@ -354,7 +426,7 @@ export class HeroOrb {
       depthTest: false,
       depthWrite: false,
       blending: THREE.AdditiveBlending,
-      opacity: 0.85,
+      opacity: 0.42,
     }));
     glow.scale.set(3.4, 3.4, 1);
     glow.renderOrder = -1;
@@ -363,12 +435,80 @@ export class HeroOrb {
     this.disposables.push(tex, glow.material);
   }
 
-  shellGeometry() {
-    if (!this._shellGeo) {
-      this._shellGeo = new THREE.IcosahedronGeometry(1, this.lowPower ? 4 : 5);
-      this.disposables.push(this._shellGeo);
+  // Segment counts, not an icosahedron detail level. IcosahedronGeometry
+  // subdivides each of its 20 faces into (detail+1)^2 triangles, so even
+  // detail 6 is only 980 triangles -- roughly a 32-sided silhouette, which is
+  // precisely the faceting that showed along the bright crescents. It is also
+  // non-indexed, so every vertex is duplicated about six times and pays for
+  // its noise lookups six times over. An indexed sphere gives a directly
+  // controllable silhouette resolution for a fraction of the vertex work.
+  shellGeometry(segs) {
+    const w = this.lowPower ? Math.round(segs * 0.5) : segs;
+    const h = Math.round(w * 0.7);
+    this._shellGeo = this._shellGeo || new Map();
+    if (!this._shellGeo.has(w)) {
+      const geo = new THREE.SphereGeometry(1, w, h);
+      this._shellGeo.set(w, geo);
+      this.disposables.push(geo);
     }
-    return this._shellGeo;
+    return this._shellGeo.get(w);
+  }
+
+  // Two concentric tubes per path: a crisp core and a much wider, much dimmer
+  // glow underneath it. That pairing is what gives a sharp centreline with a
+  // soft halo, instead of a single tube that is either thin and aliased or
+  // thick and blurry.
+  buildTrail(curve, cfg, parent, order) {
+    const segments = this.lowPower ? TRAIL.segmentsLow : TRAIL.segments;
+    const layers = [
+      {
+        radius: cfg.width * TRAIL.glowScale,
+        radial: this.lowPower ? TRAIL.radialGlowLow : TRAIL.radialGlow,
+        power: TRAIL.glowPower,
+        gain: TRAIL.glowGain,
+        order: order,
+      },
+      {
+        radius: cfg.width * TRAIL.coreScale,
+        radial: this.lowPower ? TRAIL.radialCoreLow : TRAIL.radialCore,
+        power: TRAIL.corePower,
+        gain: 1.0,
+        order: order + 1,
+      },
+    ];
+
+    return layers.map((layer) => {
+      const geo = new THREE.TubeGeometry(curve, segments, layer.radius, layer.radial, true);
+      const uniforms = {
+        uTime: { value: 0 },
+        uColorA: { value: v3(cfg.colors[0]) },
+        uColorB: { value: v3(cfg.colors[1]) },
+        uColorC: { value: v3(cfg.colors[2]) },
+        uIntensity: { value: cfg.intensity * layer.gain * TRAIL_LEVEL },
+        uFlowSpeed: { value: cfg.speed },
+        uTail: { value: cfg.tail ?? 0.5 },
+        uFloor: { value: cfg.floor ?? 0.58 },
+        uPulse: { value: 1 },
+        uDashCount: { value: cfg.dash ?? 0 },
+        uCorePower: { value: layer.power },
+        uWhiteMix: { value: cfg.white * layer.gain },
+      };
+
+      const mesh = new THREE.Mesh(geo, new THREE.ShaderMaterial({
+        uniforms,
+        vertexShader: filamentVertex,
+        fragmentShader: filamentFragment,
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        depthTest: true,
+        side: THREE.DoubleSide,
+      }));
+      mesh.renderOrder = layer.order;
+      parent.add(mesh);
+      this.disposables.push(geo, mesh.material);
+      return uniforms;
+    });
   }
 
   initShells() {
@@ -382,8 +522,8 @@ export class HeroOrb {
         uSquash: { value: new THREE.Vector3(...cfg.squash) },
         uPointer: { value: new THREE.Vector2(0, 0) },
         uTintDeep: { value: v3(cfg.tint) },
-        uIntensity: { value: cfg.intensity },
-        uFresnelPower: { value: cfg.fresnel },
+        uIntensity: { value: cfg.intensity * SHELL_LEVEL },
+        uFresnelPower: { value: cfg.fresnel * 2.1 },
         uBandFreq: { value: cfg.band },
         uHueShift: { value: cfg.hue },
         uHueSpread: { value: cfg.spread },
@@ -391,11 +531,15 @@ export class HeroOrb {
         uBias: { value: cfg.bias[1] },
         uKeyDir: { value: new THREE.Vector3(...cfg.key).normalize() },
         uEdgePower: { value: cfg.edge[0] },
-        uEdgeGain: { value: cfg.edge[1] * 1.6 },
+        uEdgeGain: { value: cfg.edge[1] * 2.2 },
+        uSpecPower: { value: cfg.glass[0] },
+        uSpecGain: { value: cfg.glass[1] },
+        uStreakGain: { value: cfg.glass[2] * 3.2 },
+        uRefractGain: { value: cfg.glass[3] },
         uPulse: { value: 1 },
       };
 
-      const mesh = new THREE.Mesh(this.shellGeometry(), new THREE.ShaderMaterial({
+      const mesh = new THREE.Mesh(this.shellGeometry(cfg.segs), new THREE.ShaderMaterial({
         uniforms,
         vertexShader: shellVertex,
         fragmentShader: shellFragment,
@@ -438,11 +582,13 @@ export class HeroOrb {
       uSquash: { value: new THREE.Vector3(1.0, 0.97, 1.0) },
       uPointer: { value: new THREE.Vector2(0, 0) },
       uCoreDark: { value: v3(CORE_DARK) },
+      uKeyDir: { value: new THREE.Vector3(0.62, 0.6, 0.5).normalize() },
+      uRimGain: { value: 3.2 },
+      uSpecGain: { value: 1.0 },
       uPulse: { value: 1 },
     };
 
-    const geo = new THREE.IcosahedronGeometry(1, this.lowPower ? 4 : 5);
-    const core = new THREE.Mesh(geo, new THREE.ShaderMaterial({
+    const core = new THREE.Mesh(this.shellGeometry(200), new THREE.ShaderMaterial({
       uniforms: this.coreUniforms,
       vertexShader: coreVertex,
       fragmentShader: coreFragment,
@@ -459,44 +605,17 @@ export class HeroOrb {
     this.coreGroup.add(core);
     this.spin.add(this.coreGroup);
     this.core = core;
-    this.disposables.push(geo, core.material);
+    this.disposables.push(core.material);
   }
 
   initFilaments() {
     FILAMENTS.forEach((cfg, i) => {
-      const curve = organicCurve(cfg);
-      const geo = new THREE.TubeGeometry(curve, this.lowPower ? 120 : 220, 0.0034, 5, true);
-      const uniforms = {
-        uTime: { value: 0 },
-        uColorA: { value: v3(cfg.a) },
-        uColorB: { value: v3(cfg.b) },
-        uIntensity: { value: cfg.intensity },
-        uFlowSpeed: { value: cfg.speed },
-        uTail: { value: cfg.tail },
-        uFloor: { value: cfg.floor },
-        uPulse: { value: 1 },
-        uDashCount: { value: 0 },
-      };
-
-      const mesh = new THREE.Mesh(geo, new THREE.ShaderMaterial({
-        uniforms,
-        vertexShader: filamentVertex,
-        fragmentShader: filamentFragment,
-        transparent: true,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false,
-        depthTest: true,
-        side: THREE.DoubleSide,
-      }));
-      mesh.renderOrder = 20 + i;
-
       const group = new THREE.Group();
       group.rotation.set(...cfg.tilt);
-      group.add(mesh);
       this.spin.add(group);
 
-      this.filaments.push({ group, uniforms, drift: 0.008 + i * 0.003 });
-      this.disposables.push(geo, mesh.material);
+      const layers = this.buildTrail(new OrganicCurve(cfg), cfg, group, 20 + i * 2);
+      this.filaments.push({ group, layers, drift: 0.008 + i * 0.003 });
     });
   }
 
@@ -509,46 +628,29 @@ export class HeroOrb {
     const sparkPhases = [];
     const sparkTints = [];
 
+    // Mostly cyan, pale green and white, with lime kept rare so it stays a
+    // highlight rather than becoming the particle colour.
+    const PEARL_TINTS = [MINT, WHITE, MINT, BLUE, LIME, MINT];
+
     ORBITS.forEach((cfg, i) => {
-      const curve = ellipseCurve(cfg.rx, cfg.rz);
-      const geo = new THREE.TubeGeometry(curve, this.lowPower ? 140 : 260, 0.0016, 4, true);
-      const uniforms = {
-        uTime: { value: 0 },
-        uColorA: { value: v3(cfg.tint) },
-        uColorB: { value: v3(cfg.tint) },
-        uIntensity: { value: cfg.intensity },
-        uFlowSpeed: { value: cfg.speed * 1.6 },
-        uTail: { value: 0.5 },
-        uFloor: { value: 0.42 },
-        uPulse: { value: 1 },
-        uDashCount: { value: cfg.dash },
-      };
-
-      const mesh = new THREE.Mesh(geo, new THREE.ShaderMaterial({
-        uniforms,
-        vertexShader: filamentVertex,
-        fragmentShader: filamentFragment,
-        transparent: true,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false,
-        depthTest: true,
-        side: THREE.DoubleSide,
-      }));
-      mesh.renderOrder = 30 + i;
-
       const group = new THREE.Group();
       group.rotation.set(...cfg.tilt);
-      group.add(mesh);
       this.spin.add(group);
-      this.orbits.push({ group, uniforms, speed: cfg.speed });
-      this.disposables.push(geo, mesh.material);
+
+      const layers = this.buildTrail(
+        new EllipsePath(cfg.rx, cfg.rz),
+        { ...cfg, speed: cfg.speed * 1.6 },
+        group,
+        30 + i * 2,
+      );
+      this.orbits.push({ group, layers, speed: cfg.speed });
 
       for (let p = 0; p < cfg.pearls; p += 1) {
-        const tint = p % 2 === 0 ? cfg.tint : MINT;
+        const tint = PEARL_TINTS[(i + p) % PEARL_TINTS.length];
         const pearl = new THREE.Mesh(pearlGeo, new THREE.ShaderMaterial({
           uniforms: {
             uColor: { value: v3(tint) },
-            uIntensity: { value: 1.35 },
+            uIntensity: { value: 1.5 },
           },
           vertexShader: pearlVertex,
           fragmentShader: pearlFragment,
@@ -557,14 +659,14 @@ export class HeroOrb {
           depthWrite: false,
           depthTest: true,
         }));
-        pearl.scale.setScalar(0.022 + (i % 3) * 0.008);
-        pearl.renderOrder = 40;
+        pearl.scale.setScalar(0.013 + (i % 3) * 0.004);
+        pearl.renderOrder = 48;
         group.add(pearl);
         this.pearls.push({
           mesh: pearl,
           rx: cfg.rx,
           rz: cfg.rz,
-          t: (p / cfg.pearls) + i * 0.17,
+          t: (p / Math.max(cfg.pearls, 1)) + i * 0.17,
           speed: 0.018 + i * 0.004,
         });
         this.disposables.push(pearl.material);
@@ -572,7 +674,7 @@ export class HeroOrb {
 
       // Tiny sparkles sitting on the same paths, in the orbit's own space so
       // they inherit its tilt and drift.
-      const count = this.lowPower ? 3 : 6;
+      const count = this.lowPower ? 2 : 3;
       const euler = new THREE.Euler(...cfg.tilt);
       for (let s = 0; s < count; s += 1) {
         const a = ((s + 0.5) / count) * Math.PI * 2 + i;
@@ -580,9 +682,9 @@ export class HeroOrb {
         const at = new THREE.Vector3(Math.cos(a) * cfg.rx, 0, Math.sin(a) * cfg.rz)
           .applyEuler(euler);
         sparkPositions.push(at.x, at.y, at.z);
-        sparkSizes.push(1.3 + Math.random() * 2.0);
+        sparkSizes.push(1.0 + Math.random() * 1.3);
         sparkPhases.push(Math.random());
-        sparkTints.push(...(s % 3 === 0 ? LIME : s % 3 === 1 ? MINT : BLUE));
+        sparkTints.push(...(s % 3 === 0 ? WHITE : s % 3 === 1 ? MINT : BLUE));
       }
     });
 
@@ -606,7 +708,7 @@ export class HeroOrb {
       depthWrite: false,
       depthTest: true,
     }));
-    sparks.renderOrder = 50;
+    sparks.renderOrder = 52;
     this.spin.add(sparks);
     this.sparks = sparks;
     this.disposables.push(sparkGeo, sparks.material);
@@ -621,7 +723,7 @@ export class HeroOrb {
         depthWrite: false,
         depthTest: false,
         blending: THREE.AdditiveBlending,
-        opacity: 0.5,
+        opacity: 0.58,
       }));
       sprite.position.set(...cfg.at);
       sprite.scale.setScalar(cfg.scale);
@@ -639,20 +741,31 @@ export class HeroOrb {
     renderPass.clearAlpha = 0;
     this.composer.addPass(renderPass);
 
+    // Bloom runs on the raw HDR buffer, before any compression. EffectComposer
+    // targets are half-float, so a rim accumulating to 4.0 is still 4.0 here
+    // and the threshold can pick out genuinely bright features instead of
+    // whatever survived a grade. High threshold on purpose: only the filament
+    // cores, the lime crescents and the core rim cross it, since blooming
+    // everything is what erases the internal depth.
+    // Small radius on purpose. A wide bloom smears the thin membrane edges and
+    // filament cores into the fuzz this pass exists to avoid; a tight one
+    // leaves the crisp detail intact and only wraps it in a halo.
+    this.bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.45, 0.22, 0.88);
+    this.composer.addPass(this.bloom);
+
+    // Grading last, so the shoulder sees the scene and its bloom together and
+    // the guarantee of never clipping actually holds. With the old ordering
+    // bloom added on top of already-compressed highlights and drove them
+    // straight to flat white.
     this.gradePass = new ShaderPass({
       uniforms: {
         tDiffuse: { value: null },
-        uKnee: { value: 0.64 },
+        uKnee: { value: 0.5 },
       },
       vertexShader: fullscreenVertex,
       fragmentShader: gradeFragment,
     });
     this.composer.addPass(this.gradePass);
-
-    // High threshold on purpose: only the lime crescent, cyan rims and
-    // filaments should bloom. Blooming everything erases the depth.
-    this.bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.45, 0.6, 0.62);
-    this.composer.addPass(this.bloom);
 
     this.alphaPass = new ShaderPass({
       uniforms: {
@@ -757,14 +870,17 @@ export class HeroOrb {
     this.coreGroup.rotation.x = Math.sin(t * 0.09) * 0.08 + this.damped.y * 0.05;
 
     this.filaments.forEach((f) => {
-      f.uniforms.uTime.value = t;
-      f.uniforms.uPulse.value = 1 + Math.sin(t * 0.31 + f.drift * 40) * 0.16;
+      const pulse = 1 + Math.sin(t * 0.31 + f.drift * 40) * 0.16;
+      f.layers.forEach((u) => {
+        u.uTime.value = t;
+        u.uPulse.value = pulse;
+      });
       f.group.rotation.y += delta * f.drift * motion * rate;
       f.group.rotation.z += delta * f.drift * 0.4 * motion * rate;
     });
 
     this.orbits.forEach((o) => {
-      o.uniforms.uTime.value = t;
+      o.layers.forEach((u) => { u.uTime.value = t; });
       o.group.rotation.y += delta * o.speed * motion * rate;
     });
 
@@ -779,7 +895,7 @@ export class HeroOrb {
     this.flares.forEach((f) => {
       const beat = 1 + Math.sin(t * 0.34 + f.phase) * 0.22;
       f.sprite.scale.setScalar(f.base * beat);
-      f.sprite.material.opacity = 0.5 * beat;
+      f.sprite.material.opacity = 0.58 * beat;
     });
 
     // Pointer tilt, slow drift, scroll lift and a very shallow breathing
@@ -794,7 +910,7 @@ export class HeroOrb {
     const breathe = 1 + Math.sin(t * 0.16) * 0.014;
     this.root.scale.setScalar(breathe * this.scroll.scale);
     this.root.position.y = Math.sin(t * 0.12) * 0.02 + this.scroll.lift;
-    this.glow.material.opacity = 0.85 * (1 + Math.sin(t * 0.19) * 0.12);
+    this.glow.material.opacity = 0.42 * (1 + Math.sin(t * 0.19) * 0.12);
 
     this.composer.render();
   };

@@ -54,9 +54,10 @@ float snoise(vec3 v) {
 // transitions across a single curved surface.
 const PALETTE = /* glsl */ `
 const vec3 C_VIOLET = vec3(0.596, 0.467, 1.000);
-const vec3 C_BLUE   = vec3(0.467, 0.812, 1.000);
+const vec3 C_BLUE   = vec3(0.475, 0.812, 1.000);
 const vec3 C_MINT   = vec3(0.392, 0.941, 0.867);
 const vec3 C_LIME   = vec3(0.843, 1.000, 0.302);
+const vec3 C_WHITE  = vec3(0.953, 1.000, 0.945);
 
 vec3 iridescence(float t) {
   float s = fract(t) * 4.0;
@@ -106,9 +107,12 @@ void main() {
   float d0 = field(dir);
   vec3 p = dir * uSquash * (1.0 + d0 * uAmp);
 
+  // Tight finite-difference stencil. A wide one quantises the normal into
+  // flat patches, and the narrow edge term below raises that to a high power,
+  // so a coarse epsilon shows up directly as facets along the bright rims.
   vec3 t1 = normalize(cross(dir, vec3(0.0, 1.0, 0.17)));
   vec3 t2 = normalize(cross(dir, t1));
-  float e = 0.085;
+  float e = 0.022;
   vec3 pa = solve(normalize(dir + t1 * e));
   vec3 pb = solve(normalize(dir + t2 * e));
 
@@ -136,6 +140,10 @@ uniform float uIntensity;
 uniform float uEdgePower;
 uniform float uEdgeGain;
 uniform float uFresnelPower;
+uniform float uSpecPower;
+uniform float uSpecGain;
+uniform float uStreakGain;
+uniform float uRefractGain;
 uniform float uBandFreq;
 uniform float uHueShift;
 uniform float uHueSpread;
@@ -153,10 +161,13 @@ void main() {
   vec3 v = normalize(vView);
   float ndv = clamp(abs(dot(n, v)), 0.0, 1.0);
 
-  // Grazing angles carry the shell silhouettes. The small face-on base keeps
-  // the surface faintly present so it reads as translucent glass you can see
-  // through, rather than disappearing entirely.
-  float fres = 0.032 + 0.968 * pow(1.0 - ndv, uFresnelPower);
+  // Split into a broad translucent body and a narrow bright rim. A single
+  // low-exponent fresnel spreads the rim into a wide fuzzy band, because near
+  // a sphere's silhouette ndv changes slowly across the screen; pushing the
+  // exponent up tightens that band to a crisp edge, and the raised base keeps
+  // the interior present so the shell still reads as glass you see through
+  // rather than an empty outline.
+  float fres = 0.115 + 0.885 * pow(1.0 - ndv, uFresnelPower);
 
   // A much narrower second rim right at the silhouette. This is what makes
   // each shell read as a distinct bubble boundary crossing its neighbours
@@ -184,10 +195,38 @@ void main() {
   // the boundaries close into full rings and the sculpture looks like an onion.
   float edgeKey = 0.06 + 0.94 * pow(kd, 2.2);
 
+  // Clearcoat-style specular. A tight Blinn lobe puts small concentrated
+  // glints on the curvature, which is how polished glass catches a light
+  // source; a broad diffuse term just washes the whole shell out.
+  vec3 hv = normalize(key + v);
+  float spec = pow(max(dot(n, hv), 0.0), uSpecPower);
+
+  // A second, far broader lobe from the same light. The tight one alone gives
+  // pinpoint glints on an otherwise dark membrane; this one lays a soft sheen
+  // gradient across the face of the shell, which is what makes a curved glass
+  // surface read as a surface rather than as an outline with a dark hole.
+  float sheen = pow(max(dot(n, hv), 0.0), 14.0);
+
+  // The refracted ray lands on a different part of the colour wheel than the
+  // reflection does, so the two layers disagree slightly. That disagreement
+  // is what reads as looking *through* the shell rather than at it.
+  vec3 rd = refract(-v, n, 0.72);
+  float rhue = uHueShift + 0.42 + rd.y * 0.30 + rd.x * 0.17;
+  vec3 refr = iridescence(rhue);
+
+  // Caustic-like streaks. High frequency on one axis only, so they stretch
+  // across the surface as light bands instead of tiling as isotropic noise.
+  float streak = 0.5 + 0.5 * sin(vPos.y * 13.0 + vDisp * 5.5 + uTime * 0.05);
+  streak = pow(streak, 4.0);
+
   vec3 col = mix(uTintDeep, irid, 0.78);
   col *= fres * shimmer * keyed * uIntensity * uPulse;
 
+  col += refr * fres * uRefractGain * kd * uPulse;
   col += irid * edge * uEdgeGain * edgeKey * uPulse;
+  col += C_WHITE * spec * uSpecGain * uPulse;
+  col += mix(irid, C_WHITE, 0.4) * sheen * uSpecGain * 0.5 * uPulse;
+  col += C_WHITE * streak * fres * uStreakGain * kd * uPulse;
 
   float a = clamp(max(max(col.r, col.g), col.b), 0.0, 1.0);
   gl_FragColor = vec4(col, a);
@@ -220,8 +259,11 @@ ${NOISE}
 ${PALETTE}
 
 uniform vec3 uCoreDark;
+uniform vec3 uKeyDir;
 uniform float uTime;
 uniform float uPulse;
+uniform float uRimGain;
+uniform float uSpecGain;
 uniform vec2 uPointer;
 
 varying vec3 vNormal;
@@ -234,8 +276,13 @@ void main() {
   vec3 v = normalize(vView);
   float ndv = clamp(abs(dot(n, v)), 0.0, 1.0);
 
-  float rim = pow(1.0 - ndv, 3.2);
-  float edge = pow(1.0 - ndv, 11.0);
+  // Three rim widths rather than one. The broad term is atmosphere, the mid
+  // term is the glass wall's apparent thickness, and the tight term is the
+  // luminous boundary itself. Together they give the core a readable shell
+  // instead of a single soft gradient.
+  float halo = pow(1.0 - ndv, 1.7);
+  float wall = pow(1.0 - ndv, 4.5);
+  float edge = pow(1.0 - ndv, 13.0);
 
   // Spiral swirl inside the core. The angular term is what turns the noise
   // into a rotating vortex rather than generic mottling.
@@ -250,15 +297,25 @@ void main() {
   vec3 rimCol = mix(C_MINT, C_LIME, smoothstep(0.30, 0.88, dir));
   rimCol = mix(rimCol, C_BLUE, smoothstep(0.45, 0.0, dir) * 0.55);
 
+  vec3 key = normalize(uKeyDir + vec3(uPointer.x * 0.25, uPointer.y * 0.2, 0.0));
+  float kd = max(dot(n, key), 0.0);
+  vec3 hv = normalize(key + v);
+  float spec = pow(max(dot(n, hv), 0.0), 90.0);
+
   // Deliberately near-black through the middle. The core is the darkest part
-  // of the sculpture; all of its colour lives in the rim.
-  vec3 col = uCoreDark * (0.18 + swirl * 0.55 + spiral * 0.22);
-  col += rimCol * rim * 0.34 * uPulse;
-  col += rimCol * edge * 1.7 * uPulse;
+  // of the sculpture; almost all of its colour lives in the rim.
+  vec3 col = uCoreDark * (0.16 + swirl * 0.52 + spiral * 0.20);
+
+  // Interior scatter: the far side of the glass shell glowing faintly through
+  // the volume, brightest where the key light enters.
+  col += rimCol * halo * 0.13 * (0.35 + 0.65 * kd) * uPulse;
+  col += rimCol * wall * 0.42 * uRimGain * uPulse;
+  col += rimCol * edge * 1.85 * uRimGain * uPulse;
+  col += C_WHITE * spec * uSpecGain * uPulse;
 
   // Opaque enough to occlude the shells behind it, translucent enough that
   // the interior still reads as glass rather than a solid ball.
-  float alpha = clamp(0.72 + rim * 0.24, 0.0, 1.0);
+  float alpha = clamp(0.72 + wall * 0.24, 0.0, 1.0);
   gl_FragColor = vec4(col * alpha, alpha);
 }
 `;
@@ -277,9 +334,15 @@ void main() {
 }
 `;
 
+// One shader drives both trail layers. The crisp core pass uses the higher
+// uCorePower on a narrow tube; the glow pass uses a low one on a much wider
+// tube at a fraction of the intensity.
 export const filamentFragment = /* glsl */ `
+${PALETTE}
+
 uniform vec3 uColorA;
 uniform vec3 uColorB;
+uniform vec3 uColorC;
 uniform float uTime;
 uniform float uIntensity;
 uniform float uFlowSpeed;
@@ -287,6 +350,8 @@ uniform float uTail;
 uniform float uFloor;
 uniform float uPulse;
 uniform float uDashCount;
+uniform float uCorePower;
+uniform float uWhiteMix;
 
 varying vec2 vUv;
 varying vec3 vNormal;
@@ -297,26 +362,34 @@ void main() {
   vec3 v = normalize(vView);
   float ndv = clamp(abs(dot(n, v)), 0.0, 1.0);
 
-  // Camera-facing part of the tube is the bright centreline; the silhouette
-  // falls off, so a solid tube reads as a thin glowing curve.
-  float body = pow(ndv, 1.35);
+  // The tube is deliberately several pixels across and the brightness is
+  // concentrated into its centreline by this exponent. That yields a sharp
+  // core with a smoothly falling edge, which resolves far better than a
+  // sub-pixel tube -- that just breaks up into a dotted, aliased line.
+  float body = pow(ndv, uCorePower);
 
-  // Travelling luminance so each curve fades in and out along its path
+  // Travelling luminance so each curve brightens and fades along its path
   // instead of sitting there as a uniform wire.
   float head = fract(vUv.x - uTime * uFlowSpeed);
   float pulse = smoothstep(0.0, uTail, head) * smoothstep(1.0, 1.0 - uTail, head);
-
   float lum = mix(uFloor, 1.0, pulse);
 
-  // Some paths are beaded rather than solid, which is what keeps a set of
+  // Some paths are beaded rather than solid, which keeps a set of
   // overlapping ellipses from reading as a wireframe cage.
   if (uDashCount > 0.5) {
     float phase = abs(fract(vUv.x * uDashCount) - 0.5);
-    lum *= 1.0 - smoothstep(0.06, 0.17, phase);
+    lum *= 1.0 - smoothstep(0.09, 0.20, phase);
   }
 
-  vec3 col = mix(uColorA, uColorB, vUv.x) * uIntensity * lum * body * uPulse;
+  // Three stops, so the hue drifts along the curve instead of blending two
+  // colours linearly from end to end.
+  float t = vUv.x;
+  vec3 tint = t < 0.5 ? mix(uColorA, uColorB, t * 2.0) : mix(uColorB, uColorC, (t - 0.5) * 2.0);
 
+  // Only the very peak of the travelling head goes white-hot.
+  tint = mix(tint, C_WHITE, uWhiteMix * pow(pulse, 4.0));
+
+  vec3 col = tint * uIntensity * lum * body * uPulse;
   gl_FragColor = vec4(col, clamp(max(max(col.r, col.g), col.b), 0.0, 1.0));
 }
 `;
@@ -329,10 +402,12 @@ void main() {
 }
 `;
 
-// Six additive shells stack well past 1.0 wherever their rims overlap.
+// Seven additive shells stack well past 1.0 wherever their rims overlap.
 // Clamping per channel would drag saturated lime and violet toward white, so
-// scale all three together above the knee: the hue survives, only the
-// intensity compresses. Runs before bloom so the threshold sees real values.
+// instead scale all three by a shared filmic shoulder: hue and saturation
+// survive, only intensity compresses, and mid-tones below the knee stay
+// completely untouched so fine detail keeps its contrast. Runs last, after
+// bloom, so the scene and its glow are compressed together.
 export const gradeFragment = /* glsl */ `
 uniform sampler2D tDiffuse;
 uniform float uKnee;
@@ -342,7 +417,17 @@ varying vec2 vUv;
 void main() {
   vec4 c = texture2D(tDiffuse, vUv);
   float peak = max(max(c.r, c.g), c.b);
-  c.rgb /= 1.0 + max(peak - uKnee, 0.0);
+  if (peak > uKnee) {
+    // The shoulder asymptotes to exactly 1.0, so no accumulation however
+    // bright ever clips: a rim at 5.0 and a rim at 2.0 still land on
+    // different values instead of both flattening to white. That headroom is
+    // what lets the bright features be genuinely bright while the glass body
+    // below the knee keeps its full contrast.
+    float range = 1.0 - uKnee;
+    float over = peak - uKnee;
+    float rolled = uKnee + range * over / (over + range);
+    c.rgb *= rolled / peak;
+  }
   gl_FragColor = c;
 }
 `;
@@ -377,7 +462,11 @@ void main() {
 }
 `;
 
+// Glass bead rather than a glowing ball: dark through the middle, bright at
+// the rim, with one tight specular dot.
 export const pearlFragment = /* glsl */ `
+${PALETTE}
+
 uniform vec3 uColor;
 uniform float uIntensity;
 
@@ -389,10 +478,13 @@ void main() {
   vec3 v = normalize(vView);
   float ndv = clamp(abs(dot(n, v)), 0.0, 1.0);
 
-  float rim = pow(1.0 - ndv, 1.8);
-  float spec = pow(max(dot(n, normalize(vec3(-0.4, 0.8, 0.7))), 0.0), 18.0);
+  vec3 key = normalize(vec3(-0.4, 0.8, 0.7));
+  float rim = pow(1.0 - ndv, 2.4);
+  vec3 hv = normalize(key + v);
+  float spec = pow(max(dot(n, hv), 0.0), 48.0);
 
-  vec3 col = uColor * (0.30 + rim * 1.25 + spec * 1.6) * uIntensity;
+  vec3 col = uColor * (0.10 + rim * 1.5) * uIntensity;
+  col += C_WHITE * spec * 1.1 * uIntensity;
   gl_FragColor = vec4(col, clamp(max(max(col.r, col.g), col.b), 0.0, 1.0));
 }
 `;
@@ -426,8 +518,11 @@ void main() {
   vec2 uv = gl_PointCoord - 0.5;
   float d = length(uv);
   if (d > 0.5) discard;
-  float glow = pow(smoothstep(0.5, 0.0, d), 1.8);
-  vec3 col = vTint * glow * vAlpha * 1.15;
+  // Tight centre with a wide faint skirt, so each spark reads as a pinpoint
+  // with a halo rather than a soft dot.
+  float core = pow(smoothstep(0.5, 0.0, d), 5.0);
+  float halo = pow(smoothstep(0.5, 0.0, d), 1.6);
+  vec3 col = vTint * (core * 1.5 + halo * 0.22) * vAlpha;
   gl_FragColor = vec4(col, clamp(max(max(col.r, col.g), col.b), 0.0, 1.0));
 }
 `;
