@@ -206,7 +206,11 @@ function applyLanguage(lang) {
     section.dataset.siteLang = lang;
   });
   contactSelect?.refresh();
-  initCopy();
+  try {
+    initCopy();
+  } catch {
+    revealCopy();
+  }
 }
 
 const gooeyNavs = [
@@ -417,8 +421,18 @@ initNav();
 initMenu(lenis);
 initServiceGlow();
 
+function revealCopy() {
+  document.querySelectorAll('[data-copy]').forEach((el) => el.classList.add('is-copy-ready'));
+}
+
 const fontsReady = document.fonts?.ready || Promise.resolve();
-fontsReady.then(() => initCopy());
+fontsReady.then(() => {
+  try {
+    initCopy();
+  } catch {
+    revealCopy();
+  }
+}).catch(revealCopy);
 
 if (import.meta.hot) {
   import.meta.hot.dispose(() => {

@@ -108,7 +108,7 @@ h3 {
   margin: 0;
 }
 
-[data-copy]:not(.is-copy-ready) {
+html.js [data-copy]:not(.is-copy-ready) {
   visibility: hidden;
 }
 
@@ -922,8 +922,8 @@ p {
 }
 
 .bilingual {
-  --bilingual-desktop: url("/Images/two languages bg.jpg");
-  --bilingual-mobile: url("/Images/two languages mobile bg.jpg");
+  --bilingual-desktop: url("../Images/two languages bg.jpg");
+  --bilingual-mobile: url("../Images/two languages mobile bg.jpg");
   position: relative;
   z-index: 2;
   isolation: isolate;

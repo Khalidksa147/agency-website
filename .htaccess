@@ -1,0 +1,4 @@
+DirectoryIndex index.html
+
+AddType text/javascript .js .mjs
+AddType application/javascript .js .mjs
