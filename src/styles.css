@@ -629,18 +629,18 @@ html[dir='rtl'] .nav-links a.is-active::after {
   }
 
   .hero-orb {
-    position: relative;
-    inset: auto;
-    order: 2;
-    width: 100%;
-    height: min(88vw, 26rem);
-    margin: 0.4rem 0 1.5rem;
+    position: absolute;
+    inset: 0;
+    width: auto;
+    height: auto;
+    margin: 0;
     opacity: 1;
   }
 
   .hero-copy {
     order: 1;
     padding-bottom: 0;
+    margin-bottom: calc(min(88vw, 26rem) + 1.9rem);
   }
 
   .hero-copy h1 {

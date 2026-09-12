@@ -362,6 +362,7 @@ export class HeroOrb {
     this.pointer = new THREE.Vector2(0, 0);
     this.damped = new THREE.Vector2(0, 0);
     this.pocketX = 0;
+    this.pocketY = 0;
 
     this.shells = [];
     this.filaments = [];
@@ -802,6 +803,9 @@ export class HeroOrb {
 
     this.resizeObserver = new ResizeObserver(() => this.setSize());
     this.resizeObserver.observe(this.canvas.parentElement);
+    if (this.hero && this.hero !== this.canvas.parentElement) {
+      this.resizeObserver.observe(this.hero);
+    }
 
     this.onVisibility = () => {
       if (document.visibilityState === 'hidden') this.stop();
@@ -827,9 +831,26 @@ export class HeroOrb {
     const tablet = window.matchMedia('(max-width: 1100px)').matches;
 
     if (mobile) {
-      // Stacked below the copy: the canvas IS the pocket, so frame to it.
-      this.camera.position.z = 1.72 / Math.tan(Math.min(vFov, hFov) / 2);
+      // Canvas covers the whole hero so the glow is not clipped by the
+      // old stacked box. Frame and sit the sculpture in the reserved
+      // gap between copy and footer so it stays the same size.
+      const heroEl = this.hero || parent.parentElement;
+      const copy = heroEl.querySelector('.hero-copy');
+      const footer = heroEl.querySelector('.hero-footer');
+      const heroRect = heroEl.getBoundingClientRect();
+      const copyBottom = copy ? copy.getBoundingClientRect().bottom - heroRect.top : 0;
+      const footerTop = footer ? footer.getBoundingClientRect().top - heroRect.top : height;
+      const pocketW = copy ? Math.max(copy.clientWidth, 1) : width;
+      let pocketH = footerTop - copyBottom;
+      if (pocketH < 80) pocketH = Math.min(width * 0.88, 26 * 16);
+      const fit = Math.max(Math.min(pocketW, pocketH), 1);
+      this.camera.position.z = (1.72 * height) / (Math.tan(vFov / 2) * fit);
+      const halfH = Math.tan(vFov / 2) * this.camera.position.z;
+      const pocketCenterY = footerTop > copyBottom
+        ? (copyBottom + footerTop) / 2
+        : copyBottom + pocketH / 2;
       this.pocketX = 0;
+      this.pocketY = ((height / 2) - pocketCenterY) / (height / 2) * halfH;
     } else {
       // Canvas covers the whole hero so bloom can travel anywhere in it.
       // Frame as if the canvas were still the original right-hand pocket so
@@ -841,6 +862,7 @@ export class HeroOrb {
       const halfW = Math.tan(hFov / 2) * this.camera.position.z;
       const center = tablet ? 0.67 : 0.76;
       this.pocketX = (center * 2 - 1) * halfW;
+      this.pocketY = 0;
     }
 
     this.camera.updateProjectionMatrix();
@@ -928,7 +950,7 @@ export class HeroOrb {
     this.root.scale.setScalar(breathe);
     const rtl = document.documentElement.dir === 'rtl' ? -1 : 1;
     this.root.position.x = this.pocketX * rtl;
-    this.root.position.y = Math.sin(t * 0.12) * 0.02;
+    this.root.position.y = this.pocketY + Math.sin(t * 0.12) * 0.02;
     this.glow.material.opacity = 0.42 * (1 + Math.sin(t * 0.19) * 0.12);
 
     this.composer.render();
