@@ -1,0 +1,154 @@
+<svg class="web-svg" viewBox="0 0 340 236" fill="none" xmlns="http://www.w3.org/2000/svg" role="img">
+  <style>
+    .web-svg {
+      --bg: #050607;
+      --panel: #0a0d10;
+      --line: #d8dee4;
+      --muted: #56616b;
+      --cyan: #6fd8e8;
+      --accent: #c8f23d;
+      --dur: 10s;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .web-svg .ln { stroke: rgba(216,222,228,0.22); stroke-width: 1; }
+    .web-svg .ln-soft { stroke: rgba(216,222,228,0.38); stroke-width: 1.05; }
+    .web-svg .ln-cyan { stroke: var(--cyan); stroke-width: 1.1; }
+    .web-svg .ln-accent { stroke: var(--accent); stroke-width: 2.2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .web-svg .code { stroke: rgba(216,222,228,0.28); stroke-width: 1.35; stroke-linecap: round; }
+    .web-svg .panel { fill: var(--panel); }
+    .web-svg .draw { stroke-dasharray: 320; stroke-dashoffset: 320; animation: web-draw var(--dur) var(--ease) infinite; }
+    .web-svg .fade { opacity: 0; animation: web-fade var(--dur) var(--ease) infinite; }
+    .web-svg .fade-d1 { animation-delay: 0.12s; }
+    .web-svg .fade-d2 { animation-delay: 0.24s; }
+    .web-svg .fade-d3 { animation-delay: 0.36s; }
+    .web-svg .fade-d4 { animation-delay: 0.48s; }
+    .web-svg #browser-back { animation: web-back var(--dur) var(--ease) infinite; transform-box: fill-box; transform-origin: center; }
+    .web-svg #main-browser { animation: web-main var(--dur) var(--ease) infinite; transform-box: fill-box; transform-origin: center; }
+    .web-svg #code-symbol { animation: web-symbol var(--dur) var(--ease) infinite; }
+    .web-svg #component-panel { animation: web-panel var(--dur) var(--ease) infinite; transform-box: fill-box; transform-origin: center; }
+    .web-svg #responsive-guides { animation: web-guides var(--dur) var(--ease) infinite; }
+    .web-svg #interaction-state { animation: web-hover var(--dur) var(--ease) infinite; }
+    .web-svg .node { animation: web-node var(--dur) var(--ease) infinite; }
+    @keyframes web-draw {
+      0% { stroke-dashoffset: 320; }
+      14%, 92% { stroke-dashoffset: 0; }
+      100% { stroke-dashoffset: 0; }
+    }
+    @keyframes web-fade {
+      0%, 6% { opacity: 0.35; }
+      18%, 88% { opacity: 1; }
+      96%, 100% { opacity: 0.85; }
+    }
+    @keyframes web-back {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(0, -2px); }
+    }
+    @keyframes web-main {
+      0%, 46%, 100% { transform: translate(0, 0); }
+      54% { transform: translate(-2px, 0); }
+    }
+    @keyframes web-symbol {
+      0%, 16% { opacity: 0.75; }
+      28%, 78% { opacity: 1; }
+      86% { opacity: 0.8; }
+      100% { opacity: 0.75; }
+    }
+    @keyframes web-panel {
+      0%, 30% { opacity: 1; transform: translate(0, 0); }
+      36% { opacity: 0.7; transform: translate(4px, 0); }
+      44%, 82% { opacity: 1; transform: translate(0, 0); }
+      100% { opacity: 1; transform: translate(0, 0); }
+    }
+    @keyframes web-guides {
+      0%, 46% { opacity: 0.25; }
+      52%, 62% { opacity: 0.85; }
+      70%, 100% { opacity: 0.3; }
+    }
+    @keyframes web-hover {
+      0%, 60%, 78%, 100% { stroke: rgba(216,222,228,0.12); }
+      66%, 72% { stroke: var(--accent); }
+    }
+    @keyframes web-node {
+      0%, 40%, 100% { opacity: 0.4; }
+      52%, 64% { opacity: 1; }
+      84% { opacity: 0.75; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .web-svg .draw { stroke-dashoffset: 0; animation: none; }
+      .web-svg .fade { opacity: 1; animation: none; }
+      .web-svg #code-symbol,
+      .web-svg #component-panel { opacity: 1; transform: none; }
+    }
+  </style>
+
+  <g id="background-grid">
+    <path class="ln draw" d="M16 12 H324" pathLength="320"/>
+    <path class="ln draw" d="M16 224 H324" pathLength="320"/>
+    <path class="ln draw" d="M20 8 V228" pathLength="320"/>
+    <path class="ln draw" d="M320 8 V188" pathLength="320"/>
+  </g>
+
+  <g id="construction-lines">
+    <path class="ln-cyan draw" d="M20 12 V228" pathLength="320" opacity="0.45"/>
+    <path class="ln draw" d="M20 12 H78" pathLength="320"/>
+    <path class="ln draw" d="M128 224 H320" pathLength="320"/>
+    <path class="ln draw" d="M320 224 V188" pathLength="320"/>
+    <rect class="node" x="17" y="70" width="6" height="6" fill="none" stroke="var(--cyan)" stroke-width="1.05"/>
+    <circle class="node" cx="20" cy="126" r="2.6" fill="var(--line)"/>
+    <circle class="node" cx="128" cy="224" r="2.2" fill="var(--line)"/>
+    <rect class="node" x="317" y="182" width="6" height="6" fill="var(--accent)"/>
+  </g>
+
+  <g id="browser-back">
+    <rect class="panel ln-soft draw" x="86" y="22" width="228" height="108" rx="5" pathLength="320"/>
+    <path fill="#ececea" d="M86 22 H314 A5 5 0 0 1 319 27 V38 H86 Z"/>
+    <circle cx="298" cy="30" r="2.05" fill="#c5c5c2"/>
+    <circle cx="306.5" cy="30" r="2.05" fill="#b4b4b1"/>
+    <circle cx="315" cy="30" r="2.05" fill="#2f2f2d"/>
+  </g>
+
+  <g id="main-browser">
+    <rect class="panel draw" x="42" y="60" width="244" height="148" rx="7" stroke="var(--cyan)" stroke-opacity="0.55" stroke-width="1.15" pathLength="320"/>
+    <circle class="fade" cx="58" cy="74" r="2.5" fill="#c4a4ff"/>
+    <circle class="fade fade-d1" cx="67.5" cy="74" r="2.5" fill="#5ee0c8"/>
+    <circle class="fade fade-d2" cx="77" cy="74" r="2.5" fill="var(--accent)"/>
+
+    <g id="code-editor">
+      <g id="code-lines">
+        <path class="code fade" d="M58 96 H88"/>
+        <path class="code fade fade-d1" d="M58 108 H146"/>
+        <path class="code fade fade-d2" d="M70 120 H124"/>
+        <rect id="interaction-state" class="fade fade-d3" x="56" y="132" width="64" height="36" rx="3" fill="none" stroke="rgba(216,222,228,0.12)"/>
+        <path class="code fade fade-d3" d="M58 176 H100"/>
+        <path class="code fade fade-d4" d="M70 188 H152"/>
+      </g>
+      <g id="code-symbol">
+        <path class="ln-accent" d="M86 138 L72 150 L86 162"/>
+        <path class="ln-accent" d="M96 136 L86 164"/>
+        <path class="ln-accent" d="M100 138 L114 150 L100 162"/>
+      </g>
+    </g>
+  </g>
+
+  <g id="component-panel">
+    <rect class="panel ln-cyan draw" x="226" y="102" width="86" height="72" rx="4" pathLength="320"/>
+    <path fill="var(--accent)" d="M236 114 L242 117.5 L236 121 Z"/>
+    <path class="code fade" d="M248 117.5 H296"/>
+    <circle class="fade fade-d1" cx="239" cy="136" r="1.7" fill="rgba(216,222,228,0.5)"/>
+    <path class="code fade fade-d1" d="M245 136 H298"/>
+    <circle class="fade fade-d2" cx="239" cy="148" r="1.7" fill="rgba(216,222,228,0.5)"/>
+    <path class="code fade fade-d2" d="M245 148 H290"/>
+    <circle class="fade fade-d3" cx="239" cy="160" r="1.7" fill="rgba(216,222,228,0.5)"/>
+    <path class="code fade fade-d3" d="M245 160 H284"/>
+  </g>
+
+  <g id="responsive-guides">
+    <path class="ln-cyan" d="M226 138 H210" opacity="0.5"/>
+    <path class="ln" d="M42 208 H210" opacity="0.35"/>
+  </g>
+
+  <g id="cursor">
+    <path d="M176 152 L176 176 L182.2 170.6 L187.4 182.2 L191 180.6 L185.6 169 L193 169 Z" fill="var(--accent)"/>
+    <animateTransform attributeName="transform" type="translate" dur="10s" repeatCount="indefinite" keyTimes="0;0.58;0.66;0.74;0.82;1" values="0 0; -36 -14; -36 -14; 42 4; 42 4; 0 0"/>
+  </g>
+</svg>

@@ -1,0 +1,217 @@
+<svg class="plat-svg" viewBox="0 0 360 240" fill="none" xmlns="http://www.w3.org/2000/svg" role="img">
+  <style>
+    .plat-svg {
+      --cyan: #4DEBFF;
+      --purple: #A875FF;
+      --lime: #C7F36B;
+      --bg: #05090B;
+      --panel: #0a0f12;
+      --card: #10161a;
+      --ink: rgba(232, 240, 244, 0.28);
+      --dur: 8s;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .plat-svg .frame { fill: var(--panel); stroke: var(--cyan); stroke-width: 1.15; }
+    .plat-svg .frame-glow { fill: none; stroke: var(--cyan); stroke-width: 1.7; opacity: 0.26; filter: url(#plat-glow); }
+    .plat-svg .card { fill: var(--card); }
+    .plat-svg .rule { stroke: rgba(232, 240, 244, 0.12); stroke-width: 1; }
+    .plat-svg .muted { stroke: var(--ink); stroke-width: 1.25; stroke-linecap: round; }
+    .plat-svg .plat-link {
+      stroke: var(--cyan);
+      stroke-width: 1.05;
+      fill: none;
+      opacity: 0.55;
+    }
+    .plat-svg .plat-line,
+    .plat-svg .plat-glow {
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+    }
+    .plat-svg .plat-line { stroke: var(--lime); stroke-width: 1.7; }
+    .plat-svg .plat-glow { stroke: var(--lime); stroke-width: 3.4; opacity: 0.26; filter: url(#plat-glow); }
+    .plat-svg .plat-flow {
+      stroke: var(--cyan);
+      stroke-width: 1.45;
+      fill: none;
+      stroke-linecap: round;
+      stroke-dasharray: 12 34;
+      filter: url(#plat-glow);
+    }
+    .plat-svg .plat-spark {
+      stroke: var(--cyan);
+      stroke-width: 1.25;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 1;
+    }
+    .plat-svg .plat-line { animation: plat-draw var(--dur) var(--ease) infinite; }
+    .plat-svg .plat-glow { animation: plat-draw var(--dur) var(--ease) infinite, plat-pulse 2.8s ease-in-out infinite; }
+    .plat-svg .plat-flow { animation: plat-flow var(--dur) linear infinite; }
+    .plat-svg .plat-spark { animation: plat-draw 7.2s var(--ease) infinite; }
+    .plat-svg .plat-dot { animation: plat-pulse 2.6s ease-in-out infinite; }
+    .plat-svg .plat-dot-b { animation: plat-pulse 3.2s ease-in-out 0.55s infinite; }
+    .plat-svg .plat-ring { animation: plat-pulse 3.4s ease-in-out 0.2s infinite; }
+    @keyframes plat-draw {
+      0% { stroke-dashoffset: 1; }
+      40% { stroke-dashoffset: 0; }
+      76% { stroke-dashoffset: 0; }
+      100% { stroke-dashoffset: 1; }
+    }
+    @keyframes plat-flow { to { stroke-dashoffset: -46; } }
+    @keyframes plat-pulse {
+      0%, 100% { opacity: 0.55; }
+      50% { opacity: 1; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .plat-svg .plat-line,
+      .plat-svg .plat-glow,
+      .plat-svg .plat-spark,
+      .plat-svg .plat-flow,
+      .plat-svg .plat-dot,
+      .plat-svg .plat-dot-b,
+      .plat-svg .plat-ring { animation: none; }
+    }
+  </style>
+
+  <defs>
+    <linearGradient id="plat-ring-g" x1="78" y1="158" x2="110" y2="192" gradientUnits="userSpaceOnUse">
+      <stop stop-color="var(--lime)"/>
+      <stop offset="0.48" stop-color="var(--cyan)"/>
+      <stop offset="1" stop-color="var(--purple)"/>
+    </linearGradient>
+    <linearGradient id="plat-phone-g" x1="266" y1="50" x2="340" y2="210" gradientUnits="userSpaceOnUse">
+      <stop stop-color="var(--cyan)"/>
+      <stop offset="1" stop-color="#79cfff"/>
+    </linearGradient>
+    <filter id="plat-glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="1.3" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <g id="plat-links">
+    <path class="plat-link" d="M14 124 H26"/>
+    <path class="plat-link" d="M14 124 V20 H248"/>
+    <path class="plat-link" d="M248 20 H332 V52"/>
+    <path class="plat-flow" d="M14 124 H26">
+      <animate attributeName="stroke-dashoffset" values="0;-46" dur="8s" repeatCount="indefinite"/>
+    </path>
+    <path class="plat-flow" d="M14 124 V20 H248">
+      <animate attributeName="stroke-dashoffset" values="0;-46" dur="8s" begin="0.45s" repeatCount="indefinite"/>
+    </path>
+    <path class="plat-flow" d="M248 20 H332 V52">
+      <animate attributeName="stroke-dashoffset" values="0;-46" dur="8s" begin="0.9s" repeatCount="indefinite"/>
+    </path>
+    <rect class="plat-dot" x="11" y="121" width="6" height="6" fill="none" stroke="var(--cyan)" stroke-width="1.05">
+      <animate attributeName="opacity" values="0.5;1;0.5" dur="2.6s" repeatCount="indefinite"/>
+    </rect>
+    <rect class="plat-dot-b" x="329" y="49" width="5" height="5" fill="var(--lime)">
+      <animate attributeName="opacity" values="0.45;1;0.45" dur="3.1s" begin="0.6s" repeatCount="indefinite"/>
+    </rect>
+    <circle class="plat-dot" cx="248" cy="36" r="1.8" fill="var(--cyan)" filter="url(#plat-glow)">
+      <animate attributeName="opacity" values="0.4;1;0.4" dur="2.9s" begin="0.3s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <g id="plat-desktop">
+    <rect class="frame-glow" x="26" y="34" width="226" height="172" rx="9"/>
+    <rect class="frame" x="26" y="34" width="226" height="172" rx="9"/>
+
+    <g id="plat-chrome">
+      <circle cx="40" cy="48" r="2.45" fill="var(--purple)"/>
+      <circle class="plat-dot" cx="50" cy="48" r="2.45" fill="var(--cyan)">
+        <animate attributeName="opacity" values="0.55;1;0.55" dur="2.6s" repeatCount="indefinite"/>
+      </circle>
+      <circle class="plat-dot-b" cx="60" cy="48" r="2.45" fill="var(--lime)">
+        <animate attributeName="opacity" values="0.5;1;0.5" dur="3.2s" begin="0.55s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+
+    <path class="rule" d="M70 60 V194"/>
+
+    <g id="plat-sidebar">
+      <circle class="plat-dot" cx="48" cy="74" r="2.25" fill="rgba(232,240,244,0.38)">
+        <animate attributeName="opacity" values="0.35;0.95;0.35" dur="2.8s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="48" cy="90" r="2.25" fill="rgba(232,240,244,0.2)"/>
+      <circle class="plat-dot-b" cx="48" cy="106" r="2.25" fill="rgba(232,240,244,0.32)">
+        <animate attributeName="opacity" values="0.3;0.88;0.3" dur="3.3s" begin="0.7s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="48" cy="122" r="2.25" fill="rgba(232,240,244,0.2)"/>
+      <circle cx="48" cy="138" r="2.25" fill="rgba(232,240,244,0.2)"/>
+      <circle cx="48" cy="154" r="2.25" fill="rgba(232,240,244,0.18)"/>
+      <circle cx="48" cy="170" r="2.25" fill="rgba(232,240,244,0.16)"/>
+    </g>
+
+    <g id="plat-chart">
+      <rect class="card" x="80" y="60" width="120" height="84" rx="4"/>
+      <path class="plat-glow" d="M92 124 L108 120 L124 123 L146 108 L166 96 L188 78" pathLength="1">
+        <animate attributeName="stroke-dashoffset" values="1;0;0;1" keyTimes="0;0.4;0.76;1" dur="8s" repeatCount="indefinite" calcMode="spline" keySplines="0.22 1 0.36 1; 0 0 1 1; 0.22 1 0.36 1"/>
+        <animate attributeName="opacity" values="0.16;0.32;0.16" dur="2.8s" repeatCount="indefinite"/>
+      </path>
+      <path class="plat-line" d="M92 124 L108 120 L124 123 L146 108 L166 96 L188 78" pathLength="1">
+        <animate attributeName="stroke-dashoffset" values="1;0;0;1" keyTimes="0;0.4;0.76;1" dur="8s" repeatCount="indefinite" calcMode="spline" keySplines="0.22 1 0.36 1; 0 0 1 1; 0.22 1 0.36 1"/>
+      </path>
+      <circle class="plat-dot-b" cx="188" cy="78" r="2.2" fill="var(--lime)">
+        <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.32;0.42;0.76;1" dur="8s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+
+    <g id="plat-bars">
+      <rect class="card" x="206" y="60" width="36" height="84" rx="4"/>
+      <rect x="212" y="118" width="5.6" height="16" rx="1" fill="var(--cyan)">
+        <animate attributeName="height" values="16;23;14;20;16" dur="7.6s" repeatCount="indefinite"/>
+        <animate attributeName="y" values="118;111;120;114;118" dur="7.6s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="221.2" y="98" width="5.6" height="36" rx="1" fill="var(--purple)">
+        <animate attributeName="height" values="36;28;40;32;36" dur="7.6s" begin="0.35s" repeatCount="indefinite"/>
+        <animate attributeName="y" values="98;106;94;102;98" dur="7.6s" begin="0.35s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="230.4" y="108" width="5.6" height="26" rx="1" fill="#C4A6FF">
+        <animate attributeName="height" values="26;32;21;29;26" dur="7.6s" begin="0.7s" repeatCount="indefinite"/>
+        <animate attributeName="y" values="108;102;113;105;108" dur="7.6s" begin="0.7s" repeatCount="indefinite"/>
+      </rect>
+    </g>
+
+    <g id="plat-metrics">
+      <circle cx="96" cy="180" r="13" stroke="rgba(232,240,244,0.08)" stroke-width="3.7"/>
+      <circle class="plat-ring" cx="96" cy="180" r="13" stroke="url(#plat-ring-g)" stroke-width="3.7" stroke-linecap="round" stroke-dasharray="54 28">
+        <animateTransform attributeName="transform" type="rotate" values="0 96 180; 360 96 180" dur="8s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.72;1;0.72" dur="3.4s" begin="0.2s" repeatCount="indefinite"/>
+      </circle>
+      <path class="muted" d="M116 176 H158"/>
+      <path class="muted" d="M116 186 H146"/>
+      <rect class="card" x="168" y="166" width="72" height="28" rx="3"/>
+      <path class="muted" d="M176 176 H228"/>
+      <path class="muted" d="M176 184 H216"/>
+    </g>
+  </g>
+
+  <g id="plat-mobile">
+    <rect class="frame-glow" x="266" y="52" width="72" height="152" rx="8"/>
+    <rect class="card" x="266" y="52" width="72" height="152" rx="8" stroke="url(#plat-phone-g)" stroke-width="1.15"/>
+    <rect x="276" y="64" width="52" height="36" rx="3" fill="#0d1418"/>
+    <circle class="plat-dot" cx="288" cy="82" r="5.4" fill="none" stroke="var(--cyan)" stroke-width="1.25">
+      <animate attributeName="opacity" values="0.45;1;0.45" dur="2.7s" repeatCount="indefinite"/>
+    </circle>
+    <path class="plat-spark" d="M298 88 L310 80 L322 72" pathLength="1">
+      <animate attributeName="stroke-dashoffset" values="1;0;0;1" keyTimes="0;0.38;0.74;1" dur="7.2s" repeatCount="indefinite" calcMode="spline" keySplines="0.22 1 0.36 1; 0 0 1 1; 0.22 1 0.36 1"/>
+    </path>
+    <path class="muted" d="M276 112 H320"/>
+    <path class="muted" d="M276 124 H314"/>
+    <path class="muted" d="M276 136 H318"/>
+    <rect x="276" y="154" width="52" height="34" rx="3" fill="#0d1418"/>
+    <circle class="plat-dot-b" cx="289" cy="171" r="5.2" fill="none" stroke="var(--lime)" stroke-width="1.25">
+      <animate attributeName="opacity" values="0.4;1;0.4" dur="3s" begin="0.5s" repeatCount="indefinite"/>
+    </circle>
+    <path d="M292.6 174.6 L296.2 178.2" stroke="var(--lime)" stroke-width="1.2" stroke-linecap="round"/>
+    <path class="muted" d="M300 171 H322"/>
+  </g>
+</svg>
