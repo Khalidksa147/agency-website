@@ -7,8 +7,16 @@
   --muted: rgba(243, 245, 242, 0.58);
   --line: rgba(243, 245, 242, 0.1);
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --page-x: 2.4rem;
   color-scheme: dark;
 }
+
+/* Breakpoints (desktop-first)
+   Desktop  ≥1440px
+   Laptop    1024–1439px
+   Tablet     768–1023px
+   Mobile     ≤440px
+*/
 
 *,
 *::before,
@@ -100,7 +108,7 @@ p {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  padding: 1.35rem 2.4rem;
+  padding: 1.35rem var(--page-x);
 }
 
 .logo {
@@ -195,7 +203,7 @@ p {
   border: 1px solid rgba(243, 245, 242, 0.18);
   border-radius: 50%;
   background: transparent;
-  display: grid;
+  display: none;
   place-content: center;
   gap: 4px;
   cursor: pointer;
@@ -235,7 +243,7 @@ p {
   display: grid;
   grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
   align-items: center;
-  padding: 7.5rem 2.4rem 4.5rem;
+  padding: 7.5rem var(--page-x) 4.5rem;
   isolation: isolate;
 }
 
@@ -280,11 +288,12 @@ p {
 .hero-copy h1 {
   font-size: clamp(3rem, 6.4vw, 5.35rem);
   line-height: 0.96;
-  max-width: 9.4ch;
+  max-width: none;
 }
 
 .hero-copy h1 span {
   display: block;
+  white-space: nowrap;
 }
 
 .accent {
@@ -340,7 +349,7 @@ p {
 
 .hero-meta {
   position: absolute;
-  right: 2.4rem;
+  right: var(--page-x);
   top: 50%;
   transform: translateY(-42%);
   z-index: 3;
@@ -362,8 +371,8 @@ p {
 
 .hero-footer {
   position: absolute;
-  left: 2.4rem;
-  right: 2.4rem;
+  left: var(--page-x);
+  right: var(--page-x);
   bottom: 1.6rem;
   z-index: 3;
   display: flex;
@@ -414,7 +423,7 @@ p {
 .section {
   position: relative;
   z-index: 2;
-  padding: 7.5rem 2.4rem;
+  padding: 7.5rem var(--page-x);
   max-width: 78rem;
   margin: 0 auto;
 }
@@ -542,13 +551,13 @@ p {
 .site-footer {
   display: flex;
   justify-content: space-between;
-  padding: 1.4rem 2.4rem 2rem;
+  padding: 1.4rem var(--page-x) 2rem;
   color: rgba(243, 245, 242, 0.38);
   font-size: 0.8rem;
 }
 
 html[dir='rtl'] .hero-copy h1 {
-  max-width: 11ch;
+  max-width: none;
 }
 
 html[dir='rtl'] .hero-orb {
@@ -564,7 +573,7 @@ html[dir='rtl'] .atmosphere {
 
 html[dir='rtl'] .hero-meta {
   right: auto;
-  left: 2.4rem;
+  left: var(--page-x);
   border-left: 0;
   border-right: 1px solid rgba(243, 245, 242, 0.16);
   padding-left: 0;
@@ -580,13 +589,45 @@ html[dir='rtl'] .nav-links a.is-active::after {
   right: 0;
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 1439px) {
+  :root {
+    --page-x: 2rem;
+  }
+
+  .nav-links {
+    gap: 1.35rem;
+  }
+
+  .hero {
+    padding-top: 7rem;
+    padding-bottom: 4rem;
+  }
+
+  .section {
+    padding-top: 6.5rem;
+    padding-bottom: 6.5rem;
+  }
+
+  .service-grid {
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 1023px) {
+  :root {
+    --page-x: 1.6rem;
+  }
+
   .nav {
     grid-template-columns: 1fr auto;
   }
 
   .nav-links {
     display: none;
+  }
+
+  .menu-btn {
+    display: grid;
   }
 
   .service-grid {
@@ -611,16 +652,7 @@ html[dir='rtl'] .nav-links a.is-active::after {
   }
 }
 
-@media (max-width: 720px) {
-  .nav,
-  .hero,
-  .section,
-  .site-footer,
-  .hero-footer {
-    padding-left: 1.2rem;
-    padding-right: 1.2rem;
-  }
-
+@media (max-width: 650px) {
   .hero {
     min-height: auto;
     padding-bottom: 5.5rem;
@@ -644,8 +676,7 @@ html[dir='rtl'] .nav-links a.is-active::after {
   }
 
   .hero-copy h1 {
-    font-size: clamp(2.6rem, 12vw, 3.4rem);
-    max-width: none;
+    font-size: clamp(2rem, 6.6vw, 3.4rem);
   }
 
   .hero-footer {
@@ -655,6 +686,12 @@ html[dir='rtl'] .nav-links a.is-active::after {
     bottom: auto;
     order: 3;
     margin-top: 0.4rem;
+  }
+}
+
+@media (max-width: 440px) {
+  :root {
+    --page-x: 1.2rem;
   }
 
   .service-grid,

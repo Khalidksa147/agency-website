@@ -18,6 +18,7 @@ import {
   gradeFragment,
   alphaRestoreFragment,
 } from './shaders.js';
+import { MQ } from '../breakpoints.js';
 
 // Raw display-space colours. Colour management is disabled below so what the
 // shaders write is what the screen shows, with no sRGB round trip.
@@ -350,7 +351,7 @@ export class HeroOrb {
     this.canvas = canvas;
     this.hero = hero;
 
-    this.mobile = window.matchMedia('(max-width: 720px)').matches;
+    this.mobile = window.matchMedia(MQ.mobile).matches;
     this.lowPower = this.mobile
       || (navigator.hardwareConcurrency || 8) <= 4
       || Boolean(navigator.connection?.saveData);
@@ -827,10 +828,11 @@ export class HeroOrb {
 
     const vFov = THREE.MathUtils.degToRad(this.camera.fov);
     const hFov = 2 * Math.atan(Math.tan(vFov / 2) * this.camera.aspect);
-    const mobile = window.matchMedia('(max-width: 720px)').matches;
-    const tablet = window.matchMedia('(max-width: 1100px)').matches;
+    const stackOrb = window.matchMedia(MQ.orbStack).matches;
+    const tablet = window.matchMedia(MQ.tablet).matches;
+    const laptop = window.matchMedia(MQ.laptop).matches;
 
-    if (mobile) {
+    if (stackOrb) {
       // Canvas covers the whole hero so the glow is not clipped by the
       // old stacked box. Frame and sit the sculpture in the reserved
       // gap between copy and footer so it stays the same size.
@@ -855,12 +857,12 @@ export class HeroOrb {
       // Canvas covers the whole hero so bloom can travel anywhere in it.
       // Frame as if the canvas were still the original right-hand pocket so
       // the sculpture does not grow, then sit it in that pocket.
-      const pocket = tablet ? 0.70 : 0.48;
+      const pocket = tablet ? 0.70 : laptop ? 0.52 : 0.48;
       const pocketAspect = (width * pocket) / height;
       const pocketHFov = 2 * Math.atan(Math.tan(vFov / 2) * pocketAspect);
       this.camera.position.z = 1.72 / Math.tan(Math.min(vFov, pocketHFov) / 2);
       const halfW = Math.tan(hFov / 2) * this.camera.position.z;
-      const center = tablet ? 0.67 : 0.76;
+      const center = tablet ? 0.67 : laptop ? 0.74 : 0.76;
       this.pocketX = (center * 2 - 1) * halfW;
       this.pocketY = 0;
     }
