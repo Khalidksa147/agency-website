@@ -82,10 +82,28 @@
           <span class="lang-sep">/</span>
           <button type="button" class="lang-btn" data-lang="ar">العربية</button>
         </div>
-        <button class="menu-btn" type="button" aria-label="Open menu" aria-expanded="false">
-          <span></span>
-          <span></span>
-          <span></span>
+        <button
+          class="menu-btn"
+          type="button"
+          aria-label="Open menu"
+          aria-expanded="false"
+          data-label-open="Open menu"
+          data-label-close="Close menu"
+        >
+          <span class="menu-btn__slider">
+            <span class="menu-btn__item">
+              <span class="menu-btn__label">
+                <p data-i18n="nav.menu">Menu</p>
+                <p data-i18n="nav.menu">Menu</p>
+              </span>
+            </span>
+            <span class="menu-btn__item menu-btn__item--close">
+              <span class="menu-btn__label">
+                <p data-i18n="nav.close">Close</p>
+                <p data-i18n="nav.close">Close</p>
+              </span>
+            </span>
+          </span>
         </button>
       </div>
     </header>

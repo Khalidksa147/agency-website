@@ -1,6 +1,7 @@
 import { HeroOrb } from './orb/HeroOrb.js';
 import { FloatingLines } from './lines/FloatingLines.js';
 import { initGooeyNav } from './nav/GooeyNav.js';
+import { initMobileMenu } from './nav/MobileMenu.js';
 import { initCopy, revertCopy } from './text/Copy.js';
 import { initSmoothScroll } from './scroll/smooth.js';
 
@@ -11,6 +12,8 @@ const copy = {
     'nav.work': 'Work',
     'nav.about': 'About',
     'nav.contact': 'Contact',
+    'nav.menu': 'Menu',
+    'nav.close': 'Close',
     'hero.eyebrow': 'Digital studio for the Gulf',
     'hero.line1': 'We build',
     'hero.line2': 'digital experiences',
@@ -102,6 +105,8 @@ const copy = {
     'nav.work': 'أعمالنا',
     'nav.about': 'عن الاستوديو',
     'nav.contact': 'تواصل',
+    'nav.menu': 'القائمة',
+    'nav.close': 'إغلاق',
     'hero.eyebrow': 'استوديو رقمي للخليج',
     'hero.line1': 'نبني',
     'hero.line2': 'تجارب رقمية',
@@ -237,35 +242,16 @@ function syncGooey(options) {
   gooeyNavs.forEach((nav) => nav.setActiveFromHref(href, options));
 }
 
+function setNavScrolled() {
+  const nav = document.querySelector('.nav');
+  if (!nav) return;
+  nav.classList.toggle('is-scrolled', window.scrollY > 12);
+}
+
 function initNav() {
   window.addEventListener('resize', () => syncGooey(), { passive: true });
   syncGooey();
-}
-
-function initMenu(lenis) {
-  const btn = document.querySelector('.menu-btn');
-  const menu = document.querySelector('.mobile-menu');
-  const close = () => {
-    menu.hidden = true;
-    btn.setAttribute('aria-expanded', 'false');
-    document.body.classList.remove('menu-open');
-    lenis?.start();
-  };
-  btn.addEventListener('click', () => {
-    const open = menu.hidden;
-    menu.hidden = !open;
-    btn.setAttribute('aria-expanded', String(open));
-    document.body.classList.toggle('menu-open', open);
-    if (open) lenis?.stop();
-    else lenis?.start();
-    if (open) {
-      requestAnimationFrame(() => {
-        syncGooey();
-        gooeyNavs.forEach((nav) => nav.refresh());
-      });
-    }
-  });
-  menu.querySelectorAll('a').forEach((link) => link.addEventListener('click', close));
+  setNavScrolled();
 }
 
 const canvas = document.querySelector('#orb-canvas');
@@ -415,10 +401,15 @@ function initServiceGlow() {
   });
 }
 
-const lenis = initSmoothScroll({ onScroll: () => syncGooey() });
+const lenis = initSmoothScroll({
+  onScroll: () => {
+    syncGooey();
+    setNavScrolled();
+  },
+});
 
 initNav();
-initMenu(lenis);
+initMobileMenu(lenis);
 initServiceGlow();
 
 function revealCopy() {
