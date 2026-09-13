@@ -4,6 +4,7 @@ import { initGooeyNav } from './nav/GooeyNav.js';
 import { initMobileMenu } from './nav/MobileMenu.js';
 import { initCopy, revertCopy } from './text/Copy.js';
 import { initSmoothScroll } from './scroll/smooth.js';
+import { initPreloader } from './preloader/Preloader.js';
 
 const copy = {
   en: {
@@ -14,6 +15,7 @@ const copy = {
     'nav.contact': 'Contact',
     'nav.menu': 'Menu',
     'nav.close': 'Close',
+    'nav.navigation': 'Navigation',
     'hero.eyebrow': 'Digital studio for the Gulf',
     'hero.line1': 'We build',
     'hero.line2': 'digital experiences',
@@ -107,6 +109,7 @@ const copy = {
     'nav.contact': 'تواصل',
     'nav.menu': 'القائمة',
     'nav.close': 'إغلاق',
+    'nav.navigation': 'التنقل',
     'hero.eyebrow': 'استوديو رقمي للخليج',
     'hero.line1': 'نبني',
     'hero.line2': 'تجارب رقمية',
@@ -211,6 +214,7 @@ function applyLanguage(lang) {
     section.dataset.siteLang = lang;
   });
   contactSelect?.refresh();
+  if (document.documentElement.classList.contains('is-preloading')) return;
   try {
     initCopy();
   } catch {
@@ -405,6 +409,10 @@ const lenis = initSmoothScroll({
   },
 });
 
+if (document.documentElement.classList.contains('is-preloading')) {
+  lenis.stop();
+}
+
 window.addEventListener('scroll', () => setNavScrolled(window.scrollY), { passive: true });
 
 initNav();
@@ -415,14 +423,26 @@ function revealCopy() {
   document.querySelectorAll('[data-copy]').forEach((el) => el.classList.add('is-copy-ready'));
 }
 
-const fontsReady = document.fonts?.ready || Promise.resolve();
-fontsReady.then(() => {
+function startCopy() {
   try {
     initCopy();
   } catch {
     revealCopy();
   }
-}).catch(revealCopy);
+}
+
+const fontsReady = document.fonts?.ready || Promise.resolve();
+const preloaderReady = initPreloader();
+
+Promise.all([fontsReady, preloaderReady])
+  .then(() => {
+    lenis.start();
+    startCopy();
+  })
+  .catch(() => {
+    lenis.start();
+    revealCopy();
+  });
 
 if (import.meta.hot) {
   import.meta.hot.dispose(() => {

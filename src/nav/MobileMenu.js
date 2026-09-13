@@ -1,101 +1,69 @@
 import { gsap } from 'gsap';
 
-function viewBox() {
-  const vv = window.visualViewport;
-  return {
-    width: vv?.width ?? window.innerWidth,
-    height: vv?.height ?? window.innerHeight,
-  };
-}
-
-function clipFromButton(btn) {
-  const rect = btn.getBoundingClientRect();
-  const { width, height } = viewBox();
-  const top = Math.max(0, rect.top);
-  const left = Math.max(0, rect.left);
-  const right = Math.max(0, width - rect.right);
-  const bottom = Math.max(0, height - rect.bottom);
-  return `inset(${top}px ${right}px ${bottom}px ${left}px round 25px)`;
-}
-
 export function initMobileMenu(lenis) {
   const btn = document.querySelector('.menu-btn');
-  const slider = btn?.querySelector('.menu-btn__slider');
+  const burger = btn?.querySelector('.menu-btn__burger');
   const menu = document.querySelector('.mobile-menu');
-  const nav = menu?.querySelector('.mobile-nav-links');
-  const links = menu ? [...menu.querySelectorAll('.mobile-nav-links a')] : [];
-  if (!btn || !menu || !nav) {
+  const nav = menu?.querySelector('.mobile-nav');
+  const curvePath = menu?.querySelector('.mobile-menu__curve-path');
+  const links = menu ? [...menu.querySelectorAll('.mobile-nav__link')] : [];
+  if (!btn || !burger || !menu || !nav || !curvePath) {
     return { close() {} };
   }
 
   let isOpen = false;
   let tl;
+  let currentHref = document.querySelector('.nav-links .is-active a')?.getAttribute('href') || '#top';
+  const ease = 'power3.inOut';
 
   const isRtl = () => document.documentElement.dir === 'rtl';
+  const viewHeight = () => window.visualViewport?.height ?? window.innerHeight;
+  const offscreen = () => (menu.offsetWidth + 100) * (isRtl() ? -1 : 1);
+  const initialPath = () =>
+    `M100 0 L200 0 L200 ${viewHeight()} L100 ${viewHeight()} Q-100 ${viewHeight() / 2} 100 0`;
+  const targetPath = () =>
+    `M100 0 L200 0 L200 ${viewHeight()} L100 ${viewHeight()} Q100 ${viewHeight() / 2} 100 0`;
+
+  curvePath.setAttribute('d', initialPath());
+  gsap.set(menu, { x: offscreen() });
+
+  const setIndicator = (href) => {
+    links.forEach((link) => {
+      const dot = link.querySelector('.mobile-nav__indicator');
+      gsap.to(dot, {
+        scale: link.dataset.href === href ? 1 : 0,
+        duration: 0.3,
+        ease: 'power2.out',
+      });
+    });
+  };
 
   const buildTimeline = () => {
-    const rtl = isRtl();
-    const fromClip = clipFromButton(btn);
-
-    gsap.set(menu, {
-      clipPath: fromClip,
-      '-webkit-clip-path': fromClip,
-    });
-    gsap.set(slider, { yPercent: 0 });
+    const startX = offscreen();
+    const slide = isRtl() ? -80 : 80;
+    gsap.set(menu, { x: startX });
+    curvePath.setAttribute('d', initialPath());
 
     const next = gsap.timeline({
       paused: true,
-      defaults: { ease: 'power3.inOut' },
+      defaults: { duration: 0.8, ease },
     });
 
-    next.to(menu, {
-      clipPath: 'inset(0px 0px 0px 0px round 0px)',
-      '-webkit-clip-path': 'inset(0px 0px 0px 0px round 0px)',
-      duration: 0.75,
-    });
-
-    if (slider) {
-      next.to(slider, { yPercent: -50, duration: 0.5 }, 0);
-    }
-
-    next.add(() => nav.classList.add('is-visible'), 0.2);
-
-    next.set(
-      links,
-      {
-        opacity: 0,
-        rotateX: 90,
-        y: 80,
-        x: rtl ? 20 : -20,
-        transformPerspective: 300,
-        transformOrigin: 'bottom',
-      },
+    next.fromTo(menu, { x: startX }, { x: 0 }, 0);
+    next.fromTo(
+      curvePath,
+      { attr: { d: initialPath() } },
+      { attr: { d: targetPath() }, duration: 1 },
       0,
     );
-
-    next.to(
-      links,
-      {
-        opacity: 1,
-        rotateX: 0,
-        y: 0,
-        x: 0,
-        duration: 0.65,
-        ease: 'back.out(1.2)',
-        stagger: 0.1,
-      },
-      0.5,
-    );
+    next.fromTo(links, { x: slide }, { x: 0, stagger: 0.05 }, 0);
 
     next.eventCallback('onReverseComplete', () => {
-      nav.classList.remove('is-visible');
-      menu.classList.remove('is-open');
-      menu.hidden = true;
-      gsap.set(menu, { clearProps: 'clipPath' });
       document.body.classList.remove('menu-open');
       document.documentElement.classList.remove('menu-open');
       btn.setAttribute('aria-expanded', 'false');
       btn.setAttribute('aria-label', btn.dataset.labelOpen || 'Open menu');
+      menu.classList.remove('is-open');
       lenis?.start();
       isOpen = false;
     });
@@ -108,38 +76,49 @@ export function initMobileMenu(lenis) {
     isOpen = true;
     document.body.classList.add('menu-open');
     document.documentElement.classList.add('menu-open');
+    menu.classList.add('is-open');
     btn.setAttribute('aria-expanded', 'true');
     btn.setAttribute('aria-label', btn.dataset.labelClose || 'Close menu');
+    burger.classList.add('is-active');
     lenis?.stop();
     tl?.kill();
-    const fromClip = clipFromButton(btn);
-    gsap.set(menu, {
-      clipPath: fromClip,
-      '-webkit-clip-path': fromClip,
-    });
-    menu.hidden = false;
-    menu.classList.add('is-open');
     tl = buildTimeline();
     tl.play();
+    setIndicator(currentHref);
   };
 
   const close = () => {
     if (!isOpen) return;
+    burger.classList.remove('is-active');
+    gsap.to('.mobile-nav__indicator', { scale: 0, duration: 0.3 });
     tl?.reverse();
   };
 
   btn.addEventListener('click', () => {
     if (isOpen) close();
     else open();
-    btn.blur();
   });
 
-  menu.querySelectorAll('a').forEach((link) => {
-    link.addEventListener('click', close);
+  links.forEach((link) => {
+    link.addEventListener('mouseenter', () => setIndicator(link.dataset.href));
+    link.querySelector('a')?.addEventListener('click', () => {
+      currentHref = link.dataset.href;
+      close();
+    });
+  });
+
+  nav.addEventListener('mouseleave', () => {
+    if (isOpen) setIndicator(currentHref);
   });
 
   window.addEventListener('resize', () => {
-    if (window.innerWidth > 1023 && isOpen) close();
+    if (window.innerWidth > 1023 && isOpen) {
+      close();
+      return;
+    }
+    const path = isOpen && tl && !tl.reversed() ? targetPath() : initialPath();
+    curvePath.setAttribute('d', path);
+    if (!isOpen) gsap.set(menu, { x: offscreen() });
   });
 
   return { close };
