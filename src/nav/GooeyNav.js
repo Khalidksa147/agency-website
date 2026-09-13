@@ -89,6 +89,7 @@ export function initGooeyNav(root) {
     if (index < 0 || index >= items.length) return;
     const item = items[index];
     const changed = index !== activeIndex;
+    if (!changed && !burst && filter.classList.contains('is-active')) return;
     activeIndex = index;
 
     items.forEach((li, i) => {

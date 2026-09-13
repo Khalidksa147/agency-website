@@ -3,7 +3,7 @@ const FEATURED_MS = 1000;
 const CYCLE_MS = 250;
 const HOLD_MS = 800;
 const LEAVE_MS = 800;
-const FAILSAFE_MS = 28000;
+const FAILSAFE_MS = 10000;
 
 const WORDS = [
   { text: 'Hello', lang: 'en' },

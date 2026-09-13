@@ -654,6 +654,12 @@ html[dir='rtl'] .mobile-nav__indicator {
 .hero-orb canvas {
   width: 100%;
   height: 100%;
+  opacity: 0;
+  transition: opacity 0.7s var(--ease);
+}
+
+.hero-orb.is-live canvas {
+  opacity: 1;
 }
 
 .hero-copy {

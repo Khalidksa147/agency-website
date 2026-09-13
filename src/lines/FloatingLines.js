@@ -88,6 +88,7 @@ export class FloatingLines {
     this.el = el;
     this.raf = 0;
     this.running = false;
+    this.inView = true;
     this.ready = new Promise((resolve) => {
       this._resolveReady = resolve;
     });
@@ -152,7 +153,16 @@ export class FloatingLines {
     this.resize();
 
     document.addEventListener('visibilitychange', this.onVisibility);
-    this.start();
+    this.viewObserver = new IntersectionObserver(
+      (entries) => {
+        this.inView = entries.some((entry) => entry.isIntersecting);
+        if (document.visibilityState === 'hidden') return;
+        if (this.inView) this.start();
+        else this.stop();
+      },
+      { rootMargin: '10% 0px', threshold: 0.01 },
+    );
+    this.viewObserver.observe(el);
   }
 
   waveY() {
@@ -191,7 +201,7 @@ export class FloatingLines {
 
   onVisibility() {
     if (document.visibilityState === 'hidden') this.stop();
-    else this.start();
+    else if (this.inView) this.start();
   }
 
   tick() {
@@ -209,6 +219,7 @@ export class FloatingLines {
   dispose() {
     this.stop();
     document.removeEventListener('visibilitychange', this.onVisibility);
+    this.viewObserver?.disconnect();
     this.mqTablet.removeEventListener('change', this.onBreakpoint);
     this.mqMobile.removeEventListener('change', this.onBreakpoint);
     this.ro.disconnect();

@@ -5,76 +5,105 @@ import { initSmoothScroll } from './scroll/smooth.js';
 import { markPageReady } from './preloader/Preloader.js';
 
 const gooeyNavs = [initGooeyNav(document.querySelector('.nav-links'))];
+const navEl = document.querySelector('.nav');
+const navLinks = [...document.querySelectorAll('.nav-links a')];
+const canvas = document.querySelector('#orb-canvas');
+const hero = document.querySelector('.hero');
+const linesEl = document.querySelector('.page-lines');
+
+let orb = null;
+let lines = null;
+let lastHref = '';
+let lastScrolled = null;
+let sections = [];
+
+function refreshSections() {
+  sections = navLinks
+    .map((link) => {
+      const id = link.getAttribute('href');
+      const el = id ? document.querySelector(id) : null;
+      if (!el) return null;
+      return {
+        href: el.id === 'top' ? '#top' : `#${el.id}`,
+        top: el.offsetTop,
+      };
+    })
+    .filter(Boolean);
+}
 
 function currentSectionHref() {
-  const links = [...document.querySelectorAll('.nav-links a')];
-  const sections = links
-    .map((link) => document.querySelector(link.getAttribute('href')))
-    .filter(Boolean);
   const y = window.scrollY + 120;
   let current = sections[0];
-  sections.forEach((section) => {
-    if (section.offsetTop <= y) current = section;
-  });
-  if (!current) return '#top';
-  return current.id === 'top' ? '#top' : `#${current.id}`;
+  for (let i = 0; i < sections.length; i += 1) {
+    if (sections[i].top <= y) current = sections[i];
+  }
+  return current?.href || '#top';
 }
 
 function syncGooey(options) {
   const href = currentSectionHref();
+  if (!options?.burst && href === lastHref) return;
+  lastHref = href;
   gooeyNavs.forEach((nav) => nav.setActiveFromHref(href, options));
 }
 
 function setNavScrolled(y = window.scrollY) {
-  const nav = document.querySelector('.nav');
-  if (!nav) return;
-  nav.classList.toggle('is-scrolled', y > 12);
+  if (!navEl) return;
+  const scrolled = y > 12;
+  if (scrolled === lastScrolled) return;
+  lastScrolled = scrolled;
+  navEl.classList.toggle('is-scrolled', scrolled);
 }
 
 function initNav() {
-  window.addEventListener('resize', () => syncGooey(), { passive: true });
+  refreshSections();
+  window.addEventListener(
+    'resize',
+    () => {
+      refreshSections();
+      syncGooey();
+    },
+    { passive: true },
+  );
   syncGooey();
   setNavScrolled();
 }
 
-const canvas = document.querySelector('#orb-canvas');
-const hero = document.querySelector('.hero');
-const linesEl = document.querySelector('.page-lines');
-let orb = null;
-let lines = null;
-
-function whenWindowLoaded() {
-  if (document.readyState === 'complete') return Promise.resolve();
-  return new Promise((resolve) => window.addEventListener('load', resolve, { once: true }));
+function whenIdle(fn, timeout = 240) {
+  if (typeof requestIdleCallback === 'function') {
+    requestIdleCallback(fn, { timeout });
+    return;
+  }
+  window.setTimeout(fn, timeout);
 }
 
-function settle(ms = 360) {
-  return new Promise((resolve) => window.setTimeout(resolve, ms));
+function afterFirstPaint(fn) {
+  requestAnimationFrame(() => requestAnimationFrame(fn));
 }
 
-async function bootVisuals() {
-  const orbMod = window.__qiramOrbMod || import('./orb/HeroOrb.js');
-  const linesMod = window.__qiramLinesMod || import('./lines/FloatingLines.js');
-  const tasks = [];
-  if (canvas) {
-    tasks.push(
-      orbMod.then(({ HeroOrb }) => {
-        orb = new HeroOrb(canvas, { hero });
-        return orb.whenReady();
-      }),
-    );
-  }
-  if (linesEl) {
-    tasks.push(
-      linesMod
-        .then(({ FloatingLines }) => {
-          lines = new FloatingLines(linesEl);
-          return lines.whenReady();
-        })
-        .catch(() => {}),
-    );
-  }
-  await Promise.all(tasks);
+function bootOrb() {
+  if (!canvas || orb) return;
+  import('./orb/HeroOrb.js')
+    .then(({ HeroOrb }) => {
+      orb = new HeroOrb(canvas, { hero });
+    })
+    .catch(() => {});
+}
+
+function bootLines() {
+  if (!linesEl || lines) return;
+  import('./lines/FloatingLines.js')
+    .then(({ FloatingLines }) => {
+      lines = new FloatingLines(linesEl);
+    })
+    .catch(() => {});
+}
+
+function bootVisuals() {
+  afterFirstPaint(() => {
+    whenIdle(bootOrb, 160);
+    whenIdle(bootLines, 480);
+  });
 }
 
 document.querySelectorAll('[data-lang-toggle]').forEach((btn) => {
@@ -176,9 +205,11 @@ function initServiceGlow() {
     }
 
     let rect = null;
+    let raf = 0;
     const pointer = { x: 0, y: 0 };
 
     const update = () => {
+      raf = 0;
       if (!rect) return;
       const x = pointer.x - rect.left;
       const y = pointer.y - rect.top;
@@ -198,21 +229,49 @@ function initServiceGlow() {
       card.style.setProperty('--cursor-angle', `${angle.toFixed(3)}deg`);
     };
 
+    const schedule = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(update);
+    };
+
     card.addEventListener('pointerenter', () => {
       rect = card.getBoundingClientRect();
       card.classList.add('is-glowing');
     });
     card.addEventListener('pointermove', (event) => {
-      if (!rect) rect = card.getBoundingClientRect();
       pointer.x = event.clientX;
       pointer.y = event.clientY;
-      update();
+      schedule();
     });
     card.addEventListener('pointerleave', () => {
       rect = null;
       card.classList.remove('is-glowing');
       card.style.setProperty('--edge-proximity', '0');
     });
+  });
+}
+
+function initServiceSvgPause() {
+  const cards = document.querySelectorAll('.service-card');
+  if (!cards.length) return;
+
+  const setPlaying = (card, play) => {
+    card.querySelectorAll('svg').forEach((svg) => {
+      if (play) svg.unpauseAnimations?.();
+      else svg.pauseAnimations?.();
+    });
+  };
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => setPlaying(entry.target, entry.isIntersecting));
+    },
+    { rootMargin: '20% 0px', threshold: 0.01 },
+  );
+
+  cards.forEach((card) => {
+    setPlaying(card, false);
+    observer.observe(card);
   });
 }
 
@@ -227,11 +286,10 @@ if (document.documentElement.classList.contains('is-preloading')) {
   lenis.stop();
 }
 
-window.addEventListener('scroll', () => setNavScrolled(window.scrollY), { passive: true });
-
 initNav();
 initMobileMenu(lenis);
 initServiceGlow();
+initServiceSvgPause();
 
 function revealCopy() {
   document.querySelectorAll('[data-copy]').forEach((el) => el.classList.add('is-copy-ready'));
@@ -246,30 +304,38 @@ function startCopy() {
   }
 }
 
-const fontsReady = document.fonts?.ready || Promise.resolve();
+function revealPage() {
+  try {
+    prepareHeroCopy();
+  } catch {
+    /* SplitText unavailable — startCopy will reveal instead */
+  }
+  markPageReady();
+}
+
 const preloaderReady = window.__qiramPreloader ?? Promise.resolve();
 
-document.addEventListener('qiram:reveal', () => lenis.start(), { once: true });
+document.addEventListener(
+  'qiram:reveal',
+  () => {
+    lenis.start();
+    bootVisuals();
+  },
+  { once: true },
+);
 
-Promise.all([fontsReady, whenWindowLoaded(), bootVisuals()])
-  .then(() => settle(240))
-  .then(() => {
-    try {
-      prepareHeroCopy();
-    } catch {
-      /* SplitText unavailable — startCopy will reveal instead */
-    }
-    markPageReady();
-  });
+revealPage();
 
 preloaderReady
   .then(() => {
     startCopy();
     lenis.start();
+    bootVisuals();
   })
   .catch(() => {
     startCopy();
     lenis.start();
+    bootVisuals();
   });
 
 if (import.meta.hot) {

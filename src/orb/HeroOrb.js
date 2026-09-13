@@ -1,8 +1,8 @@
 import * as THREE from 'three';
-import { EffectComposer } from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/postprocessing/EffectComposer.js';
-import { RenderPass } from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/postprocessing/RenderPass.js';
-import { UnrealBloomPass } from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/postprocessing/UnrealBloomPass.js';
-import { ShaderPass } from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/postprocessing/ShaderPass.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 import {
   shellVertex,
   shellFragment,
@@ -352,15 +352,19 @@ export class HeroOrb {
     this.hero = hero;
 
     this.mobile = window.matchMedia(MQ.mobile).matches;
+    this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     this.lowPower = this.mobile
+      || this.reducedMotion
       || (navigator.hardwareConcurrency || 8) <= 4
       || Boolean(navigator.connection?.saveData);
+    this.inView = true;
 
     this.clock = new THREE.Clock();
     this.time = 0;
     this.running = true;
 
     this.pointer = new THREE.Vector2(0, 0);
+    this.pointerRect = null;
     this.damped = new THREE.Vector2(0, 0);
     this.pocketX = 0;
     this.pocketY = 0;
@@ -386,11 +390,6 @@ export class HeroOrb {
     this.initPost();
     this.initEvents();
     this.setSize();
-    try {
-      this.renderer.compile(this.scene, this.camera);
-    } catch {
-      /* compile is best-effort; tick will still render */
-    }
     this.start();
   }
 
@@ -411,7 +410,7 @@ export class HeroOrb {
     // letting the browser downscale supersamples that edge properly. Retina
     // displays already have the samples and just take the 2.0 cap.
     this.pixelRatio = this.lowPower
-      ? Math.min(window.devicePixelRatio || 1, 1.5)
+      ? Math.min(window.devicePixelRatio || 1, 1.25)
       : Math.min(Math.max(window.devicePixelRatio || 1, 1.6), 2);
     this.renderer.setPixelRatio(this.pixelRatio);
   }
@@ -803,7 +802,8 @@ export class HeroOrb {
 
   initEvents() {
     this.onPointerMove = (event) => {
-      const rect = this.canvas.getBoundingClientRect();
+      if (!this.pointerRect) this.pointerRect = this.canvas.getBoundingClientRect();
+      const rect = this.pointerRect;
       if (!rect.width || !rect.height) return;
       this.pointer.set(
         ((event.clientX - rect.left) / rect.width) * 2 - 1,
@@ -812,7 +812,10 @@ export class HeroOrb {
     };
     window.addEventListener('pointermove', this.onPointerMove, { passive: true });
 
-    this.resizeObserver = new ResizeObserver(() => this.setSize());
+    this.resizeObserver = new ResizeObserver(() => {
+      this.pointerRect = null;
+      this.setSize();
+    });
     this.resizeObserver.observe(this.canvas.parentElement);
     if (this.hero && this.hero !== this.canvas.parentElement) {
       this.resizeObserver.observe(this.hero);
@@ -820,9 +823,21 @@ export class HeroOrb {
 
     this.onVisibility = () => {
       if (document.visibilityState === 'hidden') this.stop();
-      else this.start();
+      else if (this.inView) this.start();
     };
     document.addEventListener('visibilitychange', this.onVisibility);
+
+    const watch = this.hero || this.canvas.parentElement || this.canvas;
+    this.viewObserver = new IntersectionObserver(
+      (entries) => {
+        this.inView = entries.some((entry) => entry.isIntersecting);
+        if (document.visibilityState === 'hidden') return;
+        if (this.inView) this.start();
+        else this.stop();
+      },
+      { rootMargin: '15% 0px', threshold: 0.01 },
+    );
+    this.viewObserver.observe(watch);
   }
 
   setSize() {
@@ -969,9 +984,10 @@ export class HeroOrb {
     this.composer.render();
     if (this._resolveReady && this._hasSized) {
       this._readyFrames += 1;
-      if (this._readyFrames >= 3) {
+      if (this._readyFrames >= 2) {
         const done = this._resolveReady;
         this._resolveReady = null;
+        this.canvas.parentElement?.classList.add('is-live');
         done();
       }
     }
@@ -998,6 +1014,7 @@ export class HeroOrb {
     this.stop();
     window.removeEventListener('pointermove', this.onPointerMove);
     document.removeEventListener('visibilitychange', this.onVisibility);
+    this.viewObserver?.disconnect();
     this.resizeObserver?.disconnect();
     this.disposables.forEach((d) => d.dispose?.());
     this.composer?.dispose();

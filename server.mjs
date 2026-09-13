@@ -13,9 +13,29 @@ const types = {
   '.css': 'text/css; charset=utf-8',
   '.svg': 'image/svg+xml',
   '.json': 'application/json',
+  '.woff': 'font/woff',
   '.woff2': 'font/woff2',
   '.map': 'application/json',
+  '.png': 'image/png',
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.webp': 'image/webp',
+  '.ico': 'image/x-icon',
 };
+
+function cacheControl(file, url) {
+  const ext = path.extname(file);
+  if (ext === '.html') {
+    return 'no-cache, must-revalidate';
+  }
+  if (url.includes('?v=') || url.includes('?v%3D')) {
+    return 'public, max-age=31536000, immutable';
+  }
+  if (['.js', '.mjs', '.css', '.svg', '.woff', '.woff2', '.png', '.jpg', '.jpeg', '.webp', '.ico'].includes(ext)) {
+    return 'public, max-age=86400';
+  }
+  return 'public, max-age=300';
+}
 
 const server = http.createServer((req, res) => {
   const raw = req.url || '/';
@@ -44,7 +64,7 @@ const server = http.createServer((req, res) => {
     }
     res.writeHead(200, {
       'content-type': types[path.extname(file)] || 'application/octet-stream',
-      'cache-control': 'no-store',
+      'cache-control': cacheControl(file, raw),
     });
     res.end(data);
   });
