@@ -4,7 +4,7 @@ import { initCopy, playHeroCopy, prepareHeroCopy } from './text/Copy.js';
 import { initSmoothScroll } from './scroll/smooth.js';
 import { initPreloader, markPageReady } from './preloader/Preloader.js';
 
-window.__qiramPreloader = initPreloader();
+window.__qiramPreloader ??= initPreloader();
 
 const gooeyNavs = [initGooeyNav(document.querySelector('.nav-links'))];
 const navEl = document.querySelector('.nav');

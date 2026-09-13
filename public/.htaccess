@@ -16,6 +16,7 @@ AddType text/css .css
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
   <FilesMatch "\.(js|mjs|css)$">
+    Header unset Expires
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
   <FilesMatch "-[A-Za-z0-9]{8}\.(js|mjs|css)$">
