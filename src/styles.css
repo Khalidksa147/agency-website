@@ -28,6 +28,7 @@
 
 html {
   scroll-behavior: auto;
+  scrollbar-gutter: stable;
 }
 
 html.lenis,
@@ -121,9 +122,18 @@ html.is-preloading body {
   overflow: hidden;
 }
 
-html.is-preloading .preloader {
+html.is-preloading .preloader,
+.preloader.is-leaving {
   display: flex;
   pointer-events: auto;
+}
+
+.preloader[hidden] {
+  display: none !important;
+}
+
+html.is-preloading:not(.is-intro) .preloader__word {
+  visibility: hidden;
 }
 
 .preloader {
@@ -139,7 +149,7 @@ html.is-preloading .preloader {
 }
 
 .preloader.is-leaving {
-  transform: translateY(-100%);
+  transform: translateY(calc(-100% - 300px));
 }
 
 .preloader__svg {

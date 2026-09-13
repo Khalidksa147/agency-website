@@ -88,6 +88,9 @@ export class FloatingLines {
     this.el = el;
     this.raf = 0;
     this.running = false;
+    this.ready = new Promise((resolve) => {
+      this._resolveReady = resolve;
+    });
 
     const colors = (options.colors || themeColors()).slice(0, 8);
     const gradient = Array.from({ length: 8 }, () => new THREE.Vector3(1, 1, 1));
@@ -149,7 +152,7 @@ export class FloatingLines {
     this.resize();
 
     document.addEventListener('visibilitychange', this.onVisibility);
-    if (document.visibilityState !== 'hidden') this.start();
+    this.start();
   }
 
   waveY() {
@@ -168,6 +171,10 @@ export class FloatingLines {
       1
     );
     this.uniforms.topWavePosition.value.y = this.waveY();
+  }
+
+  whenReady() {
+    return this.ready;
   }
 
   start() {
@@ -191,6 +198,11 @@ export class FloatingLines {
     if (!this.running) return;
     this.uniforms.iTime.value = this.clock.getElapsedTime();
     this.renderer.render(this.scene, this.camera);
+    if (this._resolveReady) {
+      const done = this._resolveReady;
+      this._resolveReady = null;
+      done();
+    }
     this.raf = requestAnimationFrame(this.tick);
   }
 

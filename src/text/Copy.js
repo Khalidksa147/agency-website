@@ -4,9 +4,13 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(SplitText, ScrollTrigger);
 
-const splits = [];
+const HERO_LIFT_DELAY = 0.1;
 
-function animateElement(element) {
+const splits = [];
+const heroPlayers = new Map();
+let observer = null;
+
+function animateElement(element, { deferHero = false } = {}) {
   const animateOnScroll = element.dataset.copyScroll !== 'false';
   const delay = Number(element.dataset.copyDelay || 0);
   const targets = element.hasAttribute('data-copy-wrapper')
@@ -38,6 +42,20 @@ function animateElement(element) {
           delay,
         };
 
+        if (!animateOnScroll && deferHero) {
+          gsap.set(self.lines, { yPercent: 100 });
+          heroPlayers.set(element, () =>
+            gsap.to(self.lines, {
+              yPercent: 0,
+              duration: props.duration,
+              stagger: props.stagger,
+              ease: props.ease,
+              delay: delay + HERO_LIFT_DELAY,
+            }),
+          );
+          return;
+        }
+
         if (animateOnScroll) {
           return gsap.from(self.lines, {
             ...props,
@@ -49,7 +67,10 @@ function animateElement(element) {
           });
         }
 
-        return gsap.from(self.lines, props);
+        return gsap.from(self.lines, {
+          ...props,
+          delay: delay + HERO_LIFT_DELAY,
+        });
       },
     });
 
@@ -57,14 +78,58 @@ function animateElement(element) {
   });
 }
 
+function observeRest() {
+  if (observer) return;
+  const rest = [...document.querySelectorAll('[data-copy]')].filter(
+    (el) => el.dataset.copyScroll !== 'false',
+  );
+  if (!rest.length) return;
+
+  observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        observer.unobserve(entry.target);
+        animateElement(entry.target);
+      });
+    },
+    { rootMargin: '45% 0px', threshold: 0.01 },
+  );
+  rest.forEach((el) => observer.observe(el));
+}
+
 export function revertCopy() {
+  observer?.disconnect();
+  observer = null;
+  heroPlayers.clear();
   splits.splice(0).forEach((split) => split.revert());
   document.querySelectorAll('[data-copy]').forEach((el) => {
     el.classList.remove('is-copy-ready');
   });
 }
 
-export function initCopy() {
-  revertCopy();
-  document.querySelectorAll('[data-copy]').forEach(animateElement);
+export function prepareHeroCopy() {
+  if (heroPlayers.size) return;
+  document
+    .querySelectorAll('[data-copy]')
+    .forEach((el) => {
+      if (el.dataset.copyScroll === 'false') animateElement(el, { deferHero: true });
+    });
+}
+
+export function playHeroCopy() {
+  if (!heroPlayers.size) return false;
+  heroPlayers.forEach((play) => play());
+  heroPlayers.clear();
+  return true;
+}
+
+export function initCopy({ skipHero = false } = {}) {
+  if (!skipHero) {
+    revertCopy();
+    document.querySelectorAll('[data-copy]').forEach((el) => {
+      if (el.dataset.copyScroll === 'false') animateElement(el);
+    });
+  }
+  observeRest();
 }

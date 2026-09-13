@@ -1,4 +1,4 @@
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
+import * as THREE from 'three';
 import { EffectComposer } from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/postprocessing/UnrealBloomPass.js';
@@ -370,6 +370,11 @@ export class HeroOrb {
     this.orbits = [];
     this.pearls = [];
     this.disposables = [];
+    this._readyFrames = 0;
+    this._hasSized = false;
+    this.ready = new Promise((resolve) => {
+      this._resolveReady = resolve;
+    });
 
     this.initRenderer();
     this.initScene();
@@ -381,6 +386,11 @@ export class HeroOrb {
     this.initPost();
     this.initEvents();
     this.setSize();
+    try {
+      this.renderer.compile(this.scene, this.camera);
+    } catch {
+      /* compile is best-effort; tick will still render */
+    }
     this.start();
   }
 
@@ -819,6 +829,7 @@ export class HeroOrb {
     const parent = this.canvas.parentElement;
     const width = Math.max(parent.clientWidth, 1);
     const height = Math.max(parent.clientHeight, 1);
+    this._hasSized = width > 80 && height > 80;
 
     this.renderer.setSize(width, height, false);
     this.composer.setSize(width, height);
@@ -956,13 +967,25 @@ export class HeroOrb {
     this.glow.material.opacity = 0.42 * (1 + Math.sin(t * 0.19) * 0.12);
 
     this.composer.render();
+    if (this._resolveReady && this._hasSized) {
+      this._readyFrames += 1;
+      if (this._readyFrames >= 3) {
+        const done = this._resolveReady;
+        this._resolveReady = null;
+        done();
+      }
+    }
   };
+
+  whenReady() {
+    return this.ready;
+  }
 
   start() {
     if (this.running && this.frame) return;
     this.running = true;
     this.clock.getDelta();
-    this.frame = requestAnimationFrame(this.tick);
+    this.tick();
   }
 
   stop() {

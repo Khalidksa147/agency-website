@@ -18,8 +18,16 @@ const types = {
 };
 
 const server = http.createServer((req, res) => {
-  const urlPath = decodeURIComponent((req.url || '/').split('?')[0]);
-  const relative = urlPath === '/' ? 'index.html' : urlPath.replace(/^\/+/, '');
+  const raw = req.url || '/';
+  const qIndex = raw.indexOf('?');
+  const urlPath = decodeURIComponent(qIndex === -1 ? raw : raw.slice(0, qIndex));
+
+  const relative =
+    urlPath === '/'
+      ? 'index.html'
+      : urlPath === '/ar' || urlPath === '/ar/'
+        ? 'ar/index.html'
+        : urlPath.replace(/^\/+/, '');
   const file = path.normalize(path.join(root, relative));
 
   if (!file.startsWith(root)) {

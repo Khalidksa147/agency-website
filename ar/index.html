@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -59,7 +59,7 @@
       .preloader[hidden] { display: none !important; }
       .preloader.is-leaving { transform: translateY(calc(-100% - 300px)); transition: transform 0.8s cubic-bezier(0.76, 0, 0.24, 1); }
     </style>
-    <title>QIRAM — Digital studio for the Gulf</title>
+    <title>قيرام — استوديو رقمي للخليج</title>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14.5' fill='none' stroke='%23D7FF4D' stroke-width='1.4'/%3E%3Ctext x='16' y='21' text-anchor='middle' font-size='14' fill='%23D7FF4D' font-family='Georgia,serif'%3EQ%3C/text%3E%3C/svg%3E" />
     <link rel="stylesheet" href="/src/styles.css?v=20260913m" />
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
@@ -93,7 +93,7 @@
     </script>
     <meta
       name="description"
-      content="QIRAM is a boutique digital studio for websites, web apps, UX/UI and brand systems — designed with the same level of detail in Arabic and English."
+      content="قيرام استوديو متخصص في المواقع والتطبيقات وتجربة المستخدم وأنظمة الهوية — بنفس مستوى العناية بالعربية والإنجليزية."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -126,7 +126,7 @@
     </svg>
 
     <header class="nav">
-      <a class="logo" href="#top" aria-label="QIRAM home">
+      <a class="logo" href="/ar/" aria-label="قيرام الرئيسية">
         <span class="logo-mark" aria-hidden="true">Q</span>
         <span class="logo-word">QIRAM</span>
       </a>
@@ -134,19 +134,19 @@
       <nav class="nav-links" aria-label="Primary">
         <ul>
           <li class="is-active">
-            <a href="#top" class="is-active" data-i18n="nav.home">Home</a>
+            <a href="#top" class="is-active" data-i18n="nav.home">الرئيسية</a>
           </li>
           <li>
-            <a href="#services" data-i18n="nav.services">Services</a>
+            <a href="#services" data-i18n="nav.services">خدماتنا</a>
           </li>
           <li>
-            <a href="#work" data-i18n="nav.work">Work</a>
+            <a href="#work" data-i18n="nav.work">أعمالنا</a>
           </li>
           <li>
-            <a href="#about" data-i18n="nav.about">About</a>
+            <a href="#about" data-i18n="nav.about">عن الاستوديو</a>
           </li>
           <li>
-            <a href="#contact" data-i18n="nav.contact">Contact</a>
+            <a href="#contact" data-i18n="nav.contact">تواصل</a>
           </li>
         </ul>
         <span class="gooey-effect gooey-filter" aria-hidden="true"></span>
@@ -155,17 +155,17 @@
 
       <div class="nav-end">
         <div class="lang" role="group" aria-label="Language">
-          <a class="lang-btn is-active" href="/" hreflang="en">EN</a>
+          <a class="lang-btn" href="/" hreflang="en">EN</a>
           <span class="lang-sep">/</span>
-          <a class="lang-btn" href="/ar/" hreflang="ar">العربية</a>
+          <a class="lang-btn is-active" href="/ar/" hreflang="ar">العربية</a>
         </div>
         <button
           class="menu-btn"
           type="button"
-          aria-label="Open menu"
+          aria-label="فتح القائمة"
           aria-expanded="false"
-          data-label-open="Open menu"
-          data-label-close="Close menu"
+          data-label-open="فتح القائمة"
+          data-label-close="إغلاق القائمة"
         >
           <span class="menu-btn__burger" aria-hidden="true"></span>
         </button>
@@ -176,27 +176,27 @@
       <div class="mobile-menu__body">
         <nav class="mobile-nav" aria-label="Mobile">
           <div class="mobile-nav__header">
-            <p data-i18n="nav.navigation">Navigation</p>
+            <p data-i18n="nav.navigation">التنقل</p>
           </div>
           <div class="mobile-nav__link is-active" data-href="#top">
             <div class="mobile-nav__indicator"></div>
-            <a href="#top" data-i18n="nav.home">Home</a>
+            <a href="#top" data-i18n="nav.home">الرئيسية</a>
           </div>
           <div class="mobile-nav__link" data-href="#services">
             <div class="mobile-nav__indicator"></div>
-            <a href="#services" data-i18n="nav.services">Services</a>
+            <a href="#services" data-i18n="nav.services">خدماتنا</a>
           </div>
           <div class="mobile-nav__link" data-href="#work">
             <div class="mobile-nav__indicator"></div>
-            <a href="#work" data-i18n="nav.work">Work</a>
+            <a href="#work" data-i18n="nav.work">أعمالنا</a>
           </div>
           <div class="mobile-nav__link" data-href="#about">
             <div class="mobile-nav__indicator"></div>
-            <a href="#about" data-i18n="nav.about">About</a>
+            <a href="#about" data-i18n="nav.about">عن الاستوديو</a>
           </div>
           <div class="mobile-nav__link" data-href="#contact">
             <div class="mobile-nav__indicator"></div>
-            <a href="#contact" data-i18n="nav.contact">Contact</a>
+            <a href="#contact" data-i18n="nav.contact">تواصل</a>
           </div>
         </nav>
       </div>
@@ -214,23 +214,21 @@
 
         <div class="hero-copy">
           <p class="eyebrow">
-            <span data-i18n="hero.eyebrow">Digital studio for the Gulf</span>
+            <span data-i18n="hero.eyebrow">استوديو رقمي للخليج</span>
             <span class="eyebrow-line" aria-hidden="true"></span>
           </p>
           <h1 data-copy data-copy-scroll="false" data-copy-delay="0.15">
-            <span data-i18n="hero.line1">We build</span>
-            <span class="accent" data-i18n="hero.line2">digital experiences</span>
-            <span data-i18n="hero.line3">made for the Gulf.</span>
+            <span data-i18n="hero.line1">نبني</span>
+            <span class="accent" data-i18n="hero.line2">تجارب رقمية</span>
+            <span data-i18n="hero.line3">صُنعت للخليج.</span>
           </h1>
-          <p class="lede" data-copy data-copy-scroll="false" data-copy-delay="0.5" data-i18n="hero.lede">
-            QIRAM is a boutique agency for websites, web apps, UX/UI and brand systems — designed with the same level of detail in Arabic and English.
-          </p>
+          <p class="lede" data-copy data-copy-scroll="false" data-copy-delay="0.5" data-i18n="hero.lede">قيرام استوديو متخصص في المواقع والتطبيقات وتجربة المستخدم وأنظمة الهوية — بنفس مستوى العناية بالعربية والإنجليزية.</p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="#contact">
-              <span data-i18n="hero.cta">Tell us what you’re building</span>
+              <span data-i18n="hero.cta">أخبرنا عما تبنيه</span>
               <span class="btn-arrow" aria-hidden="true">→</span>
             </a>
-            <a class="btn btn-ghost" href="#work" data-i18n="hero.secondary">See our work</a>
+            <a class="btn btn-ghost" href="#work" data-i18n="hero.secondary">شاهد أعمالنا</a>
           </div>
         </div>
 
@@ -244,7 +242,7 @@
         <div class="hero-footer">
           <a class="scroll-hint" href="#services">
             <span class="scroll-track" aria-hidden="true"></span>
-            <span data-i18n="hero.scroll">Scroll</span>
+            <span data-i18n="hero.scroll">تمرير</span>
           </a>
           <p class="hero-tags">Ideas × Design × Development</p>
         </div>
@@ -254,18 +252,18 @@
         <div class="services-head">
           <div class="services-head-copy">
             <p class="eyebrow">
-              <span data-i18n="services.kicker">Our services</span>
+              <span data-i18n="services.kicker">خدماتنا</span>
               <span class="eyebrow-line" aria-hidden="true"></span>
             </p>
             <h2 data-copy>
-              <span data-i18n="services.title.lead">Everything you need to build, grow and </span>
-              <span class="accent" data-i18n="services.title.accent">stand out.</span>
+              <span data-i18n="services.title.lead">كل ما تحتاجه لتبني وتنمو و</span>
+              <span class="accent" data-i18n="services.title.accent">تتميز.</span>
             </h2>
           </div>
           <div class="services-head-aside">
-            <p data-copy data-i18n="services.lede">End-to-end digital solutions for ambitious brands across the GCC.</p>
+            <p data-copy data-i18n="services.lede">حلول رقمية متكاملة للعلامات الطموحة في دول الخليج.</p>
             <a class="services-explore" href="#contact">
-              <span data-i18n="services.explore">Explore all services</span>
+              <span data-i18n="services.explore">استكشف كل الخدمات</span>
               <span aria-hidden="true">→</span>
             </a>
           </div>
@@ -428,8 +426,8 @@
                 </g>
               </svg>
             </div>
-            <h3 data-copy data-i18n="services.web.title">Web Design &amp; Development</h3>
-            <p data-copy data-i18n="services.web.body">Modern, fast and scalable websites built for performance, user experience and business growth.</p>
+            <h3 data-copy data-i18n="services.web.title">تصميم وتطوير المواقع</h3>
+            <p data-copy data-i18n="services.web.body">مواقع حديثة وسريعة وقابلة للتوسع، مبنية للأداء وتجربة المستخدم ونمو الأعمال.</p>
             <a class="service-go" href="#contact" aria-label="Web Design & Development">
               <span aria-hidden="true">→</span>
             </a>
@@ -654,8 +652,8 @@
                 </g>
               </svg>
             </div>
-            <h3 data-copy data-i18n="services.apps.title">Web Apps &amp; Platforms</h3>
-            <p data-copy data-i18n="services.apps.body">Custom web applications and digital platforms designed for scale, efficiency and long-term success.</p>
+            <h3 data-copy data-i18n="services.apps.title">تطبيقات ومنصات ويب</h3>
+            <p data-copy data-i18n="services.apps.body">تطبيقات ومنصات رقمية مصممة للتوسع والكفاءة والنجاح طويل الأمد.</p>
             <a class="service-go" href="#contact" aria-label="Web Apps & Platforms">
               <span aria-hidden="true">→</span>
             </a>
@@ -801,8 +799,8 @@
                 </g>
               </svg>
             </div>
-            <h3 data-copy data-i18n="services.ux.title">UX/UI &amp; Product Design</h3>
-            <p data-copy data-i18n="services.ux.body">User-centered design systems and interfaces that turn ideas into seamless experiences.</p>
+            <h3 data-copy data-i18n="services.ux.title">تجربة المستخدم وتصميم المنتج</h3>
+            <p data-copy data-i18n="services.ux.body">أنظمة تصميم وواجهات تتمحور حول المستخدم وتحوّل الأفكار إلى تجارب سلسة.</p>
             <a class="service-go" href="#contact" aria-label="UX/UI & Product Design">
               <span aria-hidden="true">→</span>
             </a>
@@ -1104,8 +1102,8 @@
                 </g>
               </svg>
             </div>
-            <h3 data-copy data-i18n="services.brand.title">Branding &amp; Identity</h3>
-            <p data-copy data-i18n="services.brand.body">Distinctive brand identities, visual systems and guidelines that build recognition and trust.</p>
+            <h3 data-copy data-i18n="services.brand.title">الهوية والعلامة</h3>
+            <p data-copy data-i18n="services.brand.body">هويات بصرية وأنظمة إرشادية تبني التعرف والثقة.</p>
             <a class="service-go" href="#contact" aria-label="Branding & Identity">
               <span aria-hidden="true">→</span>
             </a>
@@ -1115,38 +1113,38 @@
 
       <section class="section" id="work">
         <div class="section-head">
-          <p class="eyebrow"><span data-i18n="work.kicker">Selected work</span></p>
-          <h2 data-copy data-i18n="work.title">A few recent engagements.</h2>
+          <p class="eyebrow"><span data-i18n="work.kicker">أعمال مختارة</span></p>
+          <h2 data-copy data-i18n="work.title">بعض التعاونات الأخيرة.</h2>
         </div>
         <div class="work-list">
           <article class="work-row">
             <p class="work-index">01</p>
             <div>
-              <h3 data-copy data-i18n="work.a.title">Maison Nur — private membership</h3>
-              <p data-copy data-i18n="work.a.body">A bilingual digital house for a Gulf hospitality brand. Site, booking, and identity system.</p>
+              <h3 data-copy data-i18n="work.a.title">ميزون نور — عضوية خاصة</h3>
+              <p data-copy data-i18n="work.a.body">بيت رقمي ثنائي اللغة لعلامة ضيافة خليجية. موقع، حجز، ونظام هوية.</p>
             </div>
             <p class="work-tag">Brand + Web</p>
           </article>
           <article class="work-row">
             <p class="work-index">02</p>
             <div>
-              <h3 data-copy data-i18n="work.b.title">Hayy Finance — product OS</h3>
-              <p data-copy data-i18n="work.b.body">A calm wealth platform with Arabic-first navigation and a glass-led visual language.</p>
+              <h3 data-copy data-i18n="work.b.title">حي فاينانس — نظام المنتج</h3>
+              <p data-copy data-i18n="work.b.body">منصة ثروة هادئة بتنقّل عربي أولاً ولغة بصرية زجاجية.</p>
             </div>
             <p class="work-tag">UX + App</p>
           </article>
           <article class="work-row">
             <p class="work-index">03</p>
             <div>
-              <h3 data-copy data-i18n="work.c.title">Noor Labs — research studio</h3>
-              <p data-copy data-i18n="work.c.body">An editorial presence for a climate studio, built to hold long-form work in two languages.</p>
+              <h3 data-copy data-i18n="work.c.title">نور لابز — استوديو بحثي</h3>
+              <p data-copy data-i18n="work.c.body">حضور تحريري لاستوديو مناخي يستوعب النصوص الطويلة بلغتين.</p>
             </div>
             <p class="work-tag">Web + Editorial</p>
           </article>
         </div>
       </section>
 
-      <section class="bilingual" id="edge" data-site-lang="en" aria-label="One brand, two languages">
+      <section class="bilingual" id="edge" data-site-lang="ar" aria-label="One brand, two languages">
         <div class="bilingual-inner">
           <div class="bilingual-col is-en">
             <p class="eyebrow">
@@ -1192,17 +1190,15 @@
         <div class="process-head">
           <div>
             <p class="eyebrow">
-              <span data-i18n="process.kicker">Our process</span>
+              <span data-i18n="process.kicker">عمليتنا</span>
               <span class="eyebrow-line"></span>
             </p>
             <h2 data-copy>
-              <span data-i18n="process.title.lead">A clear path from idea to </span>
-              <span class="accent" data-i18n="process.title.accent">impact.</span>
+              <span data-i18n="process.title.lead">مسار واضح من الفكرة إلى </span>
+              <span class="accent" data-i18n="process.title.accent">الأثر.</span>
             </h2>
           </div>
-          <p class="process-lede" data-copy data-i18n="process.lede">
-            We shape ideas into digital experiences through a structured, collaborative and human-centered process. Here’s how we turn vision into real outcomes.
-          </p>
+          <p class="process-lede" data-copy data-i18n="process.lede">نحوّل الأفكار إلى تجارب رقمية عبر عملية منظمة وتعاونية تتمحور حول الإنسان. هكذا نحوّل الرؤية إلى نتائج حقيقية.</p>
         </div>
         <ol class="process-steps">
           <li>
@@ -1210,32 +1206,32 @@
               <span class="process-num">01</span>
               <span class="process-line"></span>
             </div>
-            <h3 data-copy data-i18n="process.1.title">Discover</h3>
-            <p data-copy data-i18n="process.1.body">We learn about your goals, audience and market.</p>
+            <h3 data-copy data-i18n="process.1.title">اكتشف</h3>
+            <p data-copy data-i18n="process.1.body">نتعرّف على أهدافك وجمهورك والسوق.</p>
           </li>
           <li>
             <div class="process-rail" aria-hidden="true">
               <span class="process-num">02</span>
               <span class="process-line"></span>
             </div>
-            <h3 data-copy data-i18n="process.2.title">Shape</h3>
-            <p data-copy data-i18n="process.2.body">We define the strategy, structure and design.</p>
+            <h3 data-copy data-i18n="process.2.title">شكّل</h3>
+            <p data-copy data-i18n="process.2.body">نحدّد الاستراتيجية والبنية والتصميم.</p>
           </li>
           <li>
             <div class="process-rail" aria-hidden="true">
               <span class="process-num">03</span>
               <span class="process-line"></span>
             </div>
-            <h3 data-copy data-i18n="process.3.title">Build</h3>
-            <p data-copy data-i18n="process.3.body">We develop, test and bring it to life.</p>
+            <h3 data-copy data-i18n="process.3.title">ابنِ</h3>
+            <p data-copy data-i18n="process.3.body">نطوّر ونختبر ونحوّله إلى واقع.</p>
           </li>
           <li>
             <div class="process-rail" aria-hidden="true">
               <span class="process-num">04</span>
               <span class="process-line"></span>
             </div>
-            <h3 data-copy data-i18n="process.4.title">Launch</h3>
-            <p data-copy data-i18n="process.4.body">We go live and support your continued growth.</p>
+            <h3 data-copy data-i18n="process.4.title">أطلق</h3>
+            <p data-copy data-i18n="process.4.body">نطلق المشروع وندعم نموّك المستمر.</p>
           </li>
         </ol>
       </section>
@@ -1244,66 +1240,62 @@
         <div class="about-main">
           <div class="about-message">
             <p class="eyebrow">
-              <span data-i18n="contact.kicker">Send us a message</span>
+              <span data-i18n="contact.kicker">أرسل لنا رسالة</span>
               <span class="eyebrow-line"></span>
             </p>
-            <h2 data-copy data-i18n="contact.title">Tell us about your project.</h2>
-            <p class="about-lede" data-copy data-i18n="contact.lede">
-              Share a few details about what you’re building, your timeline and goals. The more we know, the better we can help.
-            </p>
+            <h2 data-copy data-i18n="contact.title">أخبرنا عن مشروعك.</h2>
+            <p class="about-lede" data-copy data-i18n="contact.lede">شاركنا بعض التفاصيل عما تبنيه، والجدول الزمني والأهداف. كلما عرفنا أكثر، ساعدنا بشكل أفضل.</p>
             <form class="contact-form" action="#" method="post">
               <label>
-                <span class="vh" data-i18n="contact.name">Full name</span>
-                <input type="text" name="name" autocomplete="name" required data-i18n-placeholder="contact.name.ph" placeholder="Full name *" />
+                <span class="vh" data-i18n="contact.name">الاسم الكامل</span>
+                <input type="text" name="name" autocomplete="name" required data-i18n-placeholder="contact.name.ph" placeholder="الاسم الكامل *" />
               </label>
               <label>
-                <span class="vh" data-i18n="contact.email">Email address</span>
-                <input type="email" name="email" autocomplete="email" required data-i18n-placeholder="contact.email.ph" placeholder="Email address *" />
+                <span class="vh" data-i18n="contact.email">البريد الإلكتروني</span>
+                <input type="email" name="email" autocomplete="email" required data-i18n-placeholder="contact.email.ph" placeholder="البريد الإلكتروني *" />
               </label>
               <label>
-                <span class="vh" data-i18n="contact.company">Company name</span>
-                <input type="text" name="company" autocomplete="organization" data-i18n-placeholder="contact.company.ph" placeholder="Company name" />
+                <span class="vh" data-i18n="contact.company">اسم الشركة</span>
+                <input type="text" name="company" autocomplete="organization" data-i18n-placeholder="contact.company.ph" placeholder="اسم الشركة" />
               </label>
               <label>
-                <span class="vh" data-i18n="contact.phone">Mobile number</span>
-                <input type="tel" name="phone" autocomplete="tel" data-i18n-placeholder="contact.phone.ph" placeholder="Mobile number" />
+                <span class="vh" data-i18n="contact.phone">رقم الجوال</span>
+                <input type="tel" name="phone" autocomplete="tel" data-i18n-placeholder="contact.phone.ph" placeholder="رقم الجوال" />
               </label>
               <label class="full contact-select">
-                <span class="vh" data-i18n="contact.type">Project type</span>
+                <span class="vh" data-i18n="contact.type">نوع المشروع</span>
                 <select name="type" class="contact-select-native">
-                  <option value="" disabled selected data-i18n="contact.type.ph">Select an option</option>
-                  <option value="website" data-i18n="contact.type.web">Website</option>
-                  <option value="app" data-i18n="contact.type.app">Web app</option>
-                  <option value="ux" data-i18n="contact.type.ux">UX/UI</option>
-                  <option value="brand" data-i18n="contact.type.brand">Branding</option>
-                  <option value="other" data-i18n="contact.type.other">Other</option>
+                  <option value="" disabled selected data-i18n="contact.type.ph">اختر خياراً</option>
+                  <option value="website" data-i18n="contact.type.web">موقع</option>
+                  <option value="app" data-i18n="contact.type.app">تطبيق ويب</option>
+                  <option value="ux" data-i18n="contact.type.ux">تجربة المستخدم</option>
+                  <option value="brand" data-i18n="contact.type.brand">هوية</option>
+                  <option value="other" data-i18n="contact.type.other">أخرى</option>
                 </select>
                 <button type="button" class="contact-select-btn" aria-haspopup="listbox" aria-expanded="false">
-                  <span data-i18n="contact.type.ph">Select an option</span>
+                  <span data-i18n="contact.type.ph">اختر خياراً</span>
                 </button>
                 <ul class="contact-select-list" role="listbox" hidden></ul>
               </label>
               <label class="full">
-                <span class="vh" data-i18n="contact.message">Tell us about your project</span>
-                <textarea name="message" rows="6" maxlength="500" required data-i18n-placeholder="contact.message.ph" placeholder="Your message.."></textarea>
+                <span class="vh" data-i18n="contact.message">أخبرنا عن مشروعك</span>
+                <textarea name="message" rows="6" maxlength="500" required data-i18n-placeholder="contact.message.ph" placeholder="رسالتك.."></textarea>
                 <span class="contact-count"><span data-count>0</span>/500</span>
               </label>
               <button class="btn btn-primary" type="submit">
-                <span data-i18n="contact.send">Send message</span>
+                <span data-i18n="contact.send">أرسل الرسالة</span>
                 <span class="btn-arrow" aria-hidden="true">→</span>
               </button>
             </form>
           </div>
           <div class="about-aside" id="about">
             <h2 data-copy>
-              <span data-i18n="about.title.a">The point is </span>
-              <span class="accent" data-i18n="about.title.not">not</span>
-              <span data-i18n="about.title.b"> to make a website. The point is to make your business feel </span>
-              <span class="accent" data-i18n="about.title.end">inevitable.</span>
+              <span data-i18n="about.title.a">الغاية </span>
+              <span class="accent" data-i18n="about.title.not">ليست</span>
+              <span data-i18n="about.title.b"> صنع موقع. الغاية أن تجعل عملك يبدو </span>
+              <span class="accent" data-i18n="about.title.end">حتمياً.</span>
             </h2>
-            <p class="about-lede" data-copy data-i18n="about.lede">
-              We design and develop in both English and Arabic, creating seamless, culturally relevant experiences for the GCC market.
-            </p>
+            <p class="about-lede" data-copy data-i18n="about.lede">نصمم ونطور بالإنجليزية والعربية لتقديم تجارب رقمية سلسة ومتكاملة ثقافياً لسوق دول الخليج.</p>
             <ul class="about-points">
               <li>
                 <span class="about-icon" aria-hidden="true">
@@ -1313,8 +1305,8 @@
                   </svg>
                 </span>
                 <p data-copy>
-                  <strong data-i18n="about.p1.title">Bilingual by design</strong>
-                  <span data-i18n="about.p1.body">English + Arabic.</span>
+                  <strong data-i18n="about.p1.title">ثنائي اللغة بالتصميم</strong>
+                  <span data-i18n="about.p1.body">الإنجليزية والعربية.</span>
                 </p>
               </li>
               <li>
@@ -1325,8 +1317,8 @@
                   </svg>
                 </span>
                 <p data-copy>
-                  <strong data-i18n="about.p2.title">Regionally aligned</strong>
-                  <span data-i18n="about.p2.body">GCC market expertise.</span>
+                  <strong data-i18n="about.p2.title">متوافق إقليمياً</strong>
+                  <span data-i18n="about.p2.body">خبرة سوق الخليج.</span>
                 </p>
               </li>
               <li>
@@ -1337,15 +1329,15 @@
                   </svg>
                 </span>
                 <p data-copy>
-                  <strong data-i18n="about.p3.title">Future ready</strong>
-                  <span data-i18n="about.p3.body">Built for what’s next.</span>
+                  <strong data-i18n="about.p3.title">جاهز للمستقبل</strong>
+                  <span data-i18n="about.p3.body">مبني لما هو قادم.</span>
                 </p>
               </li>
             </ul>
           </div>
         </div>
         <div class="about-trusted">
-          <p class="about-trusted-kicker" data-i18n="about.trusted">Trusted by forward-thinking brands</p>
+          <p class="about-trusted-kicker" data-i18n="about.trusted">موثوق به من علامات تفكّر بالمستقبل</p>
           <ul class="about-brands">
             <li>talabat</li>
             <li>AL RIFAI</li>
@@ -1357,7 +1349,7 @@
               </span>
             </li>
             <li>noon</li>
-            <li data-i18n="about.more">+ and more</li>
+            <li data-i18n="about.more">+ والمزيد</li>
           </ul>
         </div>
       </section>
@@ -1365,7 +1357,7 @@
 
     <footer class="site-footer">
       <span>© QIRAM</span>
-      <span data-i18n="footer.mark">Digital studio for the Gulf</span>
+      <span data-i18n="footer.mark">استوديو رقمي للخليج</span>
     </footer>
 
     <noscript>
