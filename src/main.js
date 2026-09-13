@@ -1,5 +1,3 @@
-import { HeroOrb } from './orb/HeroOrb.js';
-import { FloatingLines } from './lines/FloatingLines.js';
 import { initGooeyNav } from './nav/GooeyNav.js';
 import { initMobileMenu } from './nav/MobileMenu.js';
 import { initCopy, revertCopy } from './text/Copy.js';
@@ -257,9 +255,16 @@ function initNav() {
 
 const canvas = document.querySelector('#orb-canvas');
 const hero = document.querySelector('.hero');
-const orb = new HeroOrb(canvas, { hero });
 const linesEl = document.querySelector('.page-lines');
-const lines = linesEl ? new FloatingLines(linesEl) : null;
+let orb = null;
+let lines = null;
+
+import('./orb/HeroOrb.js').then(({ HeroOrb }) => {
+  orb = new HeroOrb(canvas, { hero });
+});
+import('./lines/FloatingLines.js').then(({ FloatingLines }) => {
+  if (linesEl) lines = new FloatingLines(linesEl);
+});
 
 document.querySelectorAll('.lang-btn').forEach((btn) => {
   btn.addEventListener('click', () => applyLanguage(btn.dataset.lang));
@@ -432,7 +437,7 @@ function startCopy() {
 }
 
 const fontsReady = document.fonts?.ready || Promise.resolve();
-const preloaderReady = initPreloader();
+const preloaderReady = window.__qiramPreloader ?? initPreloader();
 
 Promise.all([fontsReady, preloaderReady])
   .then(() => {
@@ -446,7 +451,7 @@ Promise.all([fontsReady, preloaderReady])
 
 if (import.meta.hot) {
   import.meta.hot.dispose(() => {
-    orb.dispose();
+    orb?.dispose();
     lines?.dispose();
     lenis?.destroy();
   });

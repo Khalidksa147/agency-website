@@ -160,7 +160,7 @@ html.is-preloading .preloader {
   font-weight: 300;
   line-height: 1;
   letter-spacing: -0.03em;
-  opacity: 0;
+  opacity: 0.75;
 }
 
 .preloader__word[lang='ar'] {
@@ -518,13 +518,17 @@ body.menu-open .nav.is-scrolled {
   right: 0;
   height: 100vh;
   height: 100dvh;
-  width: 100%;
+  width: min(30rem, 100vw);
   z-index: 19;
   background: var(--menu-panel);
   color: #fff;
   font-family: var(--font-display);
   pointer-events: none;
   transform: translateX(110%);
+}
+
+.mobile-menu[hidden] {
+  display: none !important;
 }
 
 .mobile-menu.is-open {

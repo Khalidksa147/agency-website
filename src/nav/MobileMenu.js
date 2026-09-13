@@ -24,6 +24,7 @@ export function initMobileMenu(lenis) {
   const targetPath = () =>
     `M100 0 L200 0 L200 ${viewHeight()} L100 ${viewHeight()} Q100 ${viewHeight() / 2} 100 0`;
 
+  menu.hidden = false;
   curvePath.setAttribute('d', initialPath());
   gsap.set(menu, { x: offscreen() });
 
