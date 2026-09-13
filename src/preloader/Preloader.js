@@ -1,5 +1,3 @@
-import { gsap } from 'gsap';
-
 const STORAGE_KEY = 'qiram.preloader';
 
 const WORDS = [
@@ -13,6 +11,18 @@ const WORDS = [
   { text: 'Guten tag', lang: 'de' },
   { text: 'Hallo', lang: 'de' },
 ];
+
+const timers = [];
+
+function later(fn, ms) {
+  const id = window.setTimeout(fn, ms);
+  timers.push(id);
+  return id;
+}
+
+function clearTimers() {
+  timers.splice(0).forEach((id) => window.clearTimeout(id));
+}
 
 function forcePreloader() {
   try {
@@ -43,12 +53,18 @@ export function shouldPlayPreloader() {
   return !hasSeenPreloader();
 }
 
-function finish(root) {
+export function finishPreloader(root = document.getElementById('preloader')) {
+  clearTimers();
   document.documentElement.classList.remove('is-preloading');
   if (!root) return;
+  root.classList.remove('is-leaving');
   root.hidden = true;
   root.style.display = 'none';
   root.setAttribute('aria-hidden', 'true');
+}
+
+function finish(root) {
+  finishPreloader(root);
 }
 
 export function initPreloader() {
@@ -57,31 +73,13 @@ export function initPreloader() {
   const wordText = document.getElementById('preloader-word-text');
   const path = document.getElementById('preloader-path');
 
-  if (!root || !wordEl || !wordText || !path || !shouldPlayPreloader()) {
+  if (!root || !wordEl || !wordText || !shouldPlayPreloader()) {
     finish(root);
     return Promise.resolve(false);
   }
 
-  markPreloaderSeen();
   root.hidden = false;
   root.removeAttribute('aria-hidden');
-
-  const dimension = {
-    width: window.innerWidth,
-    height: window.innerHeight,
-  };
-
-  const getPaths = () => {
-    const initialPath = `M0 0 L${dimension.width} 0 L${dimension.width} ${dimension.height} Q${dimension.width / 2} ${dimension.height + 300} 0 ${dimension.height} L0 0`;
-    const targetPath = `M0 0 L${dimension.width} 0 L${dimension.width} ${dimension.height} Q${dimension.width / 2} ${dimension.height} 0 ${dimension.height} L0 0`;
-    return { initialPath, targetPath };
-  };
-
-  const setInitialPath = () => {
-    path.setAttribute('d', getPaths().initialPath);
-  };
-
-  setInitialPath();
 
   const setWord = (entry) => {
     wordText.textContent = entry.text;
@@ -89,69 +87,41 @@ export function initPreloader() {
     wordEl.dir = entry.lang === 'ar' ? 'rtl' : 'ltr';
   };
 
-  let index = 0;
-  setWord(WORDS[index]);
+  setWord(WORDS[0]);
 
-  gsap.to(wordEl, {
-    opacity: 0.75,
-    duration: 1,
-    delay: 0.2,
-  });
+  if (path) {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    path.setAttribute(
+      'd',
+      `M0 0 L${w} 0 L${w} ${h} Q${w / 2} ${h + 300} 0 ${h} L0 0`,
+    );
+  }
 
-  const cycleWords = () => {
-    if (index === WORDS.length - 1) return;
-    const delay = index <= 1 ? 1 : 0.15;
-    gsap.delayedCall(delay, () => {
-      index += 1;
-      setWord(WORDS[index]);
-      cycleWords();
-    });
-  };
-
-  cycleWords();
+  WORDS.slice(1).reduce((wait, entry, i) => {
+    const delay = i === 0 ? 1000 : 150;
+    later(() => setWord(entry), wait + delay);
+    return wait + delay;
+  }, 0);
 
   const featuredCount = 2;
-  const timeToLast = featuredCount * 1 + Math.max(WORDS.length - 1 - featuredCount, 0) * 0.15;
-  const totalDelay = timeToLast + 0.8;
-
-  const onResize = () => {
-    dimension.width = window.innerWidth;
-    dimension.height = window.innerHeight;
-    setInitialPath();
-  };
-
-  window.addEventListener('resize', onResize);
+  const timeToLast =
+    featuredCount * 1000 + Math.max(WORDS.length - 1 - featuredCount, 0) * 150;
+  const leaveAt = timeToLast + 800;
 
   return new Promise((resolve) => {
-    gsap.delayedCall(totalDelay, () => {
-      const { initialPath, targetPath } = getPaths();
-      const tl = gsap.timeline({
-        defaults: { ease: 'power3.inOut' },
-        onComplete: () => {
-          window.removeEventListener('resize', onResize);
-          finish(root);
-          resolve(true);
-        },
-      });
+    const done = (played) => {
+      markPreloaderSeen();
+      finish(root);
+      resolve(played);
+    };
 
-      tl.to(wordEl, { opacity: 0, duration: 0.3 }, 0);
-      tl.to(root, {
-        y: '-100vh',
-        duration: 0.8,
-        delay: 0.2,
-        ease: 'power4.inOut',
-      }, 0);
-      tl.fromTo(
-        path,
-        { attr: { d: initialPath } },
-        {
-          attr: { d: targetPath },
-          duration: 0.7,
-          delay: 0.3,
-          ease: 'power4.inOut',
-        },
-        0,
-      );
-    });
+    later(() => {
+      wordEl.style.opacity = '0';
+      root.classList.add('is-leaving');
+      later(() => done(true), 800);
+    }, leaveAt);
+
+    later(() => done(true), leaveAt + 2000);
   });
 }

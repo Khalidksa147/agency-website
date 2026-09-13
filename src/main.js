@@ -2,7 +2,6 @@ import { initGooeyNav } from './nav/GooeyNav.js';
 import { initMobileMenu } from './nav/MobileMenu.js';
 import { initCopy, revertCopy } from './text/Copy.js';
 import { initSmoothScroll } from './scroll/smooth.js';
-import { initPreloader } from './preloader/Preloader.js';
 
 const copy = {
   en: {
@@ -437,7 +436,7 @@ function startCopy() {
 }
 
 const fontsReady = document.fonts?.ready || Promise.resolve();
-const preloaderReady = window.__qiramPreloader ?? initPreloader();
+const preloaderReady = window.__qiramPreloader ?? Promise.resolve();
 
 Promise.all([fontsReady, preloaderReady])
   .then(() => {

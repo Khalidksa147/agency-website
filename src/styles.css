@@ -135,6 +135,11 @@ html.is-preloading .preloader {
   justify-content: center;
   background: #141516;
   pointer-events: none;
+  transition: transform 0.8s cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.preloader.is-leaving {
+  transform: translateY(-100%);
 }
 
 .preloader__svg {

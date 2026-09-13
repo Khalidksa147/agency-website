@@ -51,18 +51,25 @@
         flex: 0 0 auto;
       }
       .mobile-menu[hidden] { display: none !important; }
+      .preloader.is-leaving { transform: translateY(-100%); transition: transform 0.8s cubic-bezier(0.76, 0, 0.24, 1); }
     </style>
     <title>QIRAM — Digital studio for the Gulf</title>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14.5' fill='none' stroke='%23D7FF4D' stroke-width='1.4'/%3E%3Ctext x='16' y='21' text-anchor='middle' font-size='14' fill='%23D7FF4D' font-family='Georgia,serif'%3EQ%3C/text%3E%3C/svg%3E" />
-    <link rel="stylesheet" href="src/styles.css?v=20260913c" />
+    <link rel="stylesheet" href="src/styles.css?v=20260913d" />
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
-    <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/gsap@3.15.0/index.js" />
-    <link rel="modulepreload" href="src/preloader/Preloader.js" />
+    <link rel="modulepreload" href="src/preloader/Preloader.js?v=20260913d" />
     <script>
       window.setTimeout(() => {
-        if (document.documentElement.classList.contains('is-preloading')) return;
+        if (document.documentElement.classList.contains('is-preloading')) {
+          document.documentElement.classList.remove('is-preloading');
+          const root = document.getElementById('preloader');
+          if (root) {
+            root.hidden = true;
+            root.style.display = 'none';
+          }
+        }
         document.querySelectorAll('[data-copy]').forEach((el) => el.classList.add('is-copy-ready'));
-      }, 2500);
+      }, 9000);
     </script>
     <script type="importmap">
       {
@@ -1360,9 +1367,9 @@
       </style>
     </noscript>
     <script type="module">
-      import { initPreloader } from './src/preloader/Preloader.js';
+      import { initPreloader } from './src/preloader/Preloader.js?v=20260913d';
       window.__qiramPreloader = initPreloader();
     </script>
-    <script type="module" src="src/main.js?v=20260913c"></script>
+    <script type="module" src="src/main.js?v=20260913d"></script>
   </body>
 </html>
