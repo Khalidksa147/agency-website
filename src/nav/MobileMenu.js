@@ -1,5 +1,23 @@
 import { gsap } from 'gsap';
 
+function viewBox() {
+  const vv = window.visualViewport;
+  return {
+    width: vv?.width ?? window.innerWidth,
+    height: vv?.height ?? window.innerHeight,
+  };
+}
+
+function clipFromButton(btn) {
+  const rect = btn.getBoundingClientRect();
+  const { width, height } = viewBox();
+  const top = Math.max(0, rect.top);
+  const left = Math.max(0, rect.left);
+  const right = Math.max(0, width - rect.right);
+  const bottom = Math.max(0, height - rect.bottom);
+  return `inset(${top}px ${right}px ${bottom}px ${left}px round 25px)`;
+}
+
 export function initMobileMenu(lenis) {
   const btn = document.querySelector('.menu-btn');
   const slider = btn?.querySelector('.menu-btn__slider');
@@ -17,19 +35,13 @@ export function initMobileMenu(lenis) {
 
   const buildTimeline = () => {
     const rtl = isRtl();
-    const rect = btn.getBoundingClientRect();
-    const vw = window.innerWidth;
-    const insetX = Math.min(rect.left, vw - rect.right);
+    const fromClip = clipFromButton(btn);
 
-    gsap.set(menu, { clearProps: 'left,right' });
     gsap.set(menu, {
-      top: rect.top,
-      width: rect.width,
-      height: rect.height,
-      borderRadius: 25,
-      left: rtl ? insetX : vw - insetX - rect.width,
-      right: rtl ? vw - insetX - rect.width : insetX,
+      clipPath: fromClip,
+      '-webkit-clip-path': fromClip,
     });
+    gsap.set(slider, { yPercent: 0 });
 
     const next = gsap.timeline({
       paused: true,
@@ -37,17 +49,13 @@ export function initMobileMenu(lenis) {
     });
 
     next.to(menu, {
-      top: 0,
-      left: 0,
-      right: 0,
-      width: () => window.innerWidth,
-      height: () => window.innerHeight,
-      borderRadius: 0,
+      clipPath: 'inset(0px 0px 0px 0px round 0px)',
+      '-webkit-clip-path': 'inset(0px 0px 0px 0px round 0px)',
       duration: 0.75,
     });
 
     if (slider) {
-      next.to(slider, { top: '-100%', duration: 0.5 }, 0);
+      next.to(slider, { yPercent: -50, duration: 0.5 }, 0);
     }
 
     next.add(() => nav.classList.add('is-visible'), 0.2);
@@ -81,8 +89,11 @@ export function initMobileMenu(lenis) {
 
     next.eventCallback('onReverseComplete', () => {
       nav.classList.remove('is-visible');
+      menu.classList.remove('is-open');
       menu.hidden = true;
+      gsap.set(menu, { clearProps: 'clipPath' });
       document.body.classList.remove('menu-open');
+      document.documentElement.classList.remove('menu-open');
       btn.setAttribute('aria-expanded', 'false');
       btn.setAttribute('aria-label', btn.dataset.labelOpen || 'Open menu');
       lenis?.start();
@@ -95,12 +106,19 @@ export function initMobileMenu(lenis) {
   const open = () => {
     if (isOpen) return;
     isOpen = true;
-    menu.hidden = false;
     document.body.classList.add('menu-open');
+    document.documentElement.classList.add('menu-open');
     btn.setAttribute('aria-expanded', 'true');
     btn.setAttribute('aria-label', btn.dataset.labelClose || 'Close menu');
     lenis?.stop();
     tl?.kill();
+    const fromClip = clipFromButton(btn);
+    gsap.set(menu, {
+      clipPath: fromClip,
+      '-webkit-clip-path': fromClip,
+    });
+    menu.hidden = false;
+    menu.classList.add('is-open');
     tl = buildTimeline();
     tl.play();
   };

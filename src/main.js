@@ -218,10 +218,7 @@ function applyLanguage(lang) {
   }
 }
 
-const gooeyNavs = [
-  initGooeyNav(document.querySelector('.nav-links')),
-  initGooeyNav(document.querySelector('.mobile-nav-links')),
-];
+const gooeyNavs = [initGooeyNav(document.querySelector('.nav-links'))];
 
 function currentSectionHref() {
   const links = [...document.querySelectorAll('.nav-links a')];
@@ -242,10 +239,10 @@ function syncGooey(options) {
   gooeyNavs.forEach((nav) => nav.setActiveFromHref(href, options));
 }
 
-function setNavScrolled() {
+function setNavScrolled(y = window.scrollY) {
   const nav = document.querySelector('.nav');
   if (!nav) return;
-  nav.classList.toggle('is-scrolled', window.scrollY > 12);
+  nav.classList.toggle('is-scrolled', y > 12);
 }
 
 function initNav() {
@@ -402,11 +399,13 @@ function initServiceGlow() {
 }
 
 const lenis = initSmoothScroll({
-  onScroll: () => {
+  onScroll: (event) => {
     syncGooey();
-    setNavScrolled();
+    setNavScrolled(event?.scroll ?? window.scrollY);
   },
 });
+
+window.addEventListener('scroll', () => setNavScrolled(window.scrollY), { passive: true });
 
 initNav();
 initMobileMenu(lenis);

@@ -14,9 +14,9 @@ export function initSmoothScroll({ onScroll } = {}) {
     respectReducedMotion: false,
   });
 
-  lenis.on('scroll', () => {
+  lenis.on('scroll', (event) => {
     ScrollTrigger.update();
-    onScroll?.();
+    onScroll?.(event);
   });
 
   gsap.ticker.add((time) => {
