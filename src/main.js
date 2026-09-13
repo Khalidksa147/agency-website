@@ -2,7 +2,9 @@ import { initGooeyNav } from './nav/GooeyNav.js';
 import { initMobileMenu } from './nav/MobileMenu.js';
 import { initCopy, playHeroCopy, prepareHeroCopy } from './text/Copy.js';
 import { initSmoothScroll } from './scroll/smooth.js';
-import { markPageReady } from './preloader/Preloader.js';
+import { initPreloader, markPageReady } from './preloader/Preloader.js';
+
+window.__qiramPreloader = initPreloader();
 
 const gooeyNavs = [initGooeyNav(document.querySelector('.nav-links'))];
 const navEl = document.querySelector('.nav');

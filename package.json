@@ -5,12 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "node server.mjs",
-    "start": "node server.mjs",
+    "start": "node server.mjs --dist --port 5173",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "node server.mjs --dist --port 4173",
+    "serve:src": "node server.mjs"
   },
   "dependencies": {
     "gsap": "^3.15.0",
+    "lenis": "1.3.26",
     "three": "^0.170.0"
   },
   "devDependencies": {

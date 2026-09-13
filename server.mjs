@@ -3,8 +3,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const root = path.dirname(fileURLToPath(import.meta.url));
-const port = Number(process.env.PORT) || 5173;
+const args = process.argv.slice(2);
+const useDist = args.includes('--dist');
+const portFlag = args.indexOf('--port');
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), useDist ? 'dist' : '.');
+const port = Number(portFlag !== -1 ? args[portFlag + 1] : process.env.PORT) || 5173;
 
 const types = {
   '.html': 'text/html; charset=utf-8',
