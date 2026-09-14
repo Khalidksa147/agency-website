@@ -1164,7 +1164,7 @@ html[dir='rtl'] .mobile-nav__indicator {
 
 .bilingual-col h2 {
   font-size: clamp(2.5rem, 4.4vw, 4.35rem);
-  line-height: 1.2;
+  line-height: 1.35;
   letter-spacing: -0.05em;
 }
 
@@ -1580,6 +1580,10 @@ html[dir='rtl'] .contact-count {
   left: 1rem;
 }
 
+html[dir='rtl'] .contact-form input[name='phone'] {
+  text-align: right;
+}
+
 .contact-form button {
   justify-self: start;
   margin-top: 0.55rem;
@@ -1600,9 +1604,22 @@ html[dir='rtl'] .service-go {
   transform-origin: center;
 }
 
+html[dir='rtl'] .hero-copy h1,
+html[dir='rtl'] .process-head h2 {
+  line-height: 1.35;
+}
+
 html[dir='rtl'] .hero-copy h1 {
   max-width: none;
+}
+
+html[dir='rtl'] .about-aside h2 {
+  max-width: none;
   line-height: 1.35;
+}
+
+html[dir='rtl'] .about-aside h2 > span {
+  display: block;
 }
 
 html[dir='rtl'] .hero-orb {

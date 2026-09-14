@@ -1283,16 +1283,16 @@
               </label>
               <label>
                 <span class="vh" data-i18n="contact.company">Company name</span>
-                <input type="text" name="company" autocomplete="organization" data-i18n-placeholder="contact.company.ph" placeholder="Company name" />
+                <input type="text" name="company" autocomplete="organization" required data-i18n-placeholder="contact.company.ph" placeholder="Company name *" />
               </label>
               <label>
                 <span class="vh" data-i18n="contact.phone">Mobile number</span>
-                <input type="tel" name="phone" autocomplete="tel" data-i18n-placeholder="contact.phone.ph" placeholder="Mobile number" />
+                <input type="tel" name="phone" autocomplete="tel" required data-i18n-placeholder="contact.phone.ph" placeholder="Mobile number *" />
               </label>
               <label class="full contact-select">
                 <span class="vh" data-i18n="contact.type">Project type</span>
-                <select name="type" class="contact-select-native">
-                  <option value="" disabled selected data-i18n="contact.type.ph">Select an option</option>
+                <select name="type" class="contact-select-native" required>
+                  <option value="" disabled selected data-i18n="contact.type.ph">Select an option *</option>
                   <option value="website" data-i18n="contact.type.web">Website</option>
                   <option value="app" data-i18n="contact.type.app">Web app</option>
                   <option value="ux" data-i18n="contact.type.ux">UX/UI</option>
@@ -1300,13 +1300,13 @@
                   <option value="other" data-i18n="contact.type.other">Other</option>
                 </select>
                 <button type="button" class="contact-select-btn" aria-haspopup="listbox" aria-expanded="false">
-                  <span data-i18n="contact.type.ph">Select an option</span>
+                  <span data-i18n="contact.type.ph">Select an option *</span>
                 </button>
                 <ul class="contact-select-list" role="listbox" hidden></ul>
               </label>
               <label class="full">
                 <span class="vh" data-i18n="contact.message">Tell us about your project</span>
-                <textarea name="message" rows="6" maxlength="500" required data-i18n-placeholder="contact.message.ph" placeholder="Your message.."></textarea>
+                <textarea name="message" rows="6" maxlength="500" required data-i18n-placeholder="contact.message.ph" placeholder="Your message.. *"></textarea>
                 <span class="contact-count"><span data-count>0</span>/500</span>
               </label>
               <button class="btn btn-primary" type="submit">

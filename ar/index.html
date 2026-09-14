@@ -1215,8 +1215,8 @@
               <span class="eyebrow-line"></span>
             </p>
             <h2 data-copy>
-              <span data-i18n="process.title.lead">مسار واضح من الفكرة إلى </span>
-              <span class="accent" data-i18n="process.title.accent">الأثر.</span>
+              <span data-i18n="process.title.lead">مسار واضح من الفكرة </span>
+              <span class="accent" data-i18n="process.title.accent">إلى الأثر.</span>
             </h2>
           </div>
           <p class="process-lede" data-copy data-i18n="process.lede">نحوّل الأفكار إلى تجارب رقمية عبر عملية منظمة وتعاونية تتمحور حول الإنسان. هكذا نحوّل الرؤية إلى نتائج حقيقية.</p>
@@ -1277,16 +1277,16 @@
               </label>
               <label>
                 <span class="vh" data-i18n="contact.company">اسم الشركة</span>
-                <input type="text" name="company" autocomplete="organization" data-i18n-placeholder="contact.company.ph" placeholder="اسم الشركة" />
+                <input type="text" name="company" autocomplete="organization" required data-i18n-placeholder="contact.company.ph" placeholder="اسم الشركة *" />
               </label>
               <label>
                 <span class="vh" data-i18n="contact.phone">رقم الجوال</span>
-                <input type="tel" name="phone" autocomplete="tel" data-i18n-placeholder="contact.phone.ph" placeholder="رقم الجوال" />
+                <input type="tel" name="phone" autocomplete="tel" required data-i18n-placeholder="contact.phone.ph" placeholder="رقم الجوال *" />
               </label>
               <label class="full contact-select">
                 <span class="vh" data-i18n="contact.type">نوع المشروع</span>
-                <select name="type" class="contact-select-native">
-                  <option value="" disabled selected data-i18n="contact.type.ph">اختر خياراً</option>
+                <select name="type" class="contact-select-native" required>
+                  <option value="" disabled selected data-i18n="contact.type.ph">اختر خياراً *</option>
                   <option value="website" data-i18n="contact.type.web">موقع</option>
                   <option value="app" data-i18n="contact.type.app">تطبيق ويب</option>
                   <option value="ux" data-i18n="contact.type.ux">تجربة المستخدم</option>
@@ -1294,13 +1294,13 @@
                   <option value="other" data-i18n="contact.type.other">أخرى</option>
                 </select>
                 <button type="button" class="contact-select-btn" aria-haspopup="listbox" aria-expanded="false">
-                  <span data-i18n="contact.type.ph">اختر خياراً</span>
+                  <span data-i18n="contact.type.ph">اختر خياراً *</span>
                 </button>
                 <ul class="contact-select-list" role="listbox" hidden></ul>
               </label>
               <label class="full">
                 <span class="vh" data-i18n="contact.message">أخبرنا عن مشروعك</span>
-                <textarea name="message" rows="6" maxlength="500" required data-i18n-placeholder="contact.message.ph" placeholder="رسالتك.."></textarea>
+                <textarea name="message" rows="6" maxlength="500" required data-i18n-placeholder="contact.message.ph" placeholder="رسالتك.. *"></textarea>
                 <span class="contact-count"><span data-count>0</span>/500</span>
               </label>
               <button class="btn btn-primary" type="submit">
@@ -1311,10 +1311,8 @@
           </div>
           <div class="about-aside" id="about">
             <h2 data-copy>
-              <span data-i18n="about.title.a">الغاية </span>
-              <span class="accent" data-i18n="about.title.not">ليست</span>
-              <span data-i18n="about.title.b"> صنع موقع. الغاية أن تجعل عملك يبدو </span>
-              <span class="accent" data-i18n="about.title.end">حتمياً.</span>
+              <span data-i18n="about.title.line1">الغاية <span class="accent">ليست</span> صنع موقع. الغاية أن</span>
+              <span data-i18n="about.title.line2">تجعل عملك يبدو <span class="accent">حتمياً.</span></span>
             </h2>
             <p class="about-lede" data-copy data-i18n="about.lede">نصمم ونطور بالإنجليزية والعربية لتقديم تجارب رقمية سلسة ومتكاملة ثقافياً لسوق دول الخليج.</p>
             <ul class="about-points">
