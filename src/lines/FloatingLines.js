@@ -17,6 +17,9 @@ uniform float intensity;
 uniform int topLineCount;
 uniform float topLineDistance;
 uniform vec3 topWavePosition;
+uniform int bottomLineCount;
+uniform float bottomLineDistance;
+uniform vec3 bottomWavePosition;
 uniform vec3 lineGradient[8];
 uniform int lineGradientCount;
 
@@ -49,6 +52,7 @@ void main() {
   uv.y *= -1.0;
 
   vec3 col = vec3(0.0);
+
   for (int i = 0; i < 6; ++i) {
     float fi = float(i);
     float t = fi / 5.0;
@@ -59,6 +63,18 @@ void main() {
     col += lineCol * wave(
       ruv + vec2(topLineDistance * fi + topWavePosition.x, topWavePosition.y),
       1.0 + 0.2 * fi
+    ) * 0.2;
+  }
+
+  for (int i = 0; i < 6; ++i) {
+    float fi = float(i);
+    float t = fi / 5.0;
+    vec3 lineCol = getLineColor(t) * 0.55;
+    float angle = bottomWavePosition.z * log(length(uv) + 1.0);
+    vec2 ruv = uv * rotate(angle);
+    col += lineCol * wave(
+      ruv + vec2(bottomLineDistance * fi + bottomWavePosition.x, bottomWavePosition.y),
+      1.5 + 0.2 * fi
     ) * 0.2;
   }
 
@@ -124,6 +140,17 @@ export class FloatingLines {
           options.position?.rotate ?? -0.4
         ),
       },
+      bottomLineCount: { value: options.bottomLineCount ?? options.lineCount ?? 6 },
+      bottomLineDistance: {
+        value: (options.bottomLineDistance ?? options.lineDistance ?? 9) * 0.01,
+      },
+      bottomWavePosition: {
+        value: new THREE.Vector3(
+          options.bottomPosition?.x ?? 2,
+          options.bottomPosition?.y ?? -0.7,
+          options.bottomPosition?.rotate ?? 0.4
+        ),
+      },
       lineGradient: { value: gradient },
       lineGradientCount: { value: colors.length },
     };
@@ -171,6 +198,12 @@ export class FloatingLines {
     return 0.62;
   }
 
+  bottomWaveY() {
+    if (this.mqMobile.matches) return -0.3;
+    if (this.mqTablet.matches) return -0.34;
+    return -0.7;
+  }
+
   resize() {
     const width = this.el.clientWidth || 1;
     const height = this.el.clientHeight || 1;
@@ -181,6 +214,7 @@ export class FloatingLines {
       1
     );
     this.uniforms.topWavePosition.value.y = this.waveY();
+    this.uniforms.bottomWavePosition.value.y = this.bottomWaveY();
   }
 
   whenReady() {
