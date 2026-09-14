@@ -73,6 +73,6 @@ const server = http.createServer((req, res) => {
   });
 });
 
-server.listen(port, '0.0.0.0', () => {
+server.listen(port, () => {
   console.log(`QIRAM studio running at http://localhost:${port}`);
 });
