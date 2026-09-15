@@ -95,11 +95,11 @@ function bootOrb() {
 
 function bootLines() {
   if (!linesEl || lines) return;
-  import('./lines/FloatingLines.js')
-    .then(({ FloatingLines }) => {
-      lines = new FloatingLines(linesEl);
-    })
-    .catch(() => {});
+    import('./lines/FloatingLines.js?v=20260916a')
+      .then(({ FloatingLines }) => {
+        lines = new FloatingLines(linesEl);
+      })
+      .catch(() => {});
 }
 
 function bootVisuals() {

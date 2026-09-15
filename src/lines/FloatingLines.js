@@ -209,16 +209,23 @@ export class FloatingLines {
   }
 
   /**
-   * On real phones, the browser toolbar show/hide changes visual viewport height
-   * without a layout/width change. That would remesh iResolution.y and snap the waves.
-   * Ignore those height-only updates; still resize on width/orientation changes.
+   * Real-phone URL bar show/hide changes visual viewport height (and sometimes
+   * jitters width by a few px). That remeshes iResolution.y and snaps the waves.
+   * Lock composition size until a real width/orientation change.
    */
+  isMobileChromeViewport() {
+    return this.mqPhoneViewport.matches;
+  }
+
   shouldIgnoreMobileChromeResize(width, height) {
-    if (!this.mqPhoneViewport.matches) return false;
+    if (!this.isMobileChromeViewport()) return false;
     if (!this._sizeW || !this._sizeH) return false;
-    const widthChanged = Math.abs(width - this._sizeW) > 2;
-    if (widthChanged) return false;
-    return Math.abs(height - this._sizeH) > 2;
+    // Orientation / genuine layout change — allow resize.
+    if (Math.abs(width - this._sizeW) > 24) return false;
+    // Same layout width: ignore height (and tiny width) chrome toggles.
+    return (
+      Math.abs(height - this._sizeH) > 0 || Math.abs(width - this._sizeW) > 0
+    );
   }
 
   resize() {
