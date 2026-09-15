@@ -61,7 +61,7 @@
     </style>
     <title>QIRAM — Digital studio for the Gulf</title>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14.5' fill='none' stroke='%23D7FF4D' stroke-width='1.4'/%3E%3Ctext x='16' y='21' text-anchor='middle' font-size='14' fill='%23D7FF4D' font-family='Georgia,serif'%3EQ%3C/text%3E%3C/svg%3E" />
-    <link rel="stylesheet" href="/src/styles.css?v=20260913q" />
+    <link rel="stylesheet" href="/src/styles.css?v=20260915ag" />
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
     <script type="importmap">
       {
@@ -75,7 +75,7 @@
           "gsap/ScrollTrigger": "https://cdn.jsdelivr.net/npm/gsap@3.15.0/ScrollTrigger.js",
           "gsap/SplitText": "https://cdn.jsdelivr.net/npm/gsap@3.15.0/SplitText.js",
           "lenis": "https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.mjs",
-          "/src/main.js": "/src/main.js?v=20260913q",
+          "/src/main.js": "/src/main.js?v=20260915ag",
           "/src/preloader/Preloader.js": "/src/preloader/Preloader.js?v=20260913q",
           "/src/text/Copy.js": "/src/text/Copy.js?v=20260913q",
           "/src/nav/MobileMenu.js": "/src/nav/MobileMenu.js?v=20260913q",
@@ -1134,37 +1134,190 @@
         </div>
       </section>
 
-      <section class="section" id="work">
-        <div class="section-head">
-          <p class="eyebrow"><span data-i18n="work.kicker">Selected work</span></p>
-          <h2 data-copy data-i18n="work.title">A few recent engagements.</h2>
+      <section class="section section-work" id="work">
+        <div class="services-head">
+          <div class="services-head-copy">
+            <p class="eyebrow">
+              <span data-i18n="work.kicker">Featured work</span>
+              <span class="eyebrow-line" aria-hidden="true"></span>
+            </p>
+            <h2 data-copy>
+              <span data-i18n="work.title.lead">Projects that make an </span>
+              <span class="accent" data-i18n="work.title.accent">impact.</span>
+            </h2>
+          </div>
+          <div class="services-head-aside">
+            <p data-copy data-i18n="work.lede">
+              We partner with forward-thinking brands across the GCC to create digital experiences that perform, inspire and last.
+            </p>
+            <a class="services-explore" href="#contact">
+              <span data-i18n="work.explore">View all projects</span>
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
         </div>
-        <div class="work-list">
-          <article class="work-row">
-            <p class="work-index">01</p>
-            <div>
-              <h3 data-copy data-i18n="work.a.title">Maison Nur — private membership</h3>
-              <p data-copy data-i18n="work.a.body">A bilingual digital house for a Gulf hospitality brand. Site, booking, and identity system.</p>
+        <article class="work-showcase">
+          <div class="work-showcase__bg" aria-hidden="true">
+            <img src="/Images/Project%201.jpg" alt="" />
+          </div>
+          <div class="work-showcase__blur" aria-hidden="true"></div>
+          <div class="work-showcase__noise" aria-hidden="true"></div>
+          <div class="work-showcase__container">
+            <div class="work-showcase__left">
+              <p class="work-showcase__intro" data-copy data-i18n="work.showcase.intro">
+                We’ve helped businesses across industries achieve their goals. Here are some of our selected works.
+              </p>
+              <div class="work-showcase__brand">
+                <p class="work-showcase__count" aria-label="Project 1 of 3">
+                  <span class="work-showcase__count-current">01</span>
+                  <span class="work-showcase__count-total"> / 03</span>
+                </p>
+                <h3 data-copy data-i18n="work.showcase.title">Archin</h3>
+              </div>
             </div>
-            <p class="work-tag">Brand + Web</p>
-          </article>
-          <article class="work-row">
-            <p class="work-index">02</p>
-            <div>
-              <h3 data-copy data-i18n="work.b.title">Hayy Finance — product OS</h3>
-              <p data-copy data-i18n="work.b.body">A calm wealth platform with Arabic-first navigation and a glass-led visual language.</p>
+            <a class="work-showcase__cover" href="#contact" aria-label="Archin project">
+              <span class="work-showcase__cover-frame">
+                <img
+                  src="/Images/Project%201.jpg"
+                  alt="Archin Design Studio project mockup"
+                  width="912"
+                  height="1140"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </span>
+            </a>
+            <div class="work-showcase__details">
+              <div class="work-showcase__details-top">
+                <div>
+                  <p class="work-showcase__label" data-i18n="work.showcase.year">Year</p>
+                  <p class="work-showcase__value">2025</p>
+                </div>
+                <div>
+                  <p class="work-showcase__label" data-i18n="work.showcase.role">Role</p>
+                  <p class="work-showcase__value" data-i18n="work.showcase.role.value">Lead Designer</p>
+                </div>
+              </div>
+              <div class="work-showcase__details-bottom">
+                <p class="work-showcase__label" data-i18n="work.showcase.services">Services</p>
+                <ul>
+                  <li data-i18n="work.showcase.s1">Website Design</li>
+                  <li data-i18n="work.showcase.s2">Product Design</li>
+                  <li data-i18n="work.showcase.s3">Branding</li>
+                  <li data-i18n="work.showcase.s4">Development</li>
+                </ul>
+              </div>
             </div>
-            <p class="work-tag">UX + App</p>
-          </article>
-          <article class="work-row">
-            <p class="work-index">03</p>
-            <div>
-              <h3 data-copy data-i18n="work.c.title">Noor Labs — research studio</h3>
-              <p data-copy data-i18n="work.c.body">An editorial presence for a climate studio, built to hold long-form work in two languages.</p>
+          </div>
+        </article>
+        <article class="work-showcase">
+          <div class="work-showcase__bg" aria-hidden="true">
+            <img src="/Images/Project%202.jpg" alt="" />
+          </div>
+          <div class="work-showcase__blur" aria-hidden="true"></div>
+          <div class="work-showcase__noise" aria-hidden="true"></div>
+          <div class="work-showcase__container">
+            <div class="work-showcase__left">
+              <p class="work-showcase__intro" data-copy data-i18n="work.showcase2.intro">
+                We’ve partnered with businesses across various industries to help them achieve their goals.
+              </p>
+              <div class="work-showcase__brand">
+                <p class="work-showcase__count" aria-label="Project 2 of 3">
+                  <span class="work-showcase__count-current">02</span>
+                  <span class="work-showcase__count-total"> / 03</span>
+                </p>
+                <h3 data-copy data-i18n="work.showcase2.title">VNTNR</h3>
+              </div>
             </div>
-            <p class="work-tag">Web + Editorial</p>
-          </article>
-        </div>
+            <a class="work-showcase__cover" href="#contact" aria-label="VNTNR project">
+              <span class="work-showcase__cover-frame">
+                <img
+                  src="/Images/Project%202.jpg"
+                  alt="VNTNR wine merchant project mockup"
+                  width="912"
+                  height="1140"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </span>
+            </a>
+            <div class="work-showcase__details">
+              <div class="work-showcase__details-top">
+                <div>
+                  <p class="work-showcase__label" data-i18n="work.showcase.year">Year</p>
+                  <p class="work-showcase__value">2018</p>
+                </div>
+                <div>
+                  <p class="work-showcase__label" data-i18n="work.showcase.role">Role</p>
+                  <p class="work-showcase__value" data-i18n="work.showcase2.role.value">Logo Designer</p>
+                </div>
+              </div>
+              <div class="work-showcase__details-bottom">
+                <p class="work-showcase__label" data-i18n="work.showcase.services">Services</p>
+                <ul>
+                  <li data-i18n="work.showcase2.s1">Designing</li>
+                  <li data-i18n="work.showcase2.s2">Branding</li>
+                  <li data-i18n="work.showcase2.s3">Redesigning</li>
+                  <li data-i18n="work.showcase2.s4">Development</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </article>
+        <article class="work-showcase">
+          <div class="work-showcase__bg" aria-hidden="true">
+            <img src="/Images/Project%203.jpg" alt="" />
+          </div>
+          <div class="work-showcase__blur" aria-hidden="true"></div>
+          <div class="work-showcase__noise" aria-hidden="true"></div>
+          <div class="work-showcase__container">
+            <div class="work-showcase__left">
+              <p class="work-showcase__intro" data-copy data-i18n="work.showcase3.intro">
+                We’ve collaborated with companies from diverse sectors to turn their visions into reality. Here’s a look at some of our featured work.
+              </p>
+              <div class="work-showcase__brand">
+                <p class="work-showcase__count" aria-label="Project 3 of 3">
+                  <span class="work-showcase__count-current">03</span>
+                  <span class="work-showcase__count-total"> / 03</span>
+                </p>
+                <h3 data-copy data-i18n="work.showcase3.title">Aeorim</h3>
+              </div>
+            </div>
+            <a class="work-showcase__cover" href="#contact" aria-label="Aeorim project">
+              <span class="work-showcase__cover-frame">
+                <img
+                  src="/Images/Project%203.jpg"
+                  alt="Aeorim project mockup"
+                  width="912"
+                  height="1140"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </span>
+            </a>
+            <div class="work-showcase__details">
+              <div class="work-showcase__details-top">
+                <div>
+                  <p class="work-showcase__label" data-i18n="work.showcase.year">Year</p>
+                  <p class="work-showcase__value">2023</p>
+                </div>
+                <div>
+                  <p class="work-showcase__label" data-i18n="work.showcase.role">Role</p>
+                  <p class="work-showcase__value" data-i18n="work.showcase3.role.value">Website Designer</p>
+                </div>
+              </div>
+              <div class="work-showcase__details-bottom">
+                <p class="work-showcase__label" data-i18n="work.showcase.services">Services</p>
+                <ul>
+                  <li data-i18n="work.showcase3.s1">Branding</li>
+                  <li data-i18n="work.showcase3.s2">Revamp</li>
+                  <li data-i18n="work.showcase3.s3">Development</li>
+                  <li data-i18n="work.showcase3.s4">Designing</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </article>
       </section>
 
       <section class="bilingual" id="edge" data-site-lang="en" aria-label="One brand, two languages">
@@ -1400,6 +1553,6 @@
       import { initPreloader } from '/src/preloader/Preloader.js';
       window.__qiramPreloader = initPreloader();
     </script>
-    <script type="module" src="/src/main.js?v=20260913q"></script>
+    <script type="module" src="/src/main.js?v=20260915ag"></script>
   </body>
 </html>

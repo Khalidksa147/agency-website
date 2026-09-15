@@ -3,6 +3,7 @@ import { initMobileMenu } from './nav/MobileMenu.js';
 import { initCopy, playHeroCopy, prepareHeroCopy } from './text/Copy.js';
 import { initSmoothScroll } from './scroll/smooth.js';
 import { initPreloader, markPageReady } from './preloader/Preloader.js';
+import { initWorkStack } from './work/WorkStack.js?v=20260915ag';
 
 window.__qiramPreloader ??= initPreloader();
 
@@ -292,6 +293,7 @@ initNav();
 initMobileMenu(lenis);
 initServiceGlow();
 initServiceSvgPause();
+const workStack = initWorkStack();
 
 function revealCopy() {
   document.querySelectorAll('[data-copy]').forEach((el) => el.classList.add('is-copy-ready'));
@@ -322,6 +324,7 @@ document.addEventListener(
   () => {
     lenis.start();
     bootVisuals();
+    workStack?.refresh();
   },
   { once: true },
 );
@@ -333,17 +336,20 @@ preloaderReady
     startCopy();
     lenis.start();
     bootVisuals();
+    workStack?.refresh();
   })
   .catch(() => {
     startCopy();
     lenis.start();
     bootVisuals();
+    workStack?.refresh();
   });
 
 if (import.meta.hot) {
   import.meta.hot.dispose(() => {
     orb?.dispose();
     lines?.dispose();
+    workStack?.destroy();
     lenis?.destroy();
   });
 }

@@ -61,7 +61,7 @@
     </style>
     <title>قيرام — استوديو رقمي للخليج</title>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14.5' fill='none' stroke='%23D7FF4D' stroke-width='1.4'/%3E%3Ctext x='16' y='21' text-anchor='middle' font-size='14' fill='%23D7FF4D' font-family='Georgia,serif'%3EQ%3C/text%3E%3C/svg%3E" />
-    <link rel="stylesheet" href="/src/styles.css?v=20260913q" />
+    <link rel="stylesheet" href="/src/styles.css?v=20260915ag" />
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
     <script type="importmap">
       {
@@ -75,7 +75,7 @@
           "gsap/ScrollTrigger": "https://cdn.jsdelivr.net/npm/gsap@3.15.0/ScrollTrigger.js",
           "gsap/SplitText": "https://cdn.jsdelivr.net/npm/gsap@3.15.0/SplitText.js",
           "lenis": "https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.mjs",
-          "/src/main.js": "/src/main.js?v=20260913q",
+          "/src/main.js": "/src/main.js?v=20260915ag",
           "/src/preloader/Preloader.js": "/src/preloader/Preloader.js?v=20260913q",
           "/src/text/Copy.js": "/src/text/Copy.js?v=20260913q",
           "/src/nav/MobileMenu.js": "/src/nav/MobileMenu.js?v=20260913q",
@@ -1132,37 +1132,190 @@
         </div>
       </section>
 
-      <section class="section" id="work">
-        <div class="section-head">
-          <p class="eyebrow"><span data-i18n="work.kicker">أعمال مختارة</span></p>
-          <h2 data-copy data-i18n="work.title">بعض التعاونات الأخيرة.</h2>
+      <section class="section section-work" id="work">
+        <div class="services-head">
+          <div class="services-head-copy">
+            <p class="eyebrow">
+              <span data-i18n="work.kicker">أعمال مميزة</span>
+              <span class="eyebrow-line" aria-hidden="true"></span>
+            </p>
+            <h2 data-copy>
+              <span data-i18n="work.title.lead">مشاريع تصنع </span>
+              <span class="accent" data-i18n="work.title.accent">أثراً.</span>
+            </h2>
+          </div>
+          <div class="services-head-aside">
+            <p data-copy data-i18n="work.lede">
+              نتعاون مع علامات تفكّر بالمستقبل في دول الخليج لبناء تجارب رقمية تؤدي وتُلهم وتدوم.
+            </p>
+            <a class="services-explore" href="#contact">
+              <span data-i18n="work.explore">عرض كل المشاريع</span>
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
         </div>
-        <div class="work-list">
-          <article class="work-row">
-            <p class="work-index">01</p>
-            <div>
-              <h3 data-copy data-i18n="work.a.title">ميزون نور — عضوية خاصة</h3>
-              <p data-copy data-i18n="work.a.body">بيت رقمي ثنائي اللغة لعلامة ضيافة خليجية. موقع، حجز، ونظام هوية.</p>
+        <article class="work-showcase">
+          <div class="work-showcase__bg" aria-hidden="true">
+            <img src="/Images/Project%201.jpg" alt="" />
+          </div>
+          <div class="work-showcase__blur" aria-hidden="true"></div>
+          <div class="work-showcase__noise" aria-hidden="true"></div>
+          <div class="work-showcase__container">
+            <div class="work-showcase__left">
+              <p class="work-showcase__intro" data-copy data-i18n="work.showcase.intro">
+                ساعدنا أعمالاً عبر قطاعات مختلفة على تحقيق أهدافها. هذه بعض أعمالنا المختارة.
+              </p>
+              <div class="work-showcase__brand">
+                <p class="work-showcase__count" aria-label="المشروع 1 من 3">
+                  <span class="work-showcase__count-current">01</span>
+                  <span class="work-showcase__count-total"> / 03</span>
+                </p>
+                <h3 data-copy data-i18n="work.showcase.title">Archin</h3>
+              </div>
             </div>
-            <p class="work-tag">Brand + Web</p>
-          </article>
-          <article class="work-row">
-            <p class="work-index">02</p>
-            <div>
-              <h3 data-copy data-i18n="work.b.title">حي فاينانس — نظام المنتج</h3>
-              <p data-copy data-i18n="work.b.body">منصة ثروة هادئة بتنقّل عربي أولاً ولغة بصرية زجاجية.</p>
+            <a class="work-showcase__cover" href="#contact" aria-label="مشروع Archin">
+              <span class="work-showcase__cover-frame">
+                <img
+                  src="/Images/Project%201.jpg"
+                  alt="نموذج مشروع Archin Design Studio"
+                  width="912"
+                  height="1140"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </span>
+            </a>
+            <div class="work-showcase__details">
+              <div class="work-showcase__details-top">
+                <div>
+                  <p class="work-showcase__label" data-i18n="work.showcase.year">السنة</p>
+                  <p class="work-showcase__value">2025</p>
+                </div>
+                <div>
+                  <p class="work-showcase__label" data-i18n="work.showcase.role">الدور</p>
+                  <p class="work-showcase__value" data-i18n="work.showcase.role.value">مصمم رئيسي</p>
+                </div>
+              </div>
+              <div class="work-showcase__details-bottom">
+                <p class="work-showcase__label" data-i18n="work.showcase.services">الخدمات</p>
+                <ul>
+                  <li data-i18n="work.showcase.s1">تصميم مواقع</li>
+                  <li data-i18n="work.showcase.s2">تصميم منتج</li>
+                  <li data-i18n="work.showcase.s3">هوية</li>
+                  <li data-i18n="work.showcase.s4">تطوير</li>
+                </ul>
+              </div>
             </div>
-            <p class="work-tag">UX + App</p>
-          </article>
-          <article class="work-row">
-            <p class="work-index">03</p>
-            <div>
-              <h3 data-copy data-i18n="work.c.title">نور لابز — استوديو بحثي</h3>
-              <p data-copy data-i18n="work.c.body">حضور تحريري لاستوديو مناخي يستوعب النصوص الطويلة بلغتين.</p>
+          </div>
+        </article>
+        <article class="work-showcase">
+          <div class="work-showcase__bg" aria-hidden="true">
+            <img src="/Images/Project%202.jpg" alt="" />
+          </div>
+          <div class="work-showcase__blur" aria-hidden="true"></div>
+          <div class="work-showcase__noise" aria-hidden="true"></div>
+          <div class="work-showcase__container">
+            <div class="work-showcase__left">
+              <p class="work-showcase__intro" data-copy data-i18n="work.showcase2.intro">
+                شاركنا أعمالاً عبر قطاعات مختلفة لمساعدتها على تحقيق أهدافها.
+              </p>
+              <div class="work-showcase__brand">
+                <p class="work-showcase__count" aria-label="المشروع 2 من 3">
+                  <span class="work-showcase__count-current">02</span>
+                  <span class="work-showcase__count-total"> / 03</span>
+                </p>
+                <h3 data-copy data-i18n="work.showcase2.title">VNTNR</h3>
+              </div>
             </div>
-            <p class="work-tag">Web + Editorial</p>
-          </article>
-        </div>
+            <a class="work-showcase__cover" href="#contact" aria-label="مشروع VNTNR">
+              <span class="work-showcase__cover-frame">
+                <img
+                  src="/Images/Project%202.jpg"
+                  alt="نموذج مشروع VNTNR لتاجر النبيذ"
+                  width="912"
+                  height="1140"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </span>
+            </a>
+            <div class="work-showcase__details">
+              <div class="work-showcase__details-top">
+                <div>
+                  <p class="work-showcase__label" data-i18n="work.showcase.year">السنة</p>
+                  <p class="work-showcase__value">2018</p>
+                </div>
+                <div>
+                  <p class="work-showcase__label" data-i18n="work.showcase.role">الدور</p>
+                  <p class="work-showcase__value" data-i18n="work.showcase2.role.value">مصمم شعار</p>
+                </div>
+              </div>
+              <div class="work-showcase__details-bottom">
+                <p class="work-showcase__label" data-i18n="work.showcase.services">الخدمات</p>
+                <ul>
+                  <li data-i18n="work.showcase2.s1">تصميم</li>
+                  <li data-i18n="work.showcase2.s2">هوية</li>
+                  <li data-i18n="work.showcase2.s3">إعادة تصميم</li>
+                  <li data-i18n="work.showcase2.s4">تطوير</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </article>
+        <article class="work-showcase">
+          <div class="work-showcase__bg" aria-hidden="true">
+            <img src="/Images/Project%203.jpg" alt="" />
+          </div>
+          <div class="work-showcase__blur" aria-hidden="true"></div>
+          <div class="work-showcase__noise" aria-hidden="true"></div>
+          <div class="work-showcase__container">
+            <div class="work-showcase__left">
+              <p class="work-showcase__intro" data-copy data-i18n="work.showcase3.intro">
+                تعاونّا مع شركات من قطاعات متنوعة لتحويل رؤاها إلى واقع. إليك نظرة على بعض أعمالنا المميزة.
+              </p>
+              <div class="work-showcase__brand">
+                <p class="work-showcase__count" aria-label="المشروع 3 من 3">
+                  <span class="work-showcase__count-current">03</span>
+                  <span class="work-showcase__count-total"> / 03</span>
+                </p>
+                <h3 data-copy data-i18n="work.showcase3.title">Aeorim</h3>
+              </div>
+            </div>
+            <a class="work-showcase__cover" href="#contact" aria-label="مشروع Aeorim">
+              <span class="work-showcase__cover-frame">
+                <img
+                  src="/Images/Project%203.jpg"
+                  alt="نموذج مشروع Aeorim"
+                  width="912"
+                  height="1140"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </span>
+            </a>
+            <div class="work-showcase__details">
+              <div class="work-showcase__details-top">
+                <div>
+                  <p class="work-showcase__label" data-i18n="work.showcase.year">السنة</p>
+                  <p class="work-showcase__value">2023</p>
+                </div>
+                <div>
+                  <p class="work-showcase__label" data-i18n="work.showcase.role">الدور</p>
+                  <p class="work-showcase__value" data-i18n="work.showcase3.role.value">مصمم مواقع</p>
+                </div>
+              </div>
+              <div class="work-showcase__details-bottom">
+                <p class="work-showcase__label" data-i18n="work.showcase.services">الخدمات</p>
+                <ul>
+                  <li data-i18n="work.showcase3.s1">هوية</li>
+                  <li data-i18n="work.showcase3.s2">تحديث</li>
+                  <li data-i18n="work.showcase3.s3">تطوير</li>
+                  <li data-i18n="work.showcase3.s4">تصميم</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </article>
       </section>
 
       <section class="bilingual" id="edge" data-site-lang="ar" aria-label="One brand, two languages">
@@ -1390,6 +1543,6 @@
       import { initPreloader } from '/src/preloader/Preloader.js';
       window.__qiramPreloader = initPreloader();
     </script>
-    <script type="module" src="/src/main.js?v=20260913q"></script>
+    <script type="module" src="/src/main.js?v=20260915ag"></script>
   </body>
 </html>
