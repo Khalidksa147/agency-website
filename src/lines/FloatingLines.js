@@ -172,6 +172,10 @@ export class FloatingLines {
 
     this.mqTablet = window.matchMedia(MQ.tablet);
     this.mqMobile = window.matchMedia(MQ.mobile);
+    // Phone-sized layouts only — used to ignore browser-chrome height toggles.
+    this.mqPhoneViewport = window.matchMedia('(max-width: 767px)');
+    this._sizeW = 0;
+    this._sizeH = 0;
     this.onBreakpoint = this.resize.bind(this);
     this.mqTablet.addEventListener('change', this.onBreakpoint);
     this.mqMobile.addEventListener('change', this.onBreakpoint);
@@ -204,9 +208,29 @@ export class FloatingLines {
     return -0.7;
   }
 
+  /**
+   * On real phones, the browser toolbar show/hide changes visual viewport height
+   * without a layout/width change. That would remesh iResolution.y and snap the waves.
+   * Ignore those height-only updates; still resize on width/orientation changes.
+   */
+  shouldIgnoreMobileChromeResize(width, height) {
+    if (!this.mqPhoneViewport.matches) return false;
+    if (!this._sizeW || !this._sizeH) return false;
+    const widthChanged = Math.abs(width - this._sizeW) > 2;
+    if (widthChanged) return false;
+    return Math.abs(height - this._sizeH) > 2;
+  }
+
   resize() {
-    const width = this.el.clientWidth || 1;
-    const height = this.el.clientHeight || 1;
+    const width = Math.max(1, Math.round(this.el.clientWidth || 1));
+    const height = Math.max(1, Math.round(this.el.clientHeight || 1));
+
+    if (this.shouldIgnoreMobileChromeResize(width, height)) {
+      return;
+    }
+
+    this._sizeW = width;
+    this._sizeH = height;
     this.renderer.setSize(width, height, false);
     this.uniforms.iResolution.value.set(
       this.renderer.domElement.width,
