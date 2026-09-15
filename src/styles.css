@@ -1123,7 +1123,7 @@ html[dir='rtl'] .mobile-nav__indicator {
   position: sticky;
   top: 0;
   width: 100%;
-  height: min(86vh, 54rem);
+  height: auto;
   min-height: min(86vh, 54rem);
   margin-top: 0 !important;
   will-change: transform, opacity;
@@ -1179,15 +1179,18 @@ html[dir='rtl'] .mobile-nav__indicator {
   gap: clamp(1.4rem, 2.8vw, 2.8rem);
   align-items: stretch;
   min-height: inherit;
-  padding: clamp(1.5rem, 3.2vw, 2.8rem);
+  box-sizing: border-box;
+  padding: clamp(1.6rem, 3.2vw, 2.8rem);
+  padding-bottom: clamp(1.9rem, 3.6vw, 3.2rem);
 }
 
 .work-showcase__left {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 3rem;
-  padding-block: 0.35rem;
+  gap: clamp(2rem, 4vh, 3rem);
+  min-width: 0;
+  padding-block: 0.35rem 0.55rem;
 }
 
 .work-showcase__intro {
@@ -1200,6 +1203,7 @@ html[dir='rtl'] .mobile-nav__indicator {
 .work-showcase__brand {
   display: grid;
   gap: 0.9rem;
+  min-width: 0;
 }
 
 .work-showcase__count {
@@ -1224,16 +1228,18 @@ html[dir='rtl'] .mobile-nav__indicator {
 .work-showcase__brand h3 {
   margin: 0;
   color: #fff;
-  font-size: clamp(2.8rem, 5vw, 4.5rem);
-  line-height: 1;
+  font-size: clamp(2.35rem, 4.4vw, 4.2rem);
+  line-height: 1.08;
   letter-spacing: -0.04em;
   font-weight: 500;
+  overflow-wrap: anywhere;
 }
 
 .work-showcase__cover {
   display: block;
   align-self: center;
-  width: min(100%, 38rem);
+  width: min(100%, 36rem);
+  max-height: min(64vh, 40rem);
   justify-self: center;
   border-radius: 1.5rem;
   border: 1px solid rgba(12, 12, 12, 0.82);
@@ -1247,12 +1253,14 @@ html[dir='rtl'] .mobile-nav__indicator {
   border: 1px solid rgba(255, 255, 255, 0.1);
   overflow: hidden;
   aspect-ratio: 4 / 5;
+  max-height: inherit;
 }
 
 .work-showcase__cover img {
   display: block;
   width: 100%;
   height: 100%;
+  max-height: inherit;
   object-fit: cover;
 }
 
@@ -1261,7 +1269,8 @@ html[dir='rtl'] .mobile-nav__indicator {
   flex-direction: column;
   justify-content: space-between;
   gap: 2.4rem;
-  padding-block: 0.35rem;
+  min-width: 0;
+  padding-block: 0.35rem 0.55rem;
 }
 
 .work-showcase__details-top {
@@ -2065,7 +2074,16 @@ html[dir='rtl'] .process-line::after {
     grid-column: auto;
     flex-direction: column;
     align-items: start;
-    gap: 2rem;
+    gap: 1.4rem;
+  }
+
+  .work-showcase__brand {
+    order: -1;
+  }
+
+  .work-showcase__intro {
+    order: 0;
+    max-width: none;
   }
 
   .work-showcase__details {
