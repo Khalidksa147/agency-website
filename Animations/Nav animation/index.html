@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <title>Component Demo</title>
+
+   <!-- Main stylesheet -->
+   <link rel="stylesheet" href="style.css" />
+
+   <!-- Google Fonts -->
+   <link rel="preconnect" href="https://fonts.googleapis.com" />
+   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+
+   <!-- ===== HEADER BLOCK =====
+        Fixed wrapper in the top-right corner that holds both
+        the expanding panel and the toggle button on top of it. -->
+   <div class="header">
+
+      <!-- ===== MENU PANEL =====
+           Small pill-shaped container that expands into a full menu
+           when the user clicks the button. The nav lives inside it. -->
+      <div class="menu" id="menuPanel">
+
+         <!-- Nav starts invisible (opacity: 0 in CSS) and is revealed
+              by GSAP once the panel has started expanding. -->
+         <nav class="nav" id="nav">
+
+            <!-- Main nav links (large text, 3D flip on open) -->
+            <div class="nav__body" id="navLinks">
+               <div class="nav__link-wrap"><a class="nav__link" href="#">Projects</a></div>
+               <div class="nav__link-wrap"><a class="nav__link" href="#">Agency</a></div>
+               <div class="nav__link-wrap"><a class="nav__link" href="#">Expertise</a></div>
+               <div class="nav__link-wrap"><a class="nav__link" href="#">Careers</a></div>
+               <div class="nav__link-wrap"><a class="nav__link" href="#">Contact</a></div>
+            </div>
+
+            <!-- Secondary footer links (small text, slide up) -->
+            <div class="nav__footer" id="footerLinks">
+               <a class="nav__footer-link" href="#">Facebook</a>
+               <a class="nav__footer-link" href="#">LinkedIn</a>
+               <a class="nav__footer-link" href="#">Instagram</a>
+               <a class="nav__footer-link" href="#">Twitter</a>
+            </div>
+
+         </nav>
+      </div>
+
+      <!-- ===== TOGGLE BUTTON =====
+           Sits on top of the panel (z-index: 10). The button has
+           TWO labels stacked vertically inside a slider — "Menu"
+           on top, "Close" below. GSAP slides the slider up to reveal
+           the "Close" label when the menu is open. -->
+      <div class="menu-btn" id="menuBtn">
+         <div class="menu-btn__slider" id="btnSlider">
+
+            <!-- Top half — shown when the menu is closed -->
+            <div class="menu-btn__item">
+               <div class="menu-btn__label">
+                  <!-- Two <p> elements enable the 3D hover flip.
+                       The first is visible by default, the second is
+                       pre-rotated and fades in on hover. -->
+                  <p>Menu</p>
+                  <p>Menu</p>
+               </div>
+            </div>
+
+            <!-- Bottom half — shown when the menu is open (dark variant) -->
+            <div class="menu-btn__item menu-btn__item--close">
+               <div class="menu-btn__label">
+                  <p>Close</p>
+                  <p>Close</p>
+               </div>
+            </div>
+
+         </div>
+      </div>
+
+   </div>
+
+   <!-- GSAP animation library via CDN -->
+   <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/gsap.min.js"></script>
+
+   <!-- Our animation logic -->
+   <script src="script.js"></script>
+</body>
+
+</html>

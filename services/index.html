@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      document.documentElement.classList.add('js');
+      document.documentElement.classList.add('is-preloading');
+      try {
+        const force = /[?&]preloader(?:&|=|$)/.test(location.search);
+        if (force || !sessionStorage.getItem('qiram.preloader')) {
+          document.documentElement.classList.add('is-intro');
+        }
+      } catch (err) {
+        document.documentElement.classList.add('is-intro');
+      }
+    </script>
+    <style>
+      html, body { background: #080a0a; }
+      html.is-preloading,
+      html.is-preloading body { overflow: hidden; }
+      .preloader {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        align-items: center;
+        justify-content: center;
+        background: #141516;
+        color: #fff;
+        pointer-events: none;
+      }
+      html.is-preloading .preloader,
+      .preloader.is-leaving {
+        display: flex !important;
+        pointer-events: auto;
+      }
+      html.is-preloading:not(.is-intro) .preloader__word { visibility: hidden; }
+      .preloader__word {
+        display: flex;
+        align-items: center;
+        gap: 0.625rem;
+        margin: 0;
+        font-family: Outfit, Manrope, sans-serif;
+        font-size: clamp(2rem, 4vw, 2.625rem);
+        font-weight: 300;
+        letter-spacing: -0.03em;
+      }
+      .preloader__dot {
+        width: 0.625rem;
+        height: 0.625rem;
+        border-radius: 999px;
+        background: #fff;
+        flex: 0 0 auto;
+      }
+      .mobile-menu[hidden] { display: none !important; }
+      .preloader[hidden] { display: none !important; }
+      .preloader.is-leaving { transform: translateY(calc(-100% - 300px)); transition: transform 0.8s cubic-bezier(0.76, 0, 0.24, 1); }
+    </style>
+    <title>Services — QIRAM</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14.5' fill='none' stroke='%23D7FF4D' stroke-width='1.4'/%3E%3Ctext x='16' y='21' text-anchor='middle' font-size='14' fill='%23D7FF4D' font-family='Georgia,serif'%3EQ%3C/text%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="/src/styles.css?v=20260917a" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+          "three/addons/postprocessing/EffectComposer.js": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/postprocessing/EffectComposer.js",
+          "three/addons/postprocessing/RenderPass.js": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/postprocessing/RenderPass.js",
+          "three/addons/postprocessing/UnrealBloomPass.js": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/postprocessing/UnrealBloomPass.js",
+          "three/addons/postprocessing/ShaderPass.js": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/postprocessing/ShaderPass.js",
+          "gsap": "https://cdn.jsdelivr.net/npm/gsap@3.15.0/index.js",
+          "gsap/ScrollTrigger": "https://cdn.jsdelivr.net/npm/gsap@3.15.0/ScrollTrigger.js",
+          "gsap/SplitText": "https://cdn.jsdelivr.net/npm/gsap@3.15.0/SplitText.js",
+          "lenis": "https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.mjs",
+          "/src/main.js": "/src/main.js?v=20260917a",
+          "/src/preloader/Preloader.js": "/src/preloader/Preloader.js?v=20260913q",
+          "/src/text/Copy.js": "/src/text/Copy.js?v=20260913q",
+          "/src/nav/MobileMenu.js": "/src/nav/MobileMenu.js?v=20260913q",
+          "/src/nav/GooeyNav.js": "/src/nav/GooeyNav.js?v=20260913q",
+          "/src/scroll/smooth.js": "/src/scroll/smooth.js?v=20260913q",
+          "/src/orb/HeroOrb.js": "/src/orb/HeroOrb.js?v=20260913q",
+          "/src/orb/shaders.js": "/src/orb/shaders.js?v=20260913q",
+          "/src/lines/FloatingLines.js": "/src/lines/FloatingLines.js?v=20260916a",
+          "/src/breakpoints.js": "/src/breakpoints.js?v=20260913q",
+          "/src/services/ServicesPage.js": "/src/services/ServicesPage.js?v=20260917a"
+        }
+      }
+    </script>
+    <script>
+      window.setTimeout(() => {
+        if (!window.__qiramBoot?.ready) {
+          document.querySelectorAll('[data-copy]').forEach((el) => el.classList.add('is-copy-ready'));
+        }
+        if (window.__qiramPreloader) return;
+        if (document.documentElement.classList.contains('is-preloading')) {
+          document.documentElement.classList.remove('is-preloading', 'is-intro');
+          const root = document.getElementById('preloader');
+          if (root) {
+            root.hidden = true;
+            root.style.display = 'none';
+          }
+        }
+      }, 12000);
+    </script>
+    <meta
+      name="description"
+      content="Explore QIRAM services in detail — web design & development, web apps, UX/UI and branding for ambitious brands across the GCC."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&family=Outfit:wght@200;300;400;500&family=Tajawal:wght@300;400;500;700&display=swap"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&family=Outfit:wght@200;300;400;500&family=Tajawal:wght@300;400;500;700&display=swap"
+      />
+    </noscript>
+  </head>
+  <body class="page-services">
+    <div class="preloader" id="preloader" aria-hidden="true">
+      <p class="preloader__word" id="preloader-word">
+        <span class="preloader__dot"></span>
+        <span id="preloader-word-text">Hello</span>
+      </p>
+      <svg class="preloader__svg" preserveAspectRatio="none" aria-hidden="true">
+        <path id="preloader-path"></path>
+      </svg>
+    </div>
+    <div class="page-lines" aria-hidden="true"></div>
+    <div class="grain" aria-hidden="true"></div>
+    <svg class="gooey-svg" aria-hidden="true" focusable="false">
+      <filter id="gooey-nav" x="-80%" y="-80%" width="260%" height="260%">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur" />
+        <feColorMatrix
+          in="blur"
+          mode="matrix"
+          values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7"
+        />
+      </filter>
+    </svg>
+
+    <header class="nav">
+      <a class="logo" href="/" aria-label="QIRAM home">
+        <span class="logo-mark" aria-hidden="true">Q</span>
+        <span class="logo-word">QIRAM</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Primary">
+        <ul>
+          <li>
+            <a href="/" data-i18n="nav.home">Home</a>
+          </li>
+          <li class="is-active">
+            <a href="/services/" class="is-active" data-i18n="nav.services">Services</a>
+          </li>
+          <li>
+            <a href="/work/" data-i18n="nav.work">Work</a>
+          </li>
+          <li>
+            <a href="/about/" data-i18n="nav.about">About</a>
+          </li>
+          <li>
+            <a href="/contact/" data-i18n="nav.contact">Contact</a>
+          </li>
+        </ul>
+        <span class="gooey-effect gooey-filter" aria-hidden="true"></span>
+        <span class="gooey-effect gooey-text" aria-hidden="true"></span>
+      </nav>
+
+      <div class="nav-end">
+        <div class="lang" role="group" aria-label="Language">
+          <a class="lang-btn is-active" href="/services/" hreflang="en">EN</a>
+          <span class="lang-sep">/</span>
+          <a class="lang-btn" href="/ar/services/" hreflang="ar">العربية</a>
+        </div>
+        <button
+          class="menu-btn"
+          type="button"
+          aria-label="Open menu"
+          aria-expanded="false"
+          data-label-open="Open menu"
+          data-label-close="Close menu"
+        >
+          <span class="menu-btn__burger" aria-hidden="true"></span>
+        </button>
+      </div>
+    </header>
+
+    <div class="mobile-menu" hidden data-lenis-prevent>
+      <div class="mobile-menu__body">
+        <nav class="mobile-nav" aria-label="Mobile">
+          <div class="mobile-nav__header">
+            <p data-i18n="nav.navigation">Navigation</p>
+          </div>
+          <div class="mobile-nav__link" data-href="/">
+            <div class="mobile-nav__indicator"></div>
+            <a href="/" data-i18n="nav.home">Home</a>
+          </div>
+          <div class="mobile-nav__link is-active" data-href="/services/">
+            <div class="mobile-nav__indicator"></div>
+            <a href="/services/" data-i18n="nav.services">Services</a>
+          </div>
+          <div class="mobile-nav__link" data-href="/work/">
+            <div class="mobile-nav__indicator"></div>
+            <a href="/work/" data-i18n="nav.work">Work</a>
+          </div>
+          <div class="mobile-nav__link" data-href="/about/">
+            <div class="mobile-nav__indicator"></div>
+            <a href="/about/" data-i18n="nav.about">About</a>
+          </div>
+          <div class="mobile-nav__link" data-href="/contact/">
+            <div class="mobile-nav__indicator"></div>
+            <a href="/contact/" data-i18n="nav.contact">Contact</a>
+          </div>
+        </nav>
+      </div>
+      <svg class="mobile-menu__curve" aria-hidden="true">
+        <path class="mobile-menu__curve-path"></path>
+      </svg>
+    </div>
+    <main>
+      <section class="services-hero" aria-labelledby="svc-hero-title">
+        <div class="services-hero__copy">
+          <p class="eyebrow">
+            <span>Our services</span>
+            <span class="eyebrow-line" aria-hidden="true"></span>
+          </p>
+          <h1 id="svc-hero-title" data-copy>
+            Digital craft for brands that want to
+            <span class="accent">move forward.</span>
+          </h1>
+          <p class="lede" data-copy>
+            From websites and platforms to product design and identity — we build bilingual experiences for the Gulf, with clarity at every step.
+          </p>
+          <div class="services-hero__actions">
+            <a class="btn btn-primary" href="/contact/" data-magnetic="14">
+              <span>Start a project</span>
+              <span class="btn-arrow" aria-hidden="true">→</span>
+            </a>
+            <a class="btn btn-ghost" href="#web" data-magnetic="10">
+              <span>Explore services</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <nav class="services-filters svc-jump" aria-label="Filter services">
+        <button type="button" class="services-filter is-active" data-service-filter="all">All</button>
+        <button type="button" class="services-filter" data-service-filter="web">Web</button>
+        <button type="button" class="services-filter" data-service-filter="apps">Apps</button>
+        <button type="button" class="services-filter" data-service-filter="ux">UX/UI</button>
+        <button type="button" class="services-filter" data-service-filter="brand">Brand</button>
+      </nav>
+
+      <article
+        class="svc-block services-item"
+        id="web"
+        data-service="web"
+        data-service-name="Web"
+      >
+        <div class="svc-block__media">
+          <img
+            src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1400&q=80"
+            alt="Developer workspace with code on a laptop screen"
+            width="1400"
+            height="933"
+            loading="eager"
+            decoding="async"
+          />
+        </div>
+        <div class="svc-block__copy">
+          <p class="svc-block__index">01</p>
+          <h2 data-copy>Web Design &amp; Development</h2>
+          <p data-copy>
+            Modern, fast and scalable websites built for performance, user experience and business growth — with equal care in English and Arabic.
+          </p>
+          <ul class="svc-tags">
+            <li>WordPress</li>
+            <li>Webflow</li>
+            <li>Ecommerce</li>
+            <li>Custom HTML/CSS</li>
+            <li>Landing pages</li>
+            <li>CMS builds</li>
+            <li>Performance</li>
+            <li>SEO foundations</li>
+          </ul>
+          <a class="services-explore" href="/contact/">
+            <span>Discuss a website</span>
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </article>
+
+      <article
+        class="svc-block svc-block--flip services-item"
+        id="apps"
+        data-service="apps"
+        data-service-name="Apps"
+      >
+        <div class="svc-block__media">
+          <img
+            src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1400&q=80"
+            alt="Product analytics dashboard on a laptop"
+            width="1400"
+            height="933"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <div class="svc-block__copy">
+          <p class="svc-block__index">02</p>
+          <h2 data-copy>Web Apps &amp; Platforms</h2>
+          <p data-copy>
+            Custom web applications and digital platforms designed for scale, efficiency and long-term success — from dashboards to client portals.
+          </p>
+          <ul class="svc-tags">
+            <li>SaaS interfaces</li>
+            <li>Dashboards</li>
+            <li>Client portals</li>
+            <li>Booking systems</li>
+            <li>Internal tools</li>
+            <li>API integrations</li>
+            <li>Admin panels</li>
+            <li>Multi-language apps</li>
+          </ul>
+          <a class="services-explore" href="/contact/">
+            <span>Discuss a platform</span>
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </article>
+
+      <article
+        class="svc-block services-item"
+        id="ux"
+        data-service="ux"
+        data-service-name="UX/UI"
+      >
+        <div class="svc-block__media">
+          <img
+            src="https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?auto=format&fit=crop&w=1400&q=80"
+            alt="UX designer reviewing interface wireframes at a desk"
+            width="1400"
+            height="933"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <div class="svc-block__copy">
+          <p class="svc-block__index">03</p>
+          <h2 data-copy>UX/UI &amp; Product Design</h2>
+          <p data-copy>
+            User-centered design systems and interfaces that turn ideas into seamless experiences — clear flows, sharp visuals, bilingual by default.
+          </p>
+          <ul class="svc-tags">
+            <li>UX research</li>
+            <li>Wireframes</li>
+            <li>UI design</li>
+            <li>Prototyping</li>
+            <li>Design systems</li>
+            <li>Mobile apps</li>
+            <li>Usability testing</li>
+            <li>Arabic UI</li>
+          </ul>
+          <a class="services-explore" href="/contact/">
+            <span>Discuss product design</span>
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </article>
+
+      <article
+        class="svc-block svc-block--flip services-item"
+        id="brand"
+        data-service="brand"
+        data-service-name="Brand"
+      >
+        <div class="svc-block__media">
+          <img
+            src="https://images.unsplash.com/photo-1634942537034-2531766767d1?auto=format&fit=crop&w=1400&q=80"
+            alt="Brand identity materials with typography and color samples"
+            width="1400"
+            height="933"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <div class="svc-block__copy">
+          <p class="svc-block__index">04</p>
+          <h2 data-copy>Branding &amp; Identity</h2>
+          <p data-copy>
+            Distinctive brand identities, visual systems and guidelines that build recognition and trust — crafted for markets that speak more than one language.
+          </p>
+          <ul class="svc-tags">
+            <li>Logo design</li>
+            <li>Visual identity</li>
+            <li>Brand guidelines</li>
+            <li>Typography</li>
+            <li>Color systems</li>
+            <li>Social kits</li>
+            <li>Packaging</li>
+            <li>Rebrands</li>
+          </ul>
+          <a class="services-explore" href="/contact/">
+            <span>Discuss branding</span>
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </article>
+
+      <section class="section section-process" id="process" aria-labelledby="process-title">
+        <div class="process-head">
+          <div>
+            <p class="eyebrow">
+              <span>Our process</span>
+              <span class="eyebrow-line" aria-hidden="true"></span>
+            </p>
+            <h2 id="process-title" data-copy>
+              A clear path from idea to
+              <span class="accent">impact.</span>
+            </h2>
+          </div>
+          <p class="process-lede" data-copy>
+            We shape ideas into digital experiences through a structured, collaborative and human-centered process. Here’s how we turn vision into real outcomes.
+          </p>
+        </div>
+        <ol class="process-steps">
+          <li>
+            <div class="process-rail" aria-hidden="true">
+              <span class="process-num">01</span>
+              <span class="process-line"></span>
+            </div>
+            <h3 data-copy>Discover</h3>
+            <p data-copy>We learn about your goals, audience and market.</p>
+          </li>
+          <li>
+            <div class="process-rail" aria-hidden="true">
+              <span class="process-num">02</span>
+              <span class="process-line"></span>
+            </div>
+            <h3 data-copy>Shape</h3>
+            <p data-copy>We define the strategy, structure and design.</p>
+          </li>
+          <li>
+            <div class="process-rail" aria-hidden="true">
+              <span class="process-num">03</span>
+              <span class="process-line"></span>
+            </div>
+            <h3 data-copy>Build</h3>
+            <p data-copy>We develop, test and bring it to life.</p>
+          </li>
+          <li>
+            <div class="process-rail" aria-hidden="true">
+              <span class="process-num">04</span>
+              <span class="process-line"></span>
+            </div>
+            <h3 data-copy>Launch</h3>
+            <p data-copy>We go live and support your continued growth.</p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="services-cta svc-cta" aria-labelledby="svc-cta-title">
+        <p class="eyebrow">
+          <span>Next step</span>
+          <span class="eyebrow-line" aria-hidden="true"></span>
+        </p>
+        <h2 id="svc-cta-title" data-copy>
+          Have a project in mind?
+          <span class="accent">Let’s build it.</span>
+        </h2>
+        <p class="lede" data-copy>
+          Tell us what you're building — we'll help shape the right mix of design, development and brand for your market.
+        </p>
+        <div class="svc-cta__actions">
+          <a class="btn btn-primary" href="/contact/" data-magnetic="16">
+            <span>Send a message</span>
+            <span class="btn-arrow" aria-hidden="true">→</span>
+          </a>
+          <a class="btn btn-ghost" href="/work/" data-magnetic="10">
+            <span>See featured work</span>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>© QIRAM</span>
+      <span data-i18n="footer.mark">Digital studio for the Gulf</span>
+    </footer>
+
+    <noscript>
+      <style>
+        [data-copy] {
+          visibility: visible !important;
+        }
+      </style>
+    </noscript>
+    <script type="module">
+      import { initPreloader } from '/src/preloader/Preloader.js';
+      window.__qiramPreloader = initPreloader();
+    </script>
+    <script type="module" src="/src/main.js?v=20260917a"></script>
+  </body>
+</html>

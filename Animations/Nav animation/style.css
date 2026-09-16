@@ -1,0 +1,213 @@
+/* ===============================================
+   GLOBAL RESET & BASE
+   =============================================== */
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font-family: 'Inter', sans-serif;
+	background: #f5f5f5;
+	min-height: 100vh;
+}
+
+/* ===============================================
+   BLOCK: header
+   Fixed wrapper in the top-right corner that holds
+   the expanding panel AND the toggle button.
+   =============================================== */
+.header {
+	position: fixed;
+	right: 50px;
+	top: 50px;
+	/* High z-index so nothing on the page overlaps the menu */
+	z-index: 100;
+}
+
+/* ===============================================
+   BLOCK: menu
+   The pill-shaped container that grows from a small
+   button-sized shape into a full menu panel.
+   Its width/height/position are animated by GSAP.
+   =============================================== */
+.menu {
+	width: 100px;
+	height: 40px;
+	background-color: #c9fd74;
+	border-radius: 25px;
+	position: relative;
+	/* Hide the nav content while the panel is still small */
+	overflow: hidden;
+}
+
+/* ===============================================
+   BLOCK: menu-btn
+   The toggle button that sits on top of the panel.
+   Contains a vertical slider with two labels stacked,
+   so we can slide between "Menu" and "Close" states.
+   =============================================== */
+.menu-btn {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 100px;
+	height: 40px;
+	cursor: pointer;
+	border-radius: 25px;
+	overflow: hidden;
+	/* Sits above the panel so it is always clickable */
+	z-index: 10;
+}
+
+/* ELEMENT: slider — wraps both labels in a 200%-tall column.
+   GSAP animates its `top` between 0 and -100% to swap labels.
+   pointer-events: none → clicks always reach the parent button,
+   even if they happen on the inner label. */
+.menu-btn__slider {
+	position: relative;
+	width: 100%;
+	height: 200%;
+	top: 0;
+	pointer-events: none;
+}
+
+/* ELEMENT: a single label slot — takes exactly half of the slider */
+.menu-btn__item {
+	width: 100%;
+	height: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: #c9fd74;
+}
+
+/* MODIFIER: dark variant used for the "Close" state */
+.menu-btn__item--close {
+	background-color: #000;
+}
+
+/* Text in the dark variant switches to the accent color */
+.menu-btn__item--close p {
+	color: #c9fd74;
+}
+
+/* ===============================================
+   ELEMENT: menu-btn__label
+   3D hover flip effect — the label rotates on the X axis
+   and a second <p> comes into view from below, giving
+   the impression of a rolling ticker.
+   =============================================== */
+.menu-btn__label {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	width: 100%;
+	/* preserve-3d keeps the child <p>s in 3D space */
+	transform-style: preserve-3d;
+	transition: transform 0.45s cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.menu-btn__label p {
+	text-transform: uppercase;
+	font-size: 13px;
+	font-weight: 500;
+	transition: all 0.45s cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+/* The second <p> is pre-rotated below the stage and invisible.
+   When the parent flips, this one rotates into view. */
+.menu-btn__label p:nth-child(2) {
+	position: absolute;
+	transform-origin: bottom center;
+	transform: rotateX(-90deg) translateY(9px);
+	opacity: 0;
+}
+
+/* ── Hover state: flip the whole label ── */
+.menu-btn:hover .menu-btn__label {
+	transform: rotateX(90deg);
+}
+
+/* First <p> moves up and fades out */
+.menu-btn:hover .menu-btn__label p:nth-child(1) {
+	transform: translateY(-100%);
+	opacity: 0;
+}
+
+/* Second <p> becomes visible as it rotates into place */
+.menu-btn:hover .menu-btn__label p:nth-child(2) {
+	opacity: 1;
+}
+
+/* ===============================================
+   BLOCK: nav
+   The navigation content inside the expanding panel.
+   Hidden by default; revealed once the panel is wide
+   enough to show it.
+   =============================================== */
+.nav {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	padding: 100px 40px 50px;
+	height: 100%;
+	/* Hidden and unclickable until `.nav--visible` is added */
+	opacity: 0;
+	pointer-events: none;
+}
+
+/* MODIFIER: toggled on by GSAP after the panel starts expanding */
+.nav--visible {
+	opacity: 1;
+	pointer-events: all;
+}
+
+/* ELEMENT: the list of main links */
+.nav__body {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+/* ELEMENT: wrapper around each link — adds perspective for the 3D
+   flip and clips the overflow so the link cleanly enters from below. */
+.nav__link-wrap {
+	perspective: 300px;
+	overflow: hidden;
+}
+
+/* ELEMENT: the actual link text */
+.nav__link {
+	display: block;
+	font-size: 46px;
+	text-decoration: none;
+	color: black;
+	line-height: 1.15;
+	/* Hint to the browser that these props will animate — improves perf */
+	will-change: transform, opacity;
+}
+
+/* ===============================================
+   ELEMENT: nav__footer
+   Bottom row with small social links (2 per row).
+   =============================================== */
+.nav__footer {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.nav__footer-link {
+	/* 50% width = two per row */
+	width: 50%;
+	margin-top: 5px;
+	text-decoration: none;
+	color: black;
+	font-size: 14px;
+	will-change: transform, opacity;
+}

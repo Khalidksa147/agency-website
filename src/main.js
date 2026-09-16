@@ -4,6 +4,10 @@ import { initCopy, playHeroCopy, prepareHeroCopy } from './text/Copy.js';
 import { initSmoothScroll } from './scroll/smooth.js';
 import { initPreloader, markPageReady } from './preloader/Preloader.js';
 import { initWorkStack } from './work/WorkStack.js?v=20260915ag';
+import { initContactPage } from './contact/ContactPage.js?v=20260916k';
+import { initAboutPage } from './about/AboutPage.js?v=20260916k';
+import { initWorkPage } from './work/WorkPage.js?v=20260917a';
+import { initServicesPage } from './services/ServicesPage.js?v=20260917a';
 
 window.__qiramPreloader ??= initPreloader();
 
@@ -24,7 +28,8 @@ function refreshSections() {
   sections = navLinks
     .map((link) => {
       const id = link.getAttribute('href');
-      const el = id ? document.querySelector(id) : null;
+      if (!id || !id.startsWith('#')) return null;
+      const el = document.querySelector(id);
       if (!el) return null;
       return {
         href: el.id === 'top' ? '#top' : `#${el.id}`,
@@ -186,15 +191,21 @@ const contactSelect = initContactSelect();
 
 contactForm?.addEventListener('submit', (event) => {
   event.preventDefault();
-  const button = event.currentTarget.querySelector('button span');
-  const original = button.textContent;
-  button.textContent = document.documentElement.lang === 'ar' ? 'تم الإرسال' : 'Received';
+  const form = event.currentTarget;
+  const button = form.querySelector('button[type="submit"] span');
+  const original = button?.textContent;
+  form.classList.add('is-sent');
+  if (button) {
+    button.textContent = document.documentElement.lang === 'ar' ? 'تم الإرسال' : 'Received';
+  }
   window.setTimeout(() => {
-    button.textContent = original;
-    event.currentTarget.reset();
+    form.classList.remove('is-sent');
+    if (button && original) button.textContent = original;
+    form.reset();
     if (contactCount) contactCount.textContent = '0';
     contactSelect.refresh();
-  }, 1600);
+    form.dispatchEvent(new CustomEvent('contact:reset'));
+  }, 2200);
 });
 
 function initServiceGlow() {
@@ -330,6 +341,10 @@ document.addEventListener(
 );
 
 revealPage();
+initContactPage();
+initAboutPage();
+initWorkPage();
+initServicesPage();
 
 preloaderReady
   .then(() => {

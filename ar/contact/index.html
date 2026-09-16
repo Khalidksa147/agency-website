@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      document.documentElement.classList.add('js');
+      document.documentElement.classList.add('is-preloading');
+      try {
+        const force = /[?&]preloader(?:&|=|$)/.test(location.search);
+        if (force || !sessionStorage.getItem('qiram.preloader')) {
+          document.documentElement.classList.add('is-intro');
+        }
+      } catch (err) {
+        document.documentElement.classList.add('is-intro');
+      }
+    </script>
+    <style>
+      html, body { background: #080a0a; }
+      html.is-preloading,
+      html.is-preloading body { overflow: hidden; }
+      .preloader {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        align-items: center;
+        justify-content: center;
+        background: #141516;
+        color: #fff;
+        pointer-events: none;
+      }
+      html.is-preloading .preloader,
+      .preloader.is-leaving {
+        display: flex !important;
+        pointer-events: auto;
+      }
+      html.is-preloading:not(.is-intro) .preloader__word { visibility: hidden; }
+      .preloader__word {
+        display: flex;
+        align-items: center;
+        gap: 0.625rem;
+        margin: 0;
+        font-family: Tajawal, Outfit, Manrope, sans-serif;
+        font-size: clamp(2rem, 4vw, 2.625rem);
+        font-weight: 300;
+        letter-spacing: 0;
+      }
+      .preloader__dot {
+        width: 0.625rem;
+        height: 0.625rem;
+        border-radius: 999px;
+        background: #fff;
+        flex: 0 0 auto;
+      }
+      .mobile-menu[hidden] { display: none !important; }
+      .preloader[hidden] { display: none !important; }
+      .preloader.is-leaving { transform: translateY(calc(-100% - 300px)); transition: transform 0.8s cubic-bezier(0.76, 0, 0.24, 1); }
+    </style>
+    <title>تواصل — قِرَم</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14.5' fill='none' stroke='%23D7FF4D' stroke-width='1.4'/%3E%3Ctext x='16' y='21' text-anchor='middle' font-size='14' fill='%23D7FF4D' font-family='Georgia,serif'%3EQ%3C/text%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="/src/styles.css?v=20260916k" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+          "three/addons/postprocessing/EffectComposer.js": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/postprocessing/EffectComposer.js",
+          "three/addons/postprocessing/RenderPass.js": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/postprocessing/RenderPass.js",
+          "three/addons/postprocessing/UnrealBloomPass.js": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/postprocessing/UnrealBloomPass.js",
+          "three/addons/postprocessing/ShaderPass.js": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/postprocessing/ShaderPass.js",
+          "gsap": "https://cdn.jsdelivr.net/npm/gsap@3.15.0/index.js",
+          "gsap/ScrollTrigger": "https://cdn.jsdelivr.net/npm/gsap@3.15.0/ScrollTrigger.js",
+          "gsap/SplitText": "https://cdn.jsdelivr.net/npm/gsap@3.15.0/SplitText.js",
+          "lenis": "https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.mjs",
+          "/src/main.js": "/src/main.js?v=20260916k",
+          "/src/preloader/Preloader.js": "/src/preloader/Preloader.js?v=20260913q",
+          "/src/text/Copy.js": "/src/text/Copy.js?v=20260913q",
+          "/src/nav/MobileMenu.js": "/src/nav/MobileMenu.js?v=20260913q",
+          "/src/nav/GooeyNav.js": "/src/nav/GooeyNav.js?v=20260913q",
+          "/src/scroll/smooth.js": "/src/scroll/smooth.js?v=20260913q",
+          "/src/orb/HeroOrb.js": "/src/orb/HeroOrb.js?v=20260913q",
+          "/src/orb/shaders.js": "/src/orb/shaders.js?v=20260913q",
+          "/src/lines/FloatingLines.js": "/src/lines/FloatingLines.js?v=20260916a",
+          "/src/breakpoints.js": "/src/breakpoints.js?v=20260913q",
+          "/src/contact/ContactPage.js": "/src/contact/ContactPage.js?v=20260916k"
+        }
+      }
+    </script>
+    <script>
+      window.setTimeout(() => {
+        if (!window.__qiramBoot?.ready) {
+          document.querySelectorAll('[data-copy]').forEach((el) => el.classList.add('is-copy-ready'));
+        }
+        if (window.__qiramPreloader) return;
+        if (document.documentElement.classList.contains('is-preloading')) {
+          document.documentElement.classList.remove('is-preloading', 'is-intro');
+          const root = document.getElementById('preloader');
+          if (root) {
+            root.hidden = true;
+            root.style.display = 'none';
+          }
+        }
+      }, 12000);
+    </script>
+    <meta
+      name="description"
+      content="تواصل مع قِرَم — ابدأ مشروعاً رقمياً ثنائي اللغة للخليج. أرسل موجزاً ونرد خلال يوم."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&family=Outfit:wght@200;300;400;500&family=Tajawal:wght@300;400;500;700&display=swap"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&family=Outfit:wght@200;300;400;500&family=Tajawal:wght@300;400;500;700&display=swap"
+      />
+    </noscript>
+  </head>
+  <body class="page-contact">
+    <div class="preloader" id="preloader" aria-hidden="true">
+      <p class="preloader__word" id="preloader-word">
+        <span class="preloader__dot"></span>
+        <span id="preloader-word-text">مرحباً</span>
+      </p>
+      <svg class="preloader__svg" preserveAspectRatio="none" aria-hidden="true">
+        <path id="preloader-path"></path>
+      </svg>
+    </div>
+    <div class="page-lines" aria-hidden="true"></div>
+    <div class="grain" aria-hidden="true"></div>
+    <svg class="gooey-svg" aria-hidden="true" focusable="false">
+      <filter id="gooey-nav" x="-80%" y="-80%" width="260%" height="260%">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur" />
+        <feColorMatrix
+          in="blur"
+          mode="matrix"
+          values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7"
+        />
+      </filter>
+    </svg>
+
+    <header class="nav">
+      <a class="logo" href="/ar/" aria-label="قِرَم">
+        <span class="logo-mark" aria-hidden="true">Q</span>
+        <span class="logo-word">QIRAM</span>
+      </a>
+      <nav class="nav-links" aria-label="القائمة الرئيسية">
+        <ul>
+          <li><a href="/ar/" data-i18n="nav.home">الرئيسية</a></li>
+          <li><a href="/ar/services/" data-i18n="nav.services">خدماتنا</a></li>
+          <li><a href="/ar/work/" data-i18n="nav.work">أعمالنا</a></li>
+          <li><a href="/ar/about/" data-i18n="nav.about">عن الاستوديو</a></li>
+          <li class="is-active"><a href="/ar/contact/" class="is-active" data-i18n="nav.contact">تواصل</a></li>
+        </ul>
+        <span class="gooey-effect gooey-filter" aria-hidden="true"></span>
+        <span class="gooey-effect gooey-text" aria-hidden="true"></span>
+      </nav>
+      <div class="nav-end">
+        <div class="lang" role="group" aria-label="اللغة">
+          <a class="lang-btn" href="/contact/" hreflang="en">EN</a>
+          <span class="lang-sep">/</span>
+          <a class="lang-btn is-active" href="/ar/contact/" hreflang="ar">العربية</a>
+        </div>
+        <button class="menu-btn" type="button" aria-label="فتح القائمة" aria-expanded="false" data-label-open="فتح القائمة" data-label-close="إغلاق القائمة">
+          <span class="menu-btn__burger" aria-hidden="true"></span>
+        </button>
+      </div>
+    </header>
+
+    <div class="mobile-menu" hidden data-lenis-prevent>
+      <div class="mobile-menu__body">
+        <nav class="mobile-nav" aria-label="الجوال">
+          <div class="mobile-nav__header"><p data-i18n="nav.navigation">التنقل</p></div>
+          <div class="mobile-nav__link" data-href="/ar/"><div class="mobile-nav__indicator"></div><a href="/ar/" data-i18n="nav.home">الرئيسية</a></div>
+          <div class="mobile-nav__link" data-href="/ar/services/"><div class="mobile-nav__indicator"></div><a href="/ar/services/" data-i18n="nav.services">خدماتنا</a></div>
+          <div class="mobile-nav__link" data-href="/ar/work/"><div class="mobile-nav__indicator"></div><a href="/ar/work/" data-i18n="nav.work">أعمالنا</a></div>
+          <div class="mobile-nav__link" data-href="/ar/about/"><div class="mobile-nav__indicator"></div><a href="/ar/about/" data-i18n="nav.about">عن الاستوديو</a></div>
+          <div class="mobile-nav__link is-active" data-href="/ar/contact/"><div class="mobile-nav__indicator"></div><a href="/ar/contact/" data-i18n="nav.contact">تواصل</a></div>
+        </nav>
+      </div>
+      <svg class="mobile-menu__curve" aria-hidden="true"><path class="mobile-menu__curve-path"></path></svg>
+    </div>
+
+        <main>
+      <section class="contact-hero" aria-labelledby="contact-hero-title">
+        <div class="contact-hero__copy">
+          <p class="eyebrow">
+            <span>تواصل</span>
+            <span class="eyebrow-line" aria-hidden="true"></span>
+          </p>
+          <h1 id="contact-hero-title" data-copy>
+            لنبنِ شيئاً يبدو
+            <span class="accent">حتمياً.</span>
+          </h1>
+          <p class="lede" data-copy>
+            أخبرنا بما تبنيه. سنعود إليك بوضوح وخطوات تالية وخطة تناسب سوق الخليج.
+          </p>
+          <div class="contact-hero__actions">
+            <a class="btn btn-primary" href="#brief" data-magnetic="10">
+              <span>ابدأ الموجز</span>
+              <span class="btn-arrow" aria-hidden="true">→</span>
+            </a>
+            <button class="btn btn-ghost" type="button" data-copy-email="hello@qiram.studio" data-magnetic="10">
+              <span data-copy-label>انسخ البريد</span>
+            </button>
+          </div>
+        </div>
+        <aside class="contact-hero__aside" aria-label="تواصل سريع">
+          <div class="contact-pulse" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </div>
+          <p class="contact-hero__status">نرد عادة خلال 24 ساعة</p>
+          <a class="contact-hero__mail" href="mailto:hello@qiram.studio">hello@qiram.studio</a>
+          <ul class="contact-hero__meta">
+            <li>الرياض</li>
+            <li>دبي</li>
+            <li>الدوحة</li>
+          </ul>
+        </aside>
+      </section>
+
+      <section class="contact-channels section" aria-label="طرق التواصل">
+        <article class="contact-channel" data-magnetic="8">
+          <p class="contact-channel__label">البريد</p>
+          <h2>راسل الاستوديو</h2>
+          <p>الأنسب لموجزات المشاريع والعروض والأسئلة التفصيلية.</p>
+          <a class="contact-channel__email" href="mailto:hello@qiram.studio" data-copy-email="hello@qiram.studio">
+            <span data-copy-label>hello@qiram.studio</span>
+            <span aria-hidden="true">→</span>
+          </a>
+        </article>
+        <article class="contact-channel" data-magnetic="8">
+          <p class="contact-channel__label">اتصال</p>
+          <h2>احجز محادثة</h2>
+          <p>تفضل الحديث عن المشروع؟ تواصل معنا على رقم سعودي.</p>
+          <a class="contact-channel__phone" href="tel:+966501234567" dir="ltr">+966 50 123 4567</a>
+        </article>
+        <article class="contact-channel" data-magnetic="8">
+          <p class="contact-channel__label">التواصل</p>
+          <h2>تابع الأعمال</h2>
+          <p>العملية والإطلاقات والحرفية ثنائية اللغة عبر المنطقة.</p>
+          <div class="contact-channel__social">
+            <a href="#" aria-label="LinkedIn">LinkedIn</a>
+            <a href="#" aria-label="Instagram">Instagram</a>
+            <a href="#" aria-label="Dribbble">Dribbble</a>
+          </div>
+        </article>
+      </section>
+
+      <section class="contact-board section" id="brief" aria-labelledby="brief-title">
+        <div class="contact-board__form">
+          <div class="contact-board__head">
+            <p class="eyebrow">
+              <span>موجز المشروع</span>
+              <span class="eyebrow-line" aria-hidden="true"></span>
+            </p>
+            <h2 id="brief-title" data-copy>أخبرنا عن مشروعك.</h2>
+            <p class="lede" data-copy>
+              شارك بعض التفاصيل. كلّما زاد السياق، كانت استجابتنا الأولى أدق.
+            </p>
+            <div class="contact-progress" data-form-progress style="--progress: 0%">
+              <span class="contact-progress__track" aria-hidden="true"></span>
+              <span class="contact-progress__label">اكتمال الموجز <strong data-form-progress-val>0%</strong></span>
+            </div>
+          </div>
+
+          <div class="contact-types" role="group" aria-label="نوع المشروع">
+            <button type="button" class="contact-type" data-project-type="website" aria-pressed="false">موقع</button>
+            <button type="button" class="contact-type" data-project-type="app" aria-pressed="false">تطبيق ويب</button>
+            <button type="button" class="contact-type" data-project-type="ux" aria-pressed="false">UX/UI</button>
+            <button type="button" class="contact-type" data-project-type="brand" aria-pressed="false">هوية</button>
+            <button type="button" class="contact-type" data-project-type="other" aria-pressed="false">أخرى</button>
+          </div>
+
+          <form class="contact-form contact-form--page" action="#" method="post">
+            <label>
+              <span class="vh">الاسم الكامل</span>
+              <input type="text" name="name" autocomplete="name" required placeholder="الاسم الكامل *" />
+            </label>
+            <label>
+              <span class="vh">البريد الإلكتروني</span>
+              <input type="email" name="email" autocomplete="email" required placeholder="البريد الإلكتروني *" />
+            </label>
+            <label>
+              <span class="vh">اسم الشركة</span>
+              <input type="text" name="company" autocomplete="organization" required placeholder="اسم الشركة *" />
+            </label>
+            <label>
+              <span class="vh">رقم الجوال</span>
+              <input type="tel" name="phone" autocomplete="tel" required placeholder="رقم الجوال *" />
+            </label>
+            <label class="full contact-select">
+              <span class="vh">نوع المشروع</span>
+              <select name="type" class="contact-select-native" required>
+                <option value="" disabled selected>اختر خياراً *</option>
+                <option value="website">موقع</option>
+                <option value="app">تطبيق ويب</option>
+                <option value="ux">UX/UI</option>
+                <option value="brand">هوية</option>
+                <option value="other">أخرى</option>
+              </select>
+              <button type="button" class="contact-select-btn" aria-haspopup="listbox" aria-expanded="false">
+                <span>اختر خياراً *</span>
+              </button>
+              <ul class="contact-select-list" role="listbox" hidden></ul>
+            </label>
+            <label class="full">
+              <span class="vh">أخبرنا عن مشروعك</span>
+              <textarea name="message" rows="6" maxlength="500" required placeholder="رسالتك.. *"></textarea>
+              <span class="contact-count"><span data-count>0</span>/500</span>
+            </label>
+            <button class="btn btn-primary" type="submit" data-magnetic="12">
+              <span>أرسل الرسالة</span>
+              <span class="btn-arrow" aria-hidden="true">→</span>
+            </button>
+            <div class="contact-success" aria-live="polite">
+              <p class="contact-success__kicker">وصلت الرسالة</p>
+              <p class="contact-success__title">شكراً — سنتواصل معك قريباً.</p>
+              <p class="contact-success__body">توقّع رداً خلال يوم عمل واحد.</p>
+            </div>
+          </form>
+        </div>
+
+        <aside class="contact-brief" data-brief aria-label="معاينة الموجز">
+          <p class="contact-brief__kicker">معاينة مباشرة</p>
+          <h3>موجزك</h3>
+          <dl class="contact-brief__list">
+            <div>
+              <dt>الاسم</dt>
+              <dd data-brief-name>اسمك</dd>
+            </div>
+            <div>
+              <dt>الشركة</dt>
+              <dd data-brief-company>شركتك</dd>
+            </div>
+            <div>
+              <dt>البريد</dt>
+              <dd data-brief-email>بريدك</dd>
+            </div>
+            <div>
+              <dt>النوع</dt>
+              <dd data-brief-type>نوع المشروع</dd>
+            </div>
+          </dl>
+          <p class="contact-brief__message" data-brief-message>تفاصيل المشروع…</p>
+          <p class="contact-brief__note">تتحدّث هذه المعاينة مع كتابتك — لا يُرسل شيء قبل الضغط على إرسال.</p>
+        </aside>
+      </section>
+
+      <section class="contact-faq section" aria-labelledby="faq-title">
+        <div class="contact-faq__head">
+          <p class="eyebrow">
+            <span>أسئلة شائعة</span>
+            <span class="eyebrow-line" aria-hidden="true"></span>
+          </p>
+          <h2 id="faq-title" data-copy>قبل أن تكتب.</h2>
+        </div>
+        <div class="contact-faq__list">
+          <div class="contact-faq__item is-open">
+            <button type="button" aria-expanded="true">
+              <span>متى تردّون؟</span>
+              <span class="contact-faq__icon" aria-hidden="true"></span>
+            </button>
+            <div class="contact-faq__panel">
+              <p>خلال يوم عمل واحد. إذا كان الموجز واضحاً، غالباً نعود بخطوات تالية في اليوم نفسه.</p>
+            </div>
+          </div>
+          <div class="contact-faq__item">
+            <button type="button" aria-expanded="false">
+              <span>هل تعملون باللغتين من اليوم الأول؟</span>
+              <span class="contact-faq__icon" aria-hidden="true"></span>
+            </button>
+            <div class="contact-faq__panel">
+              <p>نعم. الإنجليزية والعربية تُخطَّطان معاً — البنية والصوت والواجهة — لا تُضاف لاحقاً.</p>
+            </div>
+          </div>
+          <div class="contact-faq__item">
+            <button type="button" aria-expanded="false">
+              <span>ماذا أضمّن في الموجز؟</span>
+              <span class="contact-faq__icon" aria-hidden="true"></span>
+            </button>
+            <div class="contact-faq__panel">
+              <p>الأهداف والجمهور والجدول الزمني واللغات المطلوبة وأي مراجع تحبها. الملاحظات الأولية مرحّب بها.</p>
+            </div>
+          </div>
+          <div class="contact-faq__item">
+            <button type="button" aria-expanded="false">
+              <span>أين أنتم؟</span>
+              <span class="contact-faq__icon" aria-hidden="true"></span>
+            </button>
+            <div class="contact-faq__panel">
+              <p>نعمل عبر الخليج — الرياض ودبي والدوحة — مع تعاون عن بُعد بشكل أساسي.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="about-footer">
+      <div class="about-footer__top">
+        <a class="logo" href="/ar/" aria-label="قِرَم">
+          <span class="logo-mark" aria-hidden="true">Q</span>
+          <span class="logo-word">QIRAM</span>
+        </a>
+        <nav class="about-footer__nav" aria-label="التذييل">
+          <a href="/ar/">الرئيسية</a>
+          <a href="/ar/services/">خدماتنا</a>
+          <a href="/ar/work/">أعمالنا</a>
+          <a href="/ar/about/">عن الاستوديو</a>
+          <a href="/ar/contact/">تواصل</a>
+        </nav>
+        <div class="about-footer__social" aria-label="التواصل">
+          <a href="#" aria-label="LinkedIn">in</a>
+          <a href="#" aria-label="Instagram">ig</a>
+          <a href="#" aria-label="Dribbble">dr</a>
+        </div>
+      </div>
+      <div class="about-footer__bottom">
+        <span>© QIRAM</span>
+        <span>الرياض · دبي · الدوحة</span>
+      </div>
+    </footer>
+
+
+        <noscript>
+      <style>
+        [data-copy] { visibility: visible !important; }
+      </style>
+    </noscript>
+    <script type="module">
+      import { initPreloader } from '/src/preloader/Preloader.js';
+      window.__qiramPreloader = initPreloader();
+    </script>
+    <script type="module" src="/src/main.js?v=20260916k"></script>
+  </body>
+</html>

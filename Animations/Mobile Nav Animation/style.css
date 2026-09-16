@@ -1,0 +1,196 @@
+/* ===============================================
+   GLOBAL RESET & BASE
+   =============================================== */
+*,
+*::before,
+*::after {
+   box-sizing: border-box;
+   margin: 0;
+   padding: 0;
+}
+
+html,
+body {
+   font-family: 'Inter', sans-serif;
+   min-height: 100vh;
+   background: #f0f0f0;
+   /* Prevent horizontal scrollbar while the menu sits off-screen */
+   overflow-x: hidden;
+}
+
+/* Demo page content behind the menu */
+.page {
+   min-height: 100vh;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   font-size: 64px;
+   color: #222;
+   font-weight: 300;
+}
+
+/* ===============================================
+   BLOCK: header
+   The fixed circular button in the top-right corner.
+   =============================================== */
+.header {
+   padding: 30px;
+   position: fixed;
+   right: 0;
+   top: 0;
+   /* Sits above the menu so it is always clickable */
+   z-index: 20;
+}
+
+/* ELEMENT: the round clickable button itself */
+.header__button {
+   width: 80px;
+   height: 80px;
+   border-radius: 50%;
+   background-color: #455CE9;
+   cursor: pointer;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+/* ELEMENT: the burger icon (two lines).
+   We build the two lines with ::before and ::after pseudo-elements
+   so the markup stays clean. */
+.header__burger {
+   width: 100%;
+   position: relative;
+   /* Clicks must reach the parent button, not this decorative layer */
+   pointer-events: none;
+}
+
+.header__burger::after,
+.header__burger::before {
+   content: "";
+   display: block;
+   height: 1px;
+   width: 40%;
+   margin: auto;
+   background-color: #fff;
+   position: relative;
+   transition: transform 0.3s, top 0.3s;
+}
+
+.header__burger::after  { top: -5px; } /* top line  */
+.header__burger::before { top: 5px;  } /* bottom line */
+
+/* MODIFIER: when the menu is open, lines rotate into an "X" */
+.header__burger--active::after {
+   transform: rotate(45deg);
+   top: -1px;
+}
+.header__burger--active::before {
+   transform: rotate(-45deg);
+   top: 0;
+}
+
+/* ===============================================
+   BLOCK: menu
+   The slide-in side panel. Positioned off-screen
+   by default — the starting position is set by GSAP
+   in script.js to keep the animation in one place.
+   =============================================== */
+.menu {
+   height: 100vh;
+   width: 480px;
+   background-color: rgb(41, 41, 41);
+   position: fixed;
+   right: 0;
+   top: 0;
+   color: #fff;
+   /* Below the header button (z-index: 20) so the close button stays on top */
+   z-index: 10;
+}
+
+/* ELEMENT: inner container with padding */
+.menu__body {
+   height: 100%;
+   padding: 100px;
+   display: flex;
+   flex-direction: column;
+   /* Nav on top, footer on the bottom */
+   justify-content: space-between;
+}
+
+/* ELEMENT: the nav list wrapper */
+.menu__nav {
+   display: flex;
+   flex-direction: column;
+   font-size: 56px;
+   gap: 12px;
+   margin-top: 80px;
+}
+
+/* ELEMENT: the "Navigation" label above the links */
+.menu__header {
+   color: rgb(153, 153, 153);
+   border-bottom: 1px solid rgb(153, 153, 153);
+   text-transform: uppercase;
+   font-size: 11px;
+   margin-bottom: 40px;
+}
+
+.menu__header p {
+   padding-bottom: 10px;
+}
+
+/* ELEMENT: one row of the nav list (dot + link text) */
+.menu__link {
+   position: relative;
+   display: flex;
+   align-items: center;
+   cursor: pointer;
+}
+
+.menu__link a {
+   text-decoration: none;
+   color: #fff;
+   font-weight: 300;
+}
+
+/* ELEMENT: the little white dot indicator to the left of each link.
+   Hidden by default (scale 0); GSAP scales it to 1 on hover
+   and for the current page. */
+.menu__indicator {
+   width: 10px;
+   height: 10px;
+   background-color: #fff;
+   border-radius: 50%;
+   position: absolute;
+   left: -30px;
+   transform: scale(0);
+}
+
+/* ELEMENT: footer social links row */
+.menu__footer {
+   display: flex;
+   width: 100%;
+   justify-content: space-between;
+   font-size: 12px;
+   gap: 40px;
+}
+
+.menu__footer a {
+   color: #fff;
+   text-decoration: none;
+   cursor: pointer;
+}
+
+/* ELEMENT: the SVG curve on the left edge of the menu.
+   It is 100px wide and sits just outside the menu (left: -99px)
+   so the curve visually extends the panel. The "d" path is animated
+   in JS — bowed inward when closed, flat when open. */
+.menu__curve {
+   position: absolute;
+   top: 0;
+   left: -99px;
+   width: 100px;
+   height: 100%;
+   fill: rgb(41, 41, 41);
+   stroke: none;
+}

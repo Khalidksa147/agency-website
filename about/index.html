@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      document.documentElement.classList.add('js');
+      document.documentElement.classList.add('is-preloading');
+      try {
+        const force = /[?&]preloader(?:&|=|$)/.test(location.search);
+        if (force || !sessionStorage.getItem('qiram.preloader')) {
+          document.documentElement.classList.add('is-intro');
+        }
+      } catch (err) {
+        document.documentElement.classList.add('is-intro');
+      }
+    </script>
+    <style>
+      html, body { background: #080a0a; }
+      html.is-preloading,
+      html.is-preloading body { overflow: hidden; }
+      .preloader {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        align-items: center;
+        justify-content: center;
+        background: #141516;
+        color: #fff;
+        pointer-events: none;
+      }
+      html.is-preloading .preloader,
+      .preloader.is-leaving {
+        display: flex !important;
+        pointer-events: auto;
+      }
+      html.is-preloading:not(.is-intro) .preloader__word { visibility: hidden; }
+      .preloader__word {
+        display: flex;
+        align-items: center;
+        gap: 0.625rem;
+        margin: 0;
+        font-family: Outfit, Manrope, sans-serif;
+        font-size: clamp(2rem, 4vw, 2.625rem);
+        font-weight: 300;
+        letter-spacing: -0.03em;
+      }
+      .preloader__dot {
+        width: 0.625rem;
+        height: 0.625rem;
+        border-radius: 999px;
+        background: #fff;
+        flex: 0 0 auto;
+      }
+      .mobile-menu[hidden] { display: none !important; }
+      .preloader[hidden] { display: none !important; }
+      .preloader.is-leaving { transform: translateY(calc(-100% - 300px)); transition: transform 0.8s cubic-bezier(0.76, 0, 0.24, 1); }
+    </style>
+    <title>About — QIRAM</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14.5' fill='none' stroke='%23D7FF4D' stroke-width='1.4'/%3E%3Ctext x='16' y='21' text-anchor='middle' font-size='14' fill='%23D7FF4D' font-family='Georgia,serif'%3EQ%3C/text%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="/src/styles.css?v=20260916k" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+          "three/addons/postprocessing/EffectComposer.js": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/postprocessing/EffectComposer.js",
+          "three/addons/postprocessing/RenderPass.js": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/postprocessing/RenderPass.js",
+          "three/addons/postprocessing/UnrealBloomPass.js": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/postprocessing/UnrealBloomPass.js",
+          "three/addons/postprocessing/ShaderPass.js": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/postprocessing/ShaderPass.js",
+          "gsap": "https://cdn.jsdelivr.net/npm/gsap@3.15.0/index.js",
+          "gsap/ScrollTrigger": "https://cdn.jsdelivr.net/npm/gsap@3.15.0/ScrollTrigger.js",
+          "gsap/SplitText": "https://cdn.jsdelivr.net/npm/gsap@3.15.0/SplitText.js",
+          "lenis": "https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.mjs",
+          "/src/main.js": "/src/main.js?v=20260916k",
+          "/src/preloader/Preloader.js": "/src/preloader/Preloader.js?v=20260913q",
+          "/src/text/Copy.js": "/src/text/Copy.js?v=20260913q",
+          "/src/nav/MobileMenu.js": "/src/nav/MobileMenu.js?v=20260913q",
+          "/src/nav/GooeyNav.js": "/src/nav/GooeyNav.js?v=20260913q",
+          "/src/scroll/smooth.js": "/src/scroll/smooth.js?v=20260913q",
+          "/src/orb/HeroOrb.js": "/src/orb/HeroOrb.js?v=20260913q",
+          "/src/orb/shaders.js": "/src/orb/shaders.js?v=20260913q",
+          "/src/lines/FloatingLines.js": "/src/lines/FloatingLines.js?v=20260916a",
+          "/src/breakpoints.js": "/src/breakpoints.js?v=20260913q",
+          "/src/about/AboutPage.js": "/src/about/AboutPage.js?v=20260916k"
+        }
+      }
+    </script>
+    <script>
+      window.setTimeout(() => {
+        if (!window.__qiramBoot?.ready) {
+          document.querySelectorAll('[data-copy]').forEach((el) => el.classList.add('is-copy-ready'));
+        }
+        if (window.__qiramPreloader) return;
+        if (document.documentElement.classList.contains('is-preloading')) {
+          document.documentElement.classList.remove('is-preloading', 'is-intro');
+          const root = document.getElementById('preloader');
+          if (root) {
+            root.hidden = true;
+            root.style.display = 'none';
+          }
+        }
+      }, 12000);
+    </script>
+    <meta
+      name="description"
+      content="About QIRAM — a boutique digital studio for the Gulf. Our story, values and bilingual edge."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&family=Outfit:wght@200;300;400;500&family=Tajawal:wght@300;400;500;700&display=swap"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&family=Outfit:wght@200;300;400;500&family=Tajawal:wght@300;400;500;700&display=swap"
+      />
+    </noscript>
+  </head>
+  <body class="page-about">
+    <div class="preloader" id="preloader" aria-hidden="true">
+      <p class="preloader__word" id="preloader-word">
+        <span class="preloader__dot"></span>
+        <span id="preloader-word-text">Hello</span>
+      </p>
+      <svg class="preloader__svg" preserveAspectRatio="none" aria-hidden="true">
+        <path id="preloader-path"></path>
+      </svg>
+    </div>
+    <div class="page-lines" aria-hidden="true"></div>
+    <div class="grain" aria-hidden="true"></div>
+    <svg class="gooey-svg" aria-hidden="true" focusable="false">
+      <filter id="gooey-nav" x="-80%" y="-80%" width="260%" height="260%">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur" />
+        <feColorMatrix
+          in="blur"
+          mode="matrix"
+          values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7"
+        />
+      </filter>
+    </svg>
+
+    <header class="nav">
+      <a class="logo" href="/" aria-label="QIRAM home">
+        <span class="logo-mark" aria-hidden="true">Q</span>
+        <span class="logo-word">QIRAM</span>
+      </a>
+      <nav class="nav-links" aria-label="Primary">
+        <ul>
+          <li><a href="/" data-i18n="nav.home">Home</a></li>
+          <li><a href="/services/" data-i18n="nav.services">Services</a></li>
+          <li><a href="/work/" data-i18n="nav.work">Work</a></li>
+          <li class="is-active"><a href="/about/" class="is-active" data-i18n="nav.about">About</a></li>
+          <li><a href="/contact/" data-i18n="nav.contact">Contact</a></li>
+        </ul>
+        <span class="gooey-effect gooey-filter" aria-hidden="true"></span>
+        <span class="gooey-effect gooey-text" aria-hidden="true"></span>
+      </nav>
+      <div class="nav-end">
+        <div class="lang" role="group" aria-label="Language">
+          <a class="lang-btn is-active" href="/about/" hreflang="en">EN</a>
+          <span class="lang-sep">/</span>
+          <a class="lang-btn" href="/ar/about/" hreflang="ar">العربية</a>
+        </div>
+        <button class="menu-btn" type="button" aria-label="Open menu" aria-expanded="false" data-label-open="Open menu" data-label-close="Close menu">
+          <span class="menu-btn__burger" aria-hidden="true"></span>
+        </button>
+      </div>
+    </header>
+
+    <div class="mobile-menu" hidden data-lenis-prevent>
+      <div class="mobile-menu__body">
+        <nav class="mobile-nav" aria-label="Mobile">
+          <div class="mobile-nav__header"><p data-i18n="nav.navigation">Navigation</p></div>
+          <div class="mobile-nav__link" data-href="/"><div class="mobile-nav__indicator"></div><a href="/" data-i18n="nav.home">Home</a></div>
+          <div class="mobile-nav__link" data-href="/services/"><div class="mobile-nav__indicator"></div><a href="/services/" data-i18n="nav.services">Services</a></div>
+          <div class="mobile-nav__link" data-href="/work/"><div class="mobile-nav__indicator"></div><a href="/work/" data-i18n="nav.work">Work</a></div>
+          <div class="mobile-nav__link is-active" data-href="/about/"><div class="mobile-nav__indicator"></div><a href="/about/" data-i18n="nav.about">About</a></div>
+          <div class="mobile-nav__link" data-href="/contact/"><div class="mobile-nav__indicator"></div><a href="/contact/" data-i18n="nav.contact">Contact</a></div>
+        </nav>
+      </div>
+      <svg class="mobile-menu__curve" aria-hidden="true"><path class="mobile-menu__curve-path"></path></svg>
+    </div>
+
+    <main>
+      <section class="about-hero" aria-labelledby="about-hero-title">
+        <div class="about-hero__copy">
+          <p class="eyebrow">
+            <span>About us</span>
+            <span class="eyebrow-line" aria-hidden="true"></span>
+          </p>
+          <h1 id="about-hero-title" data-copy>
+            A boutique digital studio
+            <span class="accent">for the Gulf.</span>
+          </h1>
+          <p class="lede" data-copy>
+            We help businesses across the GCC grow through strategy, design and technology — with equal care in English and Arabic.
+          </p>
+          <div class="about-hero__actions">
+            <a class="btn btn-primary" href="/work/" data-magnetic="14">
+              <span>Our work</span>
+              <span class="btn-arrow" aria-hidden="true">→</span>
+            </a>
+            <a class="services-explore" href="#story" data-magnetic="10">
+              <span>Explore the studio</span>
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+        <div class="about-hero__visual">
+          <img
+            src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1800&q=80"
+            alt="Modern studio workspace overlooking a city skyline at night"
+            width="1800"
+            height="1100"
+            loading="eager"
+            decoding="async"
+          />
+          <div class="about-hero__glow" aria-hidden="true"></div>
+          <div class="about-hero__status">
+            <span class="about-pulse" aria-hidden="true"><span></span><span></span><span></span></span>
+            <p>Studio open · GCC</p>
+          </div>
+          <nav class="about-hero__jump" aria-label="On this page">
+            <a href="#story" class="is-active"><span>01</span> Story</a>
+            <a href="#values"><span>02</span> Values</a>
+            <a href="#edge"><span>03</span> Edge</a>
+          </nav>
+        </div>
+      </section>
+
+      <section class="about-story section" id="story" aria-labelledby="story-title">
+        <div class="about-story__copy">
+          <p class="eyebrow">
+            <span>Our story</span>
+            <span class="eyebrow-line" aria-hidden="true"></span>
+          </p>
+          <h2 id="story-title" data-copy>
+            Built for the region.
+            Designed for what’s next.
+          </h2>
+          <p data-copy>
+            QIRAM started with a simple belief: digital experiences in the Gulf should feel native — not translated as an afterthought.
+          </p>
+          <p data-copy>
+            Today we partner with ambitious brands to shape strategy, design and technology that perform in English and Arabic, and feel inevitable in this market.
+          </p>
+          <a class="services-explore" href="#edge">
+            <span>See our edge</span>
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+        <div class="about-story__media">
+          <img
+            src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1400&q=80"
+            alt="Workspace with laptop overlooking a Gulf city skyline"
+            width="1400"
+            height="900"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <ul class="about-story__stats" aria-label="Studio highlights">
+          <li>
+            <strong data-count-to="10" data-count-suffix="+">0+</strong>
+            <span>Projects delivered</span>
+          </li>
+          <li>
+            <strong data-count-to="5" data-count-suffix="+">0+</strong>
+            <span>Years of experience</span>
+          </li>
+          <li>
+            <strong data-count-to="100" data-count-suffix="%">0%</strong>
+            <span>Focus on quality</span>
+          </li>
+        </ul>
+      </section>
+
+      <section class="about-values section" id="values" aria-labelledby="values-title">
+        <div class="about-values__head">
+          <p class="eyebrow">
+            <span>Our values</span>
+            <span class="eyebrow-line" aria-hidden="true"></span>
+          </p>
+          <h2 id="values-title" data-copy>What drives us.</h2>
+          <p class="lede" data-copy>Select a value to see how it shows up in the work.</p>
+        </div>
+        <ul class="about-values__grid">
+          <li
+            class="is-active"
+            data-value-more="From typography to motion timing, we treat polish as respect — for the brand and for the people using it."
+          >
+            <div class="about-values__meta">
+              <span class="about-values__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="7.5" stroke="currentColor" stroke-width="1.3"/><circle cx="12" cy="12" r="2.2" stroke="currentColor" stroke-width="1.3"/><path d="M12 2.8v2.4M12 18.8v2.4M2.8 12h2.4M18.8 12h2.4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+              </span>
+              <span class="about-values__num">01</span>
+            </div>
+            <h3 data-copy>Excellence</h3>
+            <p data-copy>We obsess over the details that make digital experiences feel sharp, clear and lasting.</p>
+          </li>
+          <li
+            data-value-more="You get direct access, honest trade-offs and shared ownership — so decisions stay fast and accountable."
+          >
+            <div class="about-values__meta">
+              <span class="about-values__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="8" width="10" height="10" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="10" y="4" width="10" height="10" rx="1.5" stroke="currentColor" stroke-width="1.3"/></svg>
+              </span>
+              <span class="about-values__num">02</span>
+            </div>
+            <h3 data-copy>Collaboration</h3>
+            <p data-copy>We work as an extension of your team — transparent, responsive and built for shared ownership.</p>
+          </li>
+          <li
+            data-value-more="We test new patterns early, keep what earns clarity, and drop anything that only looks clever."
+          >
+            <div class="about-values__meta">
+              <span class="about-values__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M12 3.5 13.8 9.2 19.8 9.5 15.2 13.2 16.6 19.1 12 15.9 7.4 19.1 8.8 13.2 4.2 9.5 10.2 9.2 12 3.5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+              </span>
+              <span class="about-values__num">03</span>
+            </div>
+            <h3 data-copy>Innovation</h3>
+            <p data-copy>We explore new ideas carefully — always in service of clarity, performance and brand ambition.</p>
+          </li>
+          <li
+            data-value-more="Culture, calendar, commerce and language are inputs — not constraints we discover too late."
+          >
+            <div class="about-values__meta">
+              <span class="about-values__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.3"/><path d="M4 12h16M12 4c2.5 2.4 3.8 5.1 3.8 8s-1.3 5.6-3.8 8c-2.5-2.4-3.8-5.1-3.8-8s1.3-5.6 3.8-8z" stroke="currentColor" stroke-width="1.3"/></svg>
+              </span>
+              <span class="about-values__num">04</span>
+            </div>
+            <h3 data-copy>Gulf First</h3>
+            <p data-copy>Every decision considers regional culture, bilingual reality and how brands actually move here.</p>
+          </li>
+        </ul>
+        <aside class="about-values__detail is-visible" data-value-detail aria-live="polite">
+          <p class="about-values__detail-kicker">In practice</p>
+          <h3 data-value-title>Excellence</h3>
+          <p data-value-body>
+            From typography to motion timing, we treat polish as respect — for the brand and for the people using it.
+          </p>
+        </aside>
+      </section>
+
+      <section class="bilingual" id="edge" data-site-lang="en" aria-label="One brand, two languages">
+        <div class="bilingual-inner">
+          <div class="bilingual-col is-en">
+            <p class="eyebrow">
+              <span>Our edge</span>
+              <span class="eyebrow-line"></span>
+            </p>
+            <h2 data-copy>
+              One brand.<br />
+              Two languages.<br />
+              <span class="accent">Zero compromise.</span>
+            </h2>
+            <p class="lede" data-copy>
+              We design and develop in both English and Arabic, creating seamless, culturally relevant experiences for the GCC market.
+            </p>
+          </div>
+
+          <button type="button" class="bilingual-toggle" data-lang-toggle aria-label="Switch language">
+            <span class="on-en">English</span>
+            <span class="on-ar">الإنجليزية</span>
+            <span class="bilingual-toggle-arrow" aria-hidden="true">→</span>
+            <span class="on-en">Arabic</span>
+            <span class="on-ar">العربية</span>
+          </button>
+
+          <div class="bilingual-col is-ar" lang="ar" dir="rtl">
+            <p class="eyebrow">
+              <span class="eyebrow-line"></span>
+              <span>ميزتنا</span>
+            </p>
+            <h2 data-copy>
+              علامة واحدة.<br />
+              لغتان.<br />
+              <span class="accent">بدون أي تنازل.</span>
+            </h2>
+            <p class="lede" data-copy>
+              نصمم ونطور بالإنجليزية والعربية لتقديم تجارب رقمية سلسة ومتكاملة ثقافياً للمنطقة الخليجية.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="about-cta section" aria-labelledby="about-cta-title">
+        <p class="eyebrow">
+          <span>Let’s work together</span>
+          <span class="eyebrow-line" aria-hidden="true"></span>
+        </p>
+        <h2 id="about-cta-title" data-copy>Have a project in mind?</h2>
+        <p class="lede" data-copy>
+          Tell us what you’re building and we’ll get back to you with the right plan.
+        </p>
+        <a class="btn btn-primary" href="/contact/" data-magnetic="16">
+          <span>Start a project</span>
+          <span class="btn-arrow" aria-hidden="true">→</span>
+        </a>
+      </section>
+    </main>
+
+    <footer class="about-footer">
+      <div class="about-footer__top">
+        <a class="logo" href="/" aria-label="QIRAM home">
+          <span class="logo-mark" aria-hidden="true">Q</span>
+          <span class="logo-word">QIRAM</span>
+        </a>
+        <nav class="about-footer__nav" aria-label="Footer">
+          <a href="/">Home</a>
+          <a href="/services/">Services</a>
+          <a href="/work/">Work</a>
+          <a href="/about/">About</a>
+          <a href="/contact/">Contact</a>
+        </nav>
+        <div class="about-footer__social" aria-label="Social">
+          <a href="#" aria-label="LinkedIn">in</a>
+          <a href="#" aria-label="Instagram">ig</a>
+          <a href="#" aria-label="Dribbble">dr</a>
+        </div>
+      </div>
+      <div class="about-footer__bottom">
+        <span>© QIRAM</span>
+        <span>Riyadh · Dubai · Doha</span>
+      </div>
+    </footer>
+
+
+        <noscript>
+      <style>
+        [data-copy] { visibility: visible !important; }
+      </style>
+    </noscript>
+    <script type="module">
+      import { initPreloader } from '/src/preloader/Preloader.js';
+      window.__qiramPreloader = initPreloader();
+    </script>
+    <script type="module" src="/src/main.js?v=20260916k"></script>
+  </body>
+</html>

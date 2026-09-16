@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Awesome Preloader</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+</head>
+<body>
+  <div class="preloader" id="js-preloader">
+    <p class="preloader__word" id="js-word">
+      <span class="preloader__dot"></span>
+      <span id="js-word-text">Hello</span>
+    </p>
+
+    <svg class="preloader__svg" id="js-svg" preserveAspectRatio="none">
+      <path id="js-path"></path>
+    </svg>
+  </div>
+
+  <main class="page" id="js-page">
+    <div class="page__content">
+      <h1>WEBSITE CONTENT</h1>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

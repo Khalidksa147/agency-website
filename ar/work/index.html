@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      document.documentElement.classList.add('js');
+      document.documentElement.classList.add('is-preloading');
+      try {
+        const force = /[?&]preloader(?:&|=|$)/.test(location.search);
+        if (force || !sessionStorage.getItem('qiram.preloader')) {
+          document.documentElement.classList.add('is-intro');
+        }
+      } catch (err) {
+        document.documentElement.classList.add('is-intro');
+      }
+    </script>
+    <style>
+      html, body { background: #080a0a; }
+      html.is-preloading,
+      html.is-preloading body { overflow: hidden; }
+      .preloader {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        align-items: center;
+        justify-content: center;
+        background: #141516;
+        color: #fff;
+        pointer-events: none;
+      }
+      html.is-preloading .preloader,
+      .preloader.is-leaving {
+        display: flex !important;
+        pointer-events: auto;
+      }
+      html.is-preloading:not(.is-intro) .preloader__word { visibility: hidden; }
+      .preloader__word {
+        display: flex;
+        align-items: center;
+        gap: 0.625rem;
+        margin: 0;
+        font-family: Tajawal, Outfit, Manrope, sans-serif;
+        font-size: clamp(2rem, 4vw, 2.625rem);
+        font-weight: 300;
+        letter-spacing: 0;
+      }
+      .preloader__dot {
+        width: 0.625rem;
+        height: 0.625rem;
+        border-radius: 999px;
+        background: #fff;
+        flex: 0 0 auto;
+      }
+      .mobile-menu[hidden] { display: none !important; }
+      .preloader[hidden] { display: none !important; }
+      .preloader.is-leaving { transform: translateY(calc(-100% - 300px)); transition: transform 0.8s cubic-bezier(0.76, 0, 0.24, 1); }
+    </style>
+    <title>أعمالنا — قِرَم</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14.5' fill='none' stroke='%23D7FF4D' stroke-width='1.4'/%3E%3Ctext x='16' y='21' text-anchor='middle' font-size='14' fill='%23D7FF4D' font-family='Georgia,serif'%3EQ%3C/text%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="/src/styles.css?v=20260916p" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+          "three/addons/postprocessing/EffectComposer.js": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/postprocessing/EffectComposer.js",
+          "three/addons/postprocessing/RenderPass.js": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/postprocessing/RenderPass.js",
+          "three/addons/postprocessing/UnrealBloomPass.js": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/postprocessing/UnrealBloomPass.js",
+          "three/addons/postprocessing/ShaderPass.js": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/postprocessing/ShaderPass.js",
+          "gsap": "https://cdn.jsdelivr.net/npm/gsap@3.15.0/index.js",
+          "gsap/ScrollTrigger": "https://cdn.jsdelivr.net/npm/gsap@3.15.0/ScrollTrigger.js",
+          "gsap/SplitText": "https://cdn.jsdelivr.net/npm/gsap@3.15.0/SplitText.js",
+          "lenis": "https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.mjs",
+          "/src/main.js": "/src/main.js?v=20260916p",
+          "/src/preloader/Preloader.js": "/src/preloader/Preloader.js?v=20260913q",
+          "/src/text/Copy.js": "/src/text/Copy.js?v=20260913q",
+          "/src/nav/MobileMenu.js": "/src/nav/MobileMenu.js?v=20260913q",
+          "/src/nav/GooeyNav.js": "/src/nav/GooeyNav.js?v=20260913q",
+          "/src/scroll/smooth.js": "/src/scroll/smooth.js?v=20260913q",
+          "/src/orb/HeroOrb.js": "/src/orb/HeroOrb.js?v=20260913q",
+          "/src/orb/shaders.js": "/src/orb/shaders.js?v=20260913q",
+          "/src/lines/FloatingLines.js": "/src/lines/FloatingLines.js?v=20260916a",
+          "/src/breakpoints.js": "/src/breakpoints.js?v=20260913q",
+          "/src/work/WorkPage.js": "/src/work/WorkPage.js?v=20260916p"
+        }
+      }
+    </script>
+    <script>
+      window.setTimeout(() => {
+        if (!window.__qiramBoot?.ready) {
+          document.querySelectorAll('[data-copy]').forEach((el) => el.classList.add('is-copy-ready'));
+        }
+        if (window.__qiramPreloader) return;
+        if (document.documentElement.classList.contains('is-preloading')) {
+          document.documentElement.classList.remove('is-preloading', 'is-intro');
+          const root = document.getElementById('preloader');
+          if (root) {
+            root.hidden = true;
+            root.style.display = 'none';
+          }
+        }
+      }, 12000);
+    </script>
+    <meta
+      name="description"
+      content="أعمال مختارة من قِرَم — Archin وVNTNR وAeorim. دراسات حالة في الويب والهوية وتصميم المنتج للخليج."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&family=Outfit:wght@200;300;400;500&family=Tajawal:wght@300;400;500;700&display=swap"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&family=Outfit:wght@200;300;400;500&family=Tajawal:wght@300;400;500;700&display=swap"
+      />
+    </noscript>
+  </head>
+  <body class="page-work">
+    <div class="preloader" id="preloader" aria-hidden="true">
+      <p class="preloader__word" id="preloader-word">
+        <span class="preloader__dot"></span>
+        <span id="preloader-word-text">مرحباً</span>
+      </p>
+      <svg class="preloader__svg" preserveAspectRatio="none" aria-hidden="true">
+        <path id="preloader-path"></path>
+      </svg>
+    </div>
+    <div class="page-lines" aria-hidden="true"></div>
+    <div class="grain" aria-hidden="true"></div>
+    <svg class="gooey-svg" aria-hidden="true" focusable="false">
+      <filter id="gooey-nav" x="-80%" y="-80%" width="260%" height="260%">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur" />
+        <feColorMatrix
+          in="blur"
+          mode="matrix"
+          values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7"
+        />
+      </filter>
+    </svg>
+
+    <header class="nav">
+      <a class="logo" href="/ar/" aria-label="قِرَم">
+        <span class="logo-mark" aria-hidden="true">Q</span>
+        <span class="logo-word">QIRAM</span>
+      </a>
+      <nav class="nav-links" aria-label="القائمة الرئيسية">
+        <ul>
+          <li><a href="/ar/" data-i18n="nav.home">الرئيسية</a></li>
+          <li><a href="/ar/services/" data-i18n="nav.services">خدماتنا</a></li>
+          <li class="is-active"><a href="/ar/work/" class="is-active" data-i18n="nav.work">أعمالنا</a></li>
+          <li><a href="/ar/about/" data-i18n="nav.about">عن الاستوديو</a></li>
+          <li><a href="/ar/contact/" data-i18n="nav.contact">تواصل</a></li>
+        </ul>
+        <span class="gooey-effect gooey-filter" aria-hidden="true"></span>
+        <span class="gooey-effect gooey-text" aria-hidden="true"></span>
+      </nav>
+      <div class="nav-end">
+        <div class="lang" role="group" aria-label="اللغة">
+          <a class="lang-btn" href="/work/" hreflang="en">EN</a>
+          <span class="lang-sep">/</span>
+          <a class="lang-btn is-active" href="/ar/work/" hreflang="ar">العربية</a>
+        </div>
+        <button class="menu-btn" type="button" aria-label="فتح القائمة" aria-expanded="false" data-label-open="فتح القائمة" data-label-close="إغلاق القائمة">
+          <span class="menu-btn__burger" aria-hidden="true"></span>
+        </button>
+      </div>
+    </header>
+
+    <div class="mobile-menu" hidden data-lenis-prevent>
+      <div class="mobile-menu__body">
+        <nav class="mobile-nav" aria-label="الجوال">
+          <div class="mobile-nav__header"><p data-i18n="nav.navigation">التنقل</p></div>
+          <div class="mobile-nav__link" data-href="/ar/"><div class="mobile-nav__indicator"></div><a href="/ar/" data-i18n="nav.home">الرئيسية</a></div>
+          <div class="mobile-nav__link" data-href="/ar/services/"><div class="mobile-nav__indicator"></div><a href="/ar/services/" data-i18n="nav.services">خدماتنا</a></div>
+          <div class="mobile-nav__link is-active" data-href="/ar/work/"><div class="mobile-nav__indicator"></div><a href="/ar/work/" data-i18n="nav.work">أعمالنا</a></div>
+          <div class="mobile-nav__link" data-href="/ar/about/"><div class="mobile-nav__indicator"></div><a href="/ar/about/" data-i18n="nav.about">عن الاستوديو</a></div>
+          <div class="mobile-nav__link" data-href="/ar/contact/"><div class="mobile-nav__indicator"></div><a href="/ar/contact/" data-i18n="nav.contact">تواصل</a></div>
+        </nav>
+      </div>
+      <svg class="mobile-menu__curve" aria-hidden="true"><path class="mobile-menu__curve-path"></path></svg>
+    </div>
+    <main>
+      <section class="work-hero" aria-labelledby="work-hero-title">
+        <div class="work-hero__copy">
+          <p class="eyebrow">
+            <span>????? ??????</span>
+            <span class="eyebrow-line" aria-hidden="true"></span>
+          </p>
+          <h1 id="work-hero-title" data-copy>
+            ?????? ????
+            <span class="accent">?????.</span>
+          </h1>
+          <p class="lede" data-copy>
+            ?????? ??????? ??? ?????? ?????? ??? ????? ???????. ??? ????? ?????? � ???????? ??????????? ???? ???????.
+          </p>
+          <div class="work-hero__actions">
+            <a class="btn btn-primary" href="/ar/contact/" data-magnetic="14">
+              <span>???? ???????</span>
+              <span class="btn-arrow" aria-hidden="true">→</span>
+            </a>
+            <a class="btn btn-ghost" href="#archin" data-magnetic="10">
+              <span>????? ????????</span>
+            </a>
+          </div>
+        </div>
+      </section>
+      <nav class="work-filters svc-jump" aria-label="تصفية المشاريع">
+        <button type="button" class="work-filter is-active" data-work-filter="all">الكل</button>
+        <button type="button" class="work-filter" data-work-filter="website">مواقع</button>
+        <button type="button" class="work-filter" data-work-filter="branding">هوية</button>
+        <button type="button" class="work-filter" data-work-filter="product">منتج</button>
+        <button type="button" class="work-filter" data-work-filter="development">تطوير</button>
+      </nav>
+
+<article
+        class="work-project svc-block"
+        id="archin"
+        data-work-project
+        data-work-name="Archin"
+        data-work-tags="website product branding development"
+      >
+        <div class="work-project__media svc-block__media">
+          <img
+            src="/Images/Project%201.jpg"
+            alt="????? ????? Archin Design Studio"
+            width="912"
+            height="1140"
+            loading="eager"
+            decoding="async"
+          />
+        </div>
+        <div class="svc-block__copy">
+          <p class="svc-block__index">01</p>
+          <h2 data-copy>Archin</h2>
+          <div class="work-meta">
+            <div>
+              <p class="work-meta__label">?????</p>
+              <p class="work-meta__value">2025</p>
+            </div>
+            <div>
+              <p class="work-meta__label">?????</p>
+              <p class="work-meta__value">???? ?????</p>
+            </div>
+            <div>
+              <p class="work-meta__label">?????</p>
+              <p class="work-meta__value">?????? � ????? ?????</p>
+            </div>
+          </div>
+          <p data-copy>
+            ?? ?????? ??? ???????? ????? Archin ??? ???? ???? ????? ??? ????????? ???????. ?????? ?????? ??????? ?????? ??????? ??????? ?????? ????? ????? ????? ???? � ???? ????? ??????? ??????.
+          </p>
+          <ul class="svc-tags">
+            <li>????? ?????</li>
+            <li>????? ????</li>
+            <li>????</li>
+            <li>?????</li>
+          </ul>
+          <a class="services-explore" href="/ar/contact/">
+              <span>???? ??????? ???????</span>
+              <span aria-hidden="true">→</span>
+            </a>
+        </div>
+      </article>
+
+      <article
+        class="work-project svc-block svc-block--flip"
+        id="vntnr"
+        data-work-project
+        data-work-name="VNTNR"
+        data-work-tags="branding development website"
+      >
+        <div class="work-project__media svc-block__media">
+          <img
+            src="/Images/Project%202.jpg"
+            alt="????? ????? VNTNR ????? ??????"
+            width="912"
+            height="1140"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <div class="svc-block__copy">
+          <p class="svc-block__index">02</p>
+          <h2 data-copy>VNTNR</h2>
+          <div class="work-meta">
+            <div>
+              <p class="work-meta__label">?????</p>
+              <p class="work-meta__value">2018</p>
+            </div>
+            <div>
+              <p class="work-meta__label">?????</p>
+              <p class="work-meta__value">???? ????</p>
+            </div>
+            <div>
+              <p class="work-meta__label">?????</p>
+              <p class="work-meta__value">????? ?????</p>
+            </div>
+          </div>
+          <p data-copy>
+            ????? VNTNR ??? ???? ????? ????? ??? ?? ???? ?????. ????? ????? ??????? ??????? ???? ??????? ??????? ??? ???? ?????? ??????? ????? ???? ?????? ?????.
+          </p>
+          <ul class="svc-tags">
+            <li>?????</li>
+            <li>????</li>
+            <li>????? ?????</li>
+            <li>?????</li>
+          </ul>
+          <a class="services-explore" href="/ar/contact/">
+              <span>???? ??????? ???????</span>
+              <span aria-hidden="true">→</span>
+            </a>
+        </div>
+      </article>
+
+      <article
+        class="work-project svc-block"
+        id="aeorim"
+        data-work-project
+        data-work-name="Aeorim"
+        data-work-tags="branding website development product"
+      >
+        <div class="work-project__media svc-block__media">
+          <img
+            src="/Images/Project%203.jpg"
+            alt="????? ????? Aeorim"
+            width="912"
+            height="1140"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <div class="svc-block__copy">
+          <p class="svc-block__index">03</p>
+          <h2 data-copy>Aeorim</h2>
+          <div class="work-meta">
+            <div>
+              <p class="work-meta__label">?????</p>
+              <p class="work-meta__value">2023</p>
+            </div>
+            <div>
+              <p class="work-meta__label">?????</p>
+              <p class="work-meta__value">???? ?????</p>
+            </div>
+            <div>
+              <p class="work-meta__label">?????</p>
+              <p class="work-meta__value">????? ????</p>
+            </div>
+          </div>
+          <p data-copy>
+            ??? ????? Aeorim ??? ??? ????? ???? ????? ????. ????? ????? ??????? ????????? ?????? ?????? ??????? ??????? ????? ????? ???? ??? ?????? ?????? ????.
+          </p>
+          <ul class="svc-tags">
+            <li>????</li>
+            <li>?????</li>
+            <li>?????</li>
+            <li>?????</li>
+          </ul>
+          <a class="services-explore" href="/ar/contact/">
+              <span>???? ??????? ???????</span>
+              <span aria-hidden="true">→</span>
+            </a>
+        </div>
+      </article>
+
+      <section class="work-cta svc-cta" aria-labelledby="work-cta-title">
+        <p class="eyebrow">
+          <span>?????? ???????</span>
+          <span class="eyebrow-line" aria-hidden="true"></span>
+        </p>
+        <h2 id="work-cta-title" data-copy>
+          ???? ????? ?? ?????
+          <span class="accent">?????? ????.</span>
+        </h2>
+        <p class="lede" data-copy>
+          ?????? ??? ????? � ??????? ??? ????? ?????? ??????? ?? ??????? ???????? ??????? ?????.
+        </p>
+        <div class="svc-cta__actions">
+          <a class="btn btn-primary" href="/ar/contact/" data-magnetic="16">
+            <span>???? ?????</span>
+            <span class="btn-arrow" aria-hidden="true">→</span>
+          </a>
+          <a class="btn btn-ghost" href="/ar/services/" data-magnetic="10">
+            <span>?????? ???????</span>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>© QIRAM</span>
+      <span data-i18n="footer.mark">استوديو رقمي للخليج</span>
+    </footer>
+
+    <noscript>
+      <style>
+        [data-copy] { visibility: visible !important; }
+      </style>
+    </noscript>
+    <script type="module">
+      import { initPreloader } from '/src/preloader/Preloader.js';
+      window.__qiramPreloader = initPreloader();
+    </script>
+    <script type="module" src="/src/main.js?v=20260916p"></script>
+  </body>
+</html>

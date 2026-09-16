@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <title>Curved Menu</title>
+
+   <!-- Google Fonts -->
+   <link rel="preconnect" href="https://fonts.googleapis.com" />
+   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+
+   <!-- Connected Styles -->
+   <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+   <!-- ===== HTML ===== -->
+
+   <!-- Demo page content (just so the page is not empty behind the menu) -->
+   <main class="page">Curved Menu Demo</main>
+
+   <!-- ===== HEADER BLOCK =====
+        Holds the circular button in the top-right corner.
+        The burger icon inside turns into an "X" when the menu is open. -->
+   <header class="header">
+      <div class="header__button" id="js-menu-btn">
+         <div class="header__burger" id="js-burger"></div>
+      </div>
+   </header>
+
+   <!-- ===== MENU BLOCK =====
+        The slide-in panel that appears from the right side.
+        Contains the navigation links, footer links and the curved SVG edge
+        on its left side (the bezier curve that bows inward when closed). -->
+   <div class="menu" id="js-menu">
+      <div class="menu__body">
+
+         <!-- Navigation links -->
+         <nav class="menu__nav" id="js-nav">
+            <div class="menu__header"><p>Navigation</p></div>
+
+            <!-- Each link has a small white dot (indicator) that scales up
+                 on hover and when it matches the current page -->
+            <div class="menu__link" data-href="/">
+               <div class="menu__indicator"></div>
+               <a href="#">Home</a>
+            </div>
+            <div class="menu__link" data-href="/work">
+               <div class="menu__indicator"></div>
+               <a href="#">Work</a>
+            </div>
+            <div class="menu__link" data-href="/about">
+               <div class="menu__indicator"></div>
+               <a href="#">About</a>
+            </div>
+            <div class="menu__link" data-href="/contact">
+               <div class="menu__indicator"></div>
+               <a href="#">Contact</a>
+            </div>
+         </nav>
+
+         <!-- Footer social links -->
+         <div class="menu__footer">
+            <a>Awwwards</a>
+            <a>Instagram</a>
+            <a>Dribble</a>
+            <a>LinkedIn</a>
+         </div>
+      </div>
+
+      <!-- Curved SVG edge on the left side of the menu.
+           Its "d" attribute is animated via GSAP: the curve bows inward
+           when the menu is closed and flattens out when it is open. -->
+      <svg class="menu__curve">
+         <path id="js-curve-path"></path>
+      </svg>
+   </div>
+
+   <!-- ======================= -->
+
+   <!-- Connected libs -->
+   <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/gsap.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/ScrollTrigger.min.js"></script>
+
+   <!-- Connected script -->
+   <script src="script.js"></script>
+</body>
+
+</html>

@@ -50,7 +50,23 @@ const server = http.createServer((req, res) => {
       ? 'index.html'
       : urlPath === '/ar' || urlPath === '/ar/'
         ? 'ar/index.html'
-        : urlPath.replace(/^\/+/, '');
+        : urlPath === '/services' || urlPath === '/services/'
+          ? 'services/index.html'
+          : urlPath === '/ar/services' || urlPath === '/ar/services/'
+            ? 'ar/services/index.html'
+            : urlPath === '/work' || urlPath === '/work/'
+              ? 'work/index.html'
+              : urlPath === '/ar/work' || urlPath === '/ar/work/'
+                ? 'ar/work/index.html'
+                : urlPath === '/about' || urlPath === '/about/'
+                  ? 'about/index.html'
+                  : urlPath === '/ar/about' || urlPath === '/ar/about/'
+                    ? 'ar/about/index.html'
+                    : urlPath === '/contact' || urlPath === '/contact/'
+                      ? 'contact/index.html'
+                      : urlPath === '/ar/contact' || urlPath === '/ar/contact/'
+                        ? 'ar/contact/index.html'
+                        : urlPath.replace(/^\/+/, '');
   const file = path.normalize(path.join(root, relative));
 
   if (!file.startsWith(root)) {

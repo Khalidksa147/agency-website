@@ -61,7 +61,7 @@
     </style>
     <title>QIRAM — Digital studio for the Gulf</title>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14.5' fill='none' stroke='%23D7FF4D' stroke-width='1.4'/%3E%3Ctext x='16' y='21' text-anchor='middle' font-size='14' fill='%23D7FF4D' font-family='Georgia,serif'%3EQ%3C/text%3E%3C/svg%3E" />
-    <link rel="stylesheet" href="/src/styles.css?v=20260916a" />
+    <link rel="stylesheet" href="/src/styles.css?v=20260916b" />
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
     <script type="importmap">
       {
@@ -75,7 +75,7 @@
           "gsap/ScrollTrigger": "https://cdn.jsdelivr.net/npm/gsap@3.15.0/ScrollTrigger.js",
           "gsap/SplitText": "https://cdn.jsdelivr.net/npm/gsap@3.15.0/SplitText.js",
           "lenis": "https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.mjs",
-          "/src/main.js": "/src/main.js?v=20260916a",
+          "/src/main.js": "/src/main.js?v=20260916b",
           "/src/preloader/Preloader.js": "/src/preloader/Preloader.js?v=20260913q",
           "/src/text/Copy.js": "/src/text/Copy.js?v=20260913q",
           "/src/nav/MobileMenu.js": "/src/nav/MobileMenu.js?v=20260913q",
@@ -158,16 +158,16 @@
             <a href="#top" class="is-active" data-i18n="nav.home">Home</a>
           </li>
           <li>
-            <a href="#services" data-i18n="nav.services">Services</a>
+            <a href="/services/" data-i18n="nav.services">Services</a>
           </li>
           <li>
-            <a href="#work" data-i18n="nav.work">Work</a>
+            <a href="/work/" data-i18n="nav.work">Work</a>
           </li>
           <li>
-            <a href="#about" data-i18n="nav.about">About</a>
+            <a href="/about/" data-i18n="nav.about">About</a>
           </li>
           <li>
-            <a href="#contact" data-i18n="nav.contact">Contact</a>
+            <a href="/contact/" data-i18n="nav.contact">Contact</a>
           </li>
         </ul>
         <span class="gooey-effect gooey-filter" aria-hidden="true"></span>
@@ -203,21 +203,21 @@
             <div class="mobile-nav__indicator"></div>
             <a href="#top" data-i18n="nav.home">Home</a>
           </div>
-          <div class="mobile-nav__link" data-href="#services">
+          <div class="mobile-nav__link" data-href="/services/">
             <div class="mobile-nav__indicator"></div>
-            <a href="#services" data-i18n="nav.services">Services</a>
+            <a href="/services/" data-i18n="nav.services">Services</a>
           </div>
-          <div class="mobile-nav__link" data-href="#work">
+          <div class="mobile-nav__link" data-href="/work/">
             <div class="mobile-nav__indicator"></div>
-            <a href="#work" data-i18n="nav.work">Work</a>
+            <a href="/work/" data-i18n="nav.work">Work</a>
           </div>
-          <div class="mobile-nav__link" data-href="#about">
+          <div class="mobile-nav__link" data-href="/about/">
             <div class="mobile-nav__indicator"></div>
-            <a href="#about" data-i18n="nav.about">About</a>
+            <a href="/about/" data-i18n="nav.about">About</a>
           </div>
-          <div class="mobile-nav__link" data-href="#contact">
+          <div class="mobile-nav__link" data-href="/contact/">
             <div class="mobile-nav__indicator"></div>
-            <a href="#contact" data-i18n="nav.contact">Contact</a>
+            <a href="/contact/" data-i18n="nav.contact">Contact</a>
           </div>
         </nav>
       </div>
@@ -247,7 +247,7 @@
             QIRAM is a boutique agency for websites, web apps, UX/UI and brand systems — designed with the same level of detail in Arabic and English.
           </p>
           <div class="hero-actions">
-            <a class="btn btn-primary" href="#contact">
+            <a class="btn btn-primary" href="/contact/">
               <span data-i18n="hero.cta">Tell us what you’re building</span>
               <span class="btn-arrow" aria-hidden="true">→</span>
             </a>
@@ -285,7 +285,7 @@
           </div>
           <div class="services-head-aside">
             <p data-copy data-i18n="services.lede">End-to-end digital solutions for ambitious brands across the GCC.</p>
-            <a class="services-explore" href="#contact">
+            <a class="services-explore" href="/services/">
               <span data-i18n="services.explore">Explore all services</span>
               <span aria-hidden="true">→</span>
             </a>
@@ -451,7 +451,7 @@
             </div>
             <h3 data-copy data-i18n="services.web.title">Web Design &amp; Development</h3>
             <p data-copy data-i18n="services.web.body">Modern, fast and scalable websites built for performance, user experience and business growth.</p>
-            <a class="service-go" href="#contact" aria-label="Web Design & Development">
+            <a class="service-go" href="/services/#web" aria-label="Web Design & Development">
               <span aria-hidden="true">→</span>
             </a>
           </article>
@@ -677,7 +677,7 @@
             </div>
             <h3 data-copy data-i18n="services.apps.title">Web Apps &amp; Platforms</h3>
             <p data-copy data-i18n="services.apps.body">Custom web applications and digital platforms designed for scale, efficiency and long-term success.</p>
-            <a class="service-go" href="#contact" aria-label="Web Apps & Platforms">
+            <a class="service-go" href="/services/#apps" aria-label="Web Apps & Platforms">
               <span aria-hidden="true">→</span>
             </a>
           </article>
@@ -824,7 +824,7 @@
             </div>
             <h3 data-copy data-i18n="services.ux.title">UX/UI &amp; Product Design</h3>
             <p data-copy data-i18n="services.ux.body">User-centered design systems and interfaces that turn ideas into seamless experiences.</p>
-            <a class="service-go" href="#contact" aria-label="UX/UI & Product Design">
+            <a class="service-go" href="/services/#ux" aria-label="UX/UI & Product Design">
               <span aria-hidden="true">→</span>
             </a>
           </article>
@@ -1127,7 +1127,7 @@
             </div>
             <h3 data-copy data-i18n="services.brand.title">Branding &amp; Identity</h3>
             <p data-copy data-i18n="services.brand.body">Distinctive brand identities, visual systems and guidelines that build recognition and trust.</p>
-            <a class="service-go" href="#contact" aria-label="Branding & Identity">
+            <a class="service-go" href="/services/#brand" aria-label="Branding & Identity">
               <span aria-hidden="true">→</span>
             </a>
           </article>
@@ -1150,7 +1150,7 @@
             <p data-copy data-i18n="work.lede">
               We partner with forward-thinking brands across the GCC to create digital experiences that perform, inspire and last.
             </p>
-            <a class="services-explore" href="#contact">
+            <a class="services-explore" href="/work/">
               <span data-i18n="work.explore">View all projects</span>
               <span aria-hidden="true">→</span>
             </a>
@@ -1175,7 +1175,7 @@
                 <h3 data-copy data-i18n="work.showcase.title">Archin</h3>
               </div>
             </div>
-            <a class="work-showcase__cover" href="#contact" aria-label="Archin project">
+            <a class="work-showcase__cover" href="/contact/" aria-label="Archin project">
               <span class="work-showcase__cover-frame">
                 <img
                   src="/Images/Project%201.jpg"
@@ -1229,7 +1229,7 @@
                 <h3 data-copy data-i18n="work.showcase2.title">VNTNR</h3>
               </div>
             </div>
-            <a class="work-showcase__cover" href="#contact" aria-label="VNTNR project">
+            <a class="work-showcase__cover" href="/contact/" aria-label="VNTNR project">
               <span class="work-showcase__cover-frame">
                 <img
                   src="/Images/Project%202.jpg"
@@ -1283,7 +1283,7 @@
                 <h3 data-copy data-i18n="work.showcase3.title">Aeorim</h3>
               </div>
             </div>
-            <a class="work-showcase__cover" href="#contact" aria-label="Aeorim project">
+            <a class="work-showcase__cover" href="/contact/" aria-label="Aeorim project">
               <span class="work-showcase__cover-frame">
                 <img
                   src="/Images/Project%203.jpg"
@@ -1553,6 +1553,6 @@
       import { initPreloader } from '/src/preloader/Preloader.js';
       window.__qiramPreloader = initPreloader();
     </script>
-    <script type="module" src="/src/main.js?v=20260916a"></script>
+    <script type="module" src="/src/main.js?v=20260916b"></script>
   </body>
 </html>
