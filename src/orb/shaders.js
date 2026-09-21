@@ -87,10 +87,12 @@ varying float vDisp;
 
 float field(vec3 dir) {
   float t = uTime * uFlow;
-  vec3 warp = vec3(uPointer.x * 0.18, uPointer.y * 0.18, 0.0);
+  // Soft pointer response — enough to feel alive, not enough to warp the silhouette.
+  vec3 warp = vec3(uPointer.x * 0.08, uPointer.y * 0.08, 0.0);
   float a = snoise(dir * uFreq + vec3(uSeed, t * 0.33, -t * 0.21) + warp);
-  float b = snoise(dir * uFreq * 2.13 + vec3(-uSeed * 1.7, t * 0.26, t * 0.17));
-  return a * 0.74 + b * 0.26;
+  // Low secondary octave so micro-lumpiness does not break the polished sphere.
+  float b = snoise(dir * uFreq * 1.45 + vec3(-uSeed * 1.7, t * 0.26, t * 0.17));
+  return a * 0.9 + b * 0.1;
 }
 
 vec3 solve(vec3 dir) {

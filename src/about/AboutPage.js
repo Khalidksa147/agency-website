@@ -147,19 +147,6 @@ export function initAboutPage() {
 
   if (valueItems[0]) setActiveValue(valueItems[0]);
 
-  root.querySelectorAll('[data-magnetic]').forEach((el) => {
-    const strength = Number(el.dataset.magnetic) || 18;
-    el.addEventListener('pointermove', (event) => {
-      const rect = el.getBoundingClientRect();
-      const x = ((event.clientX - rect.left) / rect.width - 0.5) * strength;
-      const y = ((event.clientY - rect.top) / rect.height - 0.5) * strength;
-      el.style.transform = `translate(${x}px, ${y}px)`;
-    });
-    el.addEventListener('pointerleave', () => {
-      el.style.transform = '';
-    });
-  });
-
   const storyMedia = root.querySelector('.about-story__media');
   const storyImg = storyMedia?.querySelector('img');
   if (storyMedia && storyImg && !reduceMotion && 'IntersectionObserver' in window) {

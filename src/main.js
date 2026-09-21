@@ -4,10 +4,10 @@ import { initCopy, playHeroCopy, prepareHeroCopy } from './text/Copy.js';
 import { initSmoothScroll } from './scroll/smooth.js';
 import { initPreloader, markPageReady } from './preloader/Preloader.js';
 import { initWorkStack } from './work/WorkStack.js?v=20260915ag';
-import { initContactPage } from './contact/ContactPage.js?v=20260916k';
-import { initAboutPage } from './about/AboutPage.js?v=20260916k';
-import { initWorkPage } from './work/WorkPage.js?v=20260917a';
-import { initServicesPage } from './services/ServicesPage.js?v=20260917a';
+import { initContactPage } from './contact/ContactPage.js?v=20260921c';
+import { initAboutPage } from './about/AboutPage.js?v=20260921c';
+import { initWorkPage } from './work/WorkPage.js?v=20260921c';
+import { initServicesPage } from './services/ServicesPage.js?v=20260921c';
 
 window.__qiramPreloader ??= initPreloader();
 
@@ -340,11 +340,29 @@ document.addEventListener(
   { once: true },
 );
 
+function initMagneticButtons() {
+  document.querySelectorAll('[data-magnetic]').forEach((el) => {
+    if (el.dataset.magneticBound) return;
+    el.dataset.magneticBound = '1';
+    const strength = Number(el.dataset.magnetic) || 14;
+    el.addEventListener('pointermove', (event) => {
+      const rect = el.getBoundingClientRect();
+      const x = ((event.clientX - rect.left) / rect.width - 0.5) * strength;
+      const y = ((event.clientY - rect.top) / rect.height - 0.5) * strength;
+      el.style.transform = `translate(${x}px, ${y}px)`;
+    });
+    el.addEventListener('pointerleave', () => {
+      el.style.transform = '';
+    });
+  });
+}
+
 revealPage();
 initContactPage();
 initAboutPage();
 initWorkPage();
 initServicesPage();
+initMagneticButtons();
 
 preloaderReady
   .then(() => {

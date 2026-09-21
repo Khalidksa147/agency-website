@@ -144,20 +144,6 @@ export function initContactPage() {
     });
   });
 
-  const magnetic = root.querySelectorAll('[data-magnetic]');
-  magnetic.forEach((el) => {
-    const strength = Number(el.dataset.magnetic) || 18;
-    el.addEventListener('pointermove', (event) => {
-      const rect = el.getBoundingClientRect();
-      const x = ((event.clientX - rect.left) / rect.width - 0.5) * strength;
-      const y = ((event.clientY - rect.top) / rect.height - 0.5) * strength;
-      el.style.transform = `translate(${x}px, ${y}px)`;
-    });
-    el.addEventListener('pointerleave', () => {
-      el.style.transform = '';
-    });
-  });
-
   const channelCards = root.querySelectorAll('.contact-channel');
   channelCards.forEach((card) => {
     card.addEventListener('pointermove', (event) => {

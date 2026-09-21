@@ -17,6 +17,7 @@ export function initServicesPage() {
       const key = service.dataset.service || '';
       const show = activeFilter === 'all' || key === activeFilter;
       service.classList.toggle('is-filtered-out', !show);
+      service.toggleAttribute('hidden', !show);
       service.setAttribute('aria-hidden', String(!show));
     });
   }
@@ -41,19 +42,6 @@ export function initServicesPage() {
           activate();
         }
       });
-    });
-  });
-
-  root.querySelectorAll('[data-magnetic]').forEach((el) => {
-    const strength = Number(el.dataset.magnetic) || 16;
-    el.addEventListener('pointermove', (event) => {
-      const rect = el.getBoundingClientRect();
-      const x = ((event.clientX - rect.left) / rect.width - 0.5) * strength;
-      const y = ((event.clientY - rect.top) / rect.height - 0.5) * strength;
-      el.style.transform = `translate(${x}px, ${y}px)`;
-    });
-    el.addEventListener('pointerleave', () => {
-      el.style.transform = '';
     });
   });
 

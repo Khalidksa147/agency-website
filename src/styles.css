@@ -747,6 +747,11 @@ html[dir='rtl'] .mobile-nav__indicator {
   transform: translateY(-1px);
 }
 
+[data-magnetic] {
+  will-change: transform;
+  transition: transform 0.2s var(--ease);
+}
+
 .btn-primary {
   background: var(--lime);
   color: #14180c;
@@ -1261,7 +1266,6 @@ html[dir='rtl'] .mobile-nav__indicator {
 .work-showcase__cover {
   display: block;
   align-self: center;
-  width: min(100%, 36rem);
   max-height: min(64vh, 40rem);
   justify-self: center;
   border-radius: 1.5rem;
@@ -2102,9 +2106,7 @@ html[dir='rtl'] .svc-hero .btn-arrow {
 }
 
 .work-project.is-filtered-out {
-  opacity: 0.18;
-  filter: grayscale(0.7);
-  pointer-events: none;
+  display: none;
 }
 
 .work-project__media {
@@ -2235,9 +2237,7 @@ html[dir='rtl'] .work-cta .btn-arrow {
 }
 
 .services-item.is-filtered-out {
-  opacity: 0.18;
-  filter: grayscale(0.7);
-  pointer-events: none;
+  display: none;
 }
 
 .page-services .svc-tags li {

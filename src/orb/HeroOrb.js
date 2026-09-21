@@ -35,11 +35,12 @@ const v3 = (c) => new THREE.Vector3(c[0], c[1], c[2]);
 
 // Outer silhouette sits at radius 1; every other layer is expressed as a
 // fraction of it so the sculpture stays proportional at any canvas size.
+// Displacement stays minimal so the silhouette reads as polished glass.
 const SHELLS = [
   {
     radius: 1.0,
-    amp: 0.035,
-    freq: 0.75,
+    amp: 0.008,
+    freq: 0.55,
     offset: [0.0, 0.0, 0.0],
     edge: [9.0, 0.75],
     // [specPower, specGain, streakGain, refractGain] — the outer shell is the
@@ -47,8 +48,8 @@ const SHELLS = [
     glass: [240.0, 0.26, 0.18, 0.26],
     // Silhouette segments. Shells whose rims use a high uEdgePower need the
     // denser mesh, since a narrow rim on a coarse outline reads as facets.
-    segs: 144,
-    squash: [1.0, 0.94, 1.02],
+    segs: 192,
+    squash: [1.0, 0.995, 1.005],
     tint: DEEP_TEAL,
     hue: 0.02,
     spread: -0.22,
@@ -57,19 +58,19 @@ const SHELLS = [
     intensity: 0.58,
     bias: [DEEP_TEAL, 0.25],
     key: [-0.3, 0.5, 0.8],
-    flow: 0.16,
+    flow: 0.12,
     spin: [0.006, 0.013, -0.004],
     pulse: [0.14, 0.0],
   },
   {
     radius: 0.95,
-    amp: 0.07,
-    freq: 0.95,
-    offset: [-0.24, 0.15, 0.09],
+    amp: 0.012,
+    freq: 0.7,
+    offset: [-0.02, 0.012, 0.01],
     edge: [11.0, 1.15],
     glass: [190.0, 0.36, 0.2, 0.24],
-    segs: 168,
-    squash: [0.96, 1.06, 0.93],
+    segs: 192,
+    squash: [0.995, 1.008, 0.992],
     tint: DARK_GREEN,
     hue: 0.03,
     spread: -0.12,
@@ -79,19 +80,19 @@ const SHELLS = [
     // Violet iridescence catching the upper-left shell edges.
     bias: [VIOLET, 0.5],
     key: [-0.82, 0.52, 0.24],
-    flow: 0.24,
+    flow: 0.18,
     spin: [-0.009, 0.017, 0.006],
     pulse: [0.18, 1.7],
   },
   {
     radius: 0.87,
-    amp: 0.085,
-    freq: 1.1,
-    offset: [0.19, -0.23, -0.08],
+    amp: 0.014,
+    freq: 0.8,
+    offset: [0.018, -0.02, -0.01],
     edge: [12.0, 0.85],
     glass: [150.0, 0.3, 0.16, 0.2],
-    segs: 168,
-    squash: [1.05, 0.9, 1.0],
+    segs: 192,
+    squash: [1.005, 0.992, 1.0],
     tint: DEEP_TEAL,
     hue: 0.22,
     spread: 0.18,
@@ -100,19 +101,19 @@ const SHELLS = [
     intensity: 0.85,
     bias: [BLUE, 0.32],
     key: [0.18, -0.72, 0.66],
-    flow: 0.34,
+    flow: 0.24,
     spin: [0.011, -0.021, -0.008],
     pulse: [0.21, 3.1],
   },
   {
     radius: 0.8,
-    amp: 0.095,
-    freq: 1.25,
-    offset: [0.26, 0.12, 0.15],
+    amp: 0.015,
+    freq: 0.9,
+    offset: [0.022, 0.012, 0.014],
     edge: [13.0, 0.95],
     glass: [130.0, 0.32, 0.13, 0.2],
-    segs: 200,
-    squash: [0.92, 1.04, 1.06],
+    segs: 216,
+    squash: [0.992, 1.005, 1.005],
     tint: DEEP_TEAL,
     hue: 0.44,
     spread: -0.18,
@@ -121,7 +122,7 @@ const SHELLS = [
     intensity: 0.68,
     bias: [MINT, 0.36],
     key: [0.76, 0.28, 0.55],
-    flow: 0.42,
+    flow: 0.3,
     spin: [-0.014, 0.024, 0.009],
     pulse: [0.24, 4.4],
   },
@@ -130,13 +131,13 @@ const SHELLS = [
     // edge wraps the core's boundary, and its broad body is kept low: the
     // highlight has to read as a sharp arc, not a lime blob.
     radius: 0.58,
-    amp: 0.10,
-    freq: 1.35,
-    offset: [0.15, 0.21, -0.12],
+    amp: 0.018,
+    freq: 1.0,
+    offset: [0.018, 0.022, -0.012],
     edge: [16.0, 4.2],
     glass: [95.0, 0.5, 0.11, 0.16],
-    segs: 232,
-    squash: [1.04, 0.95, 0.92],
+    segs: 256,
+    squash: [1.005, 0.995, 0.992],
     tint: DARK_GREEN,
     hue: 0.62,
     spread: 0.3,
@@ -145,19 +146,19 @@ const SHELLS = [
     intensity: 1.55,
     bias: [LIME, 0.55],
     key: [0.64, 0.62, 0.45],
-    flow: 0.58,
+    flow: 0.4,
     spin: [0.016, -0.028, 0.011],
     pulse: [0.28, 5.6],
   },
   {
     radius: 0.70,
-    amp: 0.09,
-    freq: 1.55,
-    offset: [-0.17, -0.14, 0.18],
+    amp: 0.015,
+    freq: 1.1,
+    offset: [-0.018, -0.014, 0.018],
     edge: [14.0, 0.8],
     glass: [115.0, 0.24, 0.12, 0.18],
-    segs: 200,
-    squash: [0.95, 1.03, 1.04],
+    segs: 216,
+    squash: [0.995, 1.005, 1.005],
     tint: DEEP_TEAL,
     hue: 0.36,
     spread: -0.25,
@@ -166,7 +167,7 @@ const SHELLS = [
     intensity: 0.44,
     bias: [MINT, 0.25],
     key: [-0.5, -0.62, 0.6],
-    flow: 0.5,
+    flow: 0.36,
     spin: [-0.019, 0.031, -0.013],
     pulse: [0.26, 2.3],
   },
@@ -175,13 +176,13 @@ const SHELLS = [
     // yellow-green highlight on two opposing faces of the core, which is what
     // stops the lime from looking like a single pasted-on arc.
     radius: 0.64,
-    amp: 0.08,
-    freq: 1.15,
-    offset: [-0.21, -0.18, 0.08],
+    amp: 0.016,
+    freq: 0.85,
+    offset: [-0.02, -0.018, 0.01],
     edge: [18.0, 3.1],
     glass: [85.0, 0.4, 0.1, 0.15],
-    segs: 232,
-    squash: [0.98, 1.02, 0.96],
+    segs: 256,
+    squash: [0.998, 1.002, 0.995],
     tint: DARK_GREEN,
     hue: 0.66,
     spread: 0.24,
@@ -190,7 +191,7 @@ const SHELLS = [
     intensity: 1.05,
     bias: [LIME, 0.48],
     key: [-0.62, -0.55, 0.56],
-    flow: 0.54,
+    flow: 0.38,
     spin: [0.013, 0.022, -0.01],
     pulse: [0.22, 0.8],
   },
@@ -233,14 +234,16 @@ const FILAMENTS = [
   { radius: 0.96, wobble: 0.33, lift: 0.58, seed: 6.6, tilt: [-0.4, -1.0, -0.6], colors: [MINT, WHITE, LIME], intensity: 0.85, speed: 0.03, tail: 0.38, floor: 0.09, white: 0.45, width: 0.005 },
 ];
 
+// Perfect circles (rx === rz) with clearance past the outer glass so tubes
+// never intersect the orb volume. Tilts still give 3D elliptical silhouettes.
 const ORBITS = [
-  { rx: 1.66, rz: 1.2, tilt: [0.2, 0.1, -0.36], colors: [LIME, WHITE, LIME], intensity: 1.5, speed: 0.012, dash: 0, pearls: 3, tints: [LIME, WHITE, MINT], white: 0.6, width: 0.0048 },
-  { rx: 1.48, rz: 1.52, tilt: [-1.18, 0.55, 0.2], colors: [MINT, MINT, BLUE], intensity: 1.15, speed: -0.009, dash: 0, pearls: 2, tints: [MINT, BLUE], white: 0.4, width: 0.0044 },
-  { rx: 1.58, rz: 1.02, tilt: [0.78, -0.86, 0.55], colors: [LIME, LIME, WHITE], intensity: 1.3, speed: 0.015, dash: 0, pearls: 2, tints: [LIME, WHITE], white: 0.5, width: 0.0046 },
-  { rx: 1.36, rz: 1.4, tilt: [-0.35, 1.25, -0.72], colors: [BLUE, MINT, BLUE], intensity: 0.62, speed: -0.011, dash: 118, pearls: 1, tints: [BLUE], white: 0.3, width: 0.0042 },
-  { rx: 1.7, rz: 0.9, tilt: [1.34, 0.3, 0.15], colors: [VIOLET, BLUE, VIOLET], intensity: 0.82, speed: 0.008, dash: 0, pearls: 2, tints: [VIOLET, BLUE], white: 0.2, width: 0.004 },
-  { rx: 1.28, rz: 1.3, tilt: [0.45, -0.3, 1.1], colors: [MINT, BLUE, MINT], intensity: 0.58, speed: -0.014, dash: 136, pearls: 2, tints: [MINT, WHITE], white: 0.25, width: 0.004 },
-  { rx: 1.62, rz: 1.44, tilt: [-0.62, -1.05, -0.25], colors: [LIME, MINT, LIME], intensity: 0.88, speed: 0.01, dash: 0, pearls: 2, tints: [LIME, MINT], white: 0.35, width: 0.0042 },
+  { rx: 1.38, rz: 1.38, tilt: [0.2, 0.1, -0.36], colors: [LIME, WHITE, LIME], intensity: 1.5, speed: 0.012, dash: 0, pearls: 3, tints: [LIME, WHITE, MINT], white: 0.6, width: 0.0048 },
+  { rx: 1.46, rz: 1.46, tilt: [-1.18, 0.55, 0.2], colors: [MINT, MINT, BLUE], intensity: 1.15, speed: -0.009, dash: 0, pearls: 2, tints: [MINT, BLUE], white: 0.4, width: 0.0044 },
+  { rx: 1.42, rz: 1.42, tilt: [0.78, -0.86, 0.55], colors: [LIME, LIME, WHITE], intensity: 1.3, speed: 0.015, dash: 0, pearls: 2, tints: [LIME, WHITE], white: 0.5, width: 0.0046 },
+  { rx: 1.34, rz: 1.34, tilt: [-0.35, 1.25, -0.72], colors: [BLUE, MINT, BLUE], intensity: 0.62, speed: -0.011, dash: 118, pearls: 1, tints: [BLUE], white: 0.3, width: 0.0042 },
+  { rx: 1.5, rz: 1.5, tilt: [1.34, 0.3, 0.15], colors: [VIOLET, BLUE, VIOLET], intensity: 0.82, speed: 0.008, dash: 0, pearls: 2, tints: [VIOLET, BLUE], white: 0.2, width: 0.004 },
+  { rx: 1.3, rz: 1.3, tilt: [0.45, -0.3, 1.1], colors: [MINT, BLUE, MINT], intensity: 0.58, speed: -0.014, dash: 136, pearls: 2, tints: [MINT, WHITE], white: 0.25, width: 0.004 },
+  { rx: 1.54, rz: 1.54, tilt: [-0.62, -1.05, -0.25], colors: [LIME, MINT, LIME], intensity: 0.88, speed: 0.01, dash: 0, pearls: 2, tints: [LIME, MINT], white: 0.35, width: 0.0042 },
 ];
 
 // Distinct orbital speeds so the beads never march in lockstep. All stay
@@ -385,6 +388,7 @@ export class HeroOrb {
     this.initShells();
     this.initCore();
     this.initFilaments();
+    this.initOrbitOccluder();
     this.initOrbits();
     this.initFlares();
     this.initPost();
@@ -467,7 +471,9 @@ export class HeroOrb {
   // glow underneath it. That pairing is what gives a sharp centreline with a
   // soft halo, instead of a single tube that is either thin and aliased or
   // thick and blurry.
-  buildTrail(curve, cfg, parent, order) {
+  // opts.orbit: depth-tested against the invisible occluder so rings wrap
+  // outside the glass without slicing through it.
+  buildTrail(curve, cfg, parent, order, opts = {}) {
     const segments = this.lowPower ? TRAIL.segmentsLow : TRAIL.segments;
     const layers = [
       {
@@ -513,11 +519,14 @@ export class HeroOrb {
         fragmentShader: filamentFragment,
         transparent: true,
         blending: THREE.AdditiveBlending,
+        // Orbit tubes must depth-test so back arcs hide behind the orb; they
+        // still skip depthWrite so additive stacking stays clean.
         depthWrite: false,
         depthTest: true,
         side: THREE.DoubleSide,
       }));
       mesh.renderOrder = layer.order;
+      if (opts.orbit) mesh.frustumCulled = true;
       parent.add(mesh);
       this.disposables.push(geo, mesh.material);
       return uniforms;
@@ -563,8 +572,8 @@ export class HeroOrb {
         side: THREE.DoubleSide,
       }));
       mesh.scale.setScalar(cfg.radius);
-      // Off-centre so the shell silhouettes cross each other instead of
-      // nesting as concentric rings.
+      // Small residual offsets keep internal membranes from nesting as perfect
+      // concentric rings without breaking the outer spherical silhouette.
       mesh.position.set(...cfg.offset).multiplyScalar(cfg.radius);
       mesh.renderOrder = 2 + i;
 
@@ -588,11 +597,11 @@ export class HeroOrb {
   initCore() {
     this.coreUniforms = {
       uTime: { value: 0 },
-      uAmp: { value: 0.07 },
-      uFreq: { value: 1.9 },
+      uAmp: { value: 0.018 },
+      uFreq: { value: 1.15 },
       uSeed: { value: 11.3 },
-      uFlow: { value: 0.32 },
-      uSquash: { value: new THREE.Vector3(1.0, 0.97, 1.0) },
+      uFlow: { value: 0.22 },
+      uSquash: { value: new THREE.Vector3(1.0, 0.998, 1.0) },
       uPointer: { value: new THREE.Vector2(0, 0) },
       uCoreDark: { value: v3(CORE_DARK) },
       uKeyDir: { value: new THREE.Vector3(0.62, 0.6, 0.5).normalize() },
@@ -601,7 +610,7 @@ export class HeroOrb {
       uPulse: { value: 1 },
     };
 
-    const core = new THREE.Mesh(this.shellGeometry(200), new THREE.ShaderMaterial({
+    const core = new THREE.Mesh(this.shellGeometry(216), new THREE.ShaderMaterial({
       uniforms: this.coreUniforms,
       vertexShader: coreVertex,
       fragmentShader: coreFragment,
@@ -632,6 +641,31 @@ export class HeroOrb {
     });
   }
 
+  // Invisible depth-only sphere for the orbital system. Transparent additive
+  // shells cannot occlude tubes reliably; this writes depth after the glass
+  // has drawn so front orbit segments stay sharp while back segments hide
+  // cleanly behind the orb — no slicing through the glass volume.
+  initOrbitOccluder() {
+    const segs = this.lowPower ? 56 : 72;
+    const geo = new THREE.SphereGeometry(1, segs, Math.round(segs * 0.75));
+    const mat = new THREE.MeshBasicMaterial({
+      colorWrite: false,
+      depthWrite: true,
+      depthTest: true,
+      // Stay in the transparent pass so renderOrder runs after the glass
+      // shells; an opaque depth mesh would draw first and punch holes in them.
+      transparent: true,
+      opacity: 1,
+    });
+    const occluder = new THREE.Mesh(geo, mat);
+    // Snug to the polished outer shell so orbits clear the volume outside.
+    occluder.scale.setScalar(1.03);
+    occluder.renderOrder = 28;
+    this.spin.add(occluder);
+    this.orbitOccluder = occluder;
+    this.disposables.push(geo, mat);
+  }
+
   initOrbits() {
     const pearlGeo = new THREE.SphereGeometry(1, 24, 18);
     this.disposables.push(pearlGeo);
@@ -648,9 +682,10 @@ export class HeroOrb {
 
       const layers = this.buildTrail(
         new EllipsePath(cfg.rx, cfg.rz),
-        { ...cfg, speed: cfg.speed * 1.6 },
+        { ...cfg, speed: cfg.speed * 1.6, floor: cfg.floor ?? 0.62 },
         group,
         30 + i * 2,
+        { orbit: true },
       );
 
       const count = this.lowPower ? Math.min(cfg.pearls, 2) : cfg.pearls;
