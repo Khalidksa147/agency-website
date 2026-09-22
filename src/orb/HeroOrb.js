@@ -239,13 +239,13 @@ const FILAMENTS = [
 // clearance floor ~1.12. Every orbit sits above that so paths never enter
 // the glass volume; tilts still read as ellipses in perspective.
 const ORBITS = [
-  { rx: 1.68, rz: 1.68, tilt: [0.2, 0.1, -0.36], colors: [LIME, WHITE, LIME], intensity: 1.5, speed: 0.012, dash: 0, pearls: 3, tints: [LIME, WHITE, MINT], white: 0.6, width: 0.0048 },
-  { rx: 1.78, rz: 1.78, tilt: [-1.18, 0.55, 0.2], colors: [MINT, MINT, BLUE], intensity: 1.15, speed: -0.009, dash: 0, pearls: 2, tints: [MINT, BLUE], white: 0.4, width: 0.0044 },
-  { rx: 1.72, rz: 1.72, tilt: [0.78, -0.86, 0.55], colors: [LIME, LIME, WHITE], intensity: 1.3, speed: 0.015, dash: 0, pearls: 2, tints: [LIME, WHITE], white: 0.5, width: 0.0046 },
-  { rx: 1.62, rz: 1.62, tilt: [-0.35, 1.25, -0.72], colors: [BLUE, MINT, BLUE], intensity: 0.62, speed: -0.011, dash: 118, pearls: 1, tints: [BLUE], white: 0.3, width: 0.0042 },
-  { rx: 1.85, rz: 1.85, tilt: [1.34, 0.3, 0.15], colors: [VIOLET, BLUE, VIOLET], intensity: 0.82, speed: 0.008, dash: 0, pearls: 2, tints: [VIOLET, BLUE], white: 0.2, width: 0.004 },
+  { rx: 1.58, rz: 1.58, tilt: [0.2, 0.1, -0.36], colors: [LIME, WHITE, LIME], intensity: 1.5, speed: 0.012, dash: 0, pearls: 3, tints: [LIME, WHITE, MINT], white: 0.6, width: 0.0048 },
+  { rx: 1.58, rz: 1.58, tilt: [-1.18, 0.55, 0.2], colors: [MINT, MINT, BLUE], intensity: 1.15, speed: -0.009, dash: 0, pearls: 2, tints: [MINT, BLUE], white: 0.4, width: 0.0044 },
+  { rx: 1.58, rz: 1.58, tilt: [0.78, -0.86, 0.55], colors: [LIME, LIME, WHITE], intensity: 1.3, speed: 0.015, dash: 0, pearls: 2, tints: [LIME, WHITE], white: 0.5, width: 0.0046 },
+  { rx: 1.58, rz: 1.58, tilt: [-0.35, 1.25, -0.72], colors: [BLUE, MINT, BLUE], intensity: 0.62, speed: -0.011, dash: 118, pearls: 1, tints: [BLUE], white: 0.3, width: 0.0042 },
+  { rx: 1.58, rz: 1.58, tilt: [1.34, 0.3, 0.15], colors: [VIOLET, BLUE, VIOLET], intensity: 0.82, speed: 0.008, dash: 0, pearls: 2, tints: [VIOLET, BLUE], white: 0.2, width: 0.004 },
   { rx: 1.58, rz: 1.58, tilt: [0.45, -0.3, 1.1], colors: [MINT, BLUE, MINT], intensity: 0.58, speed: -0.014, dash: 136, pearls: 2, tints: [MINT, WHITE], white: 0.25, width: 0.004 },
-  { rx: 1.9, rz: 1.9, tilt: [-0.62, -1.05, -0.25], colors: [LIME, MINT, LIME], intensity: 0.88, speed: 0.01, dash: 0, pearls: 2, tints: [LIME, MINT], white: 0.35, width: 0.0042 },
+  { rx: 1.58, rz: 1.58, tilt: [-0.62, -1.05, -0.25], colors: [LIME, MINT, LIME], intensity: 0.88, speed: 0.01, dash: 0, pearls: 2, tints: [LIME, MINT], white: 0.35, width: 0.0042 },
 ];
 
 // Distinct orbital speeds so the beads never march in lockstep. All stay
