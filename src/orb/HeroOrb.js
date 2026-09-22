@@ -227,23 +227,25 @@ const TRAIL = {
 };
 
 const FILAMENTS = [
-  { radius: 1.02, wobble: 0.3, lift: 0.62, seed: 0.4, tilt: [0.5, 0.2, -0.3], colors: [LIME, WHITE, MINT], intensity: 1.05, speed: 0.035, tail: 0.4, floor: 0.1, white: 0.55, width: 0.0058 },
-  { radius: 0.9, wobble: 0.36, lift: 0.52, seed: 2.1, tilt: [-0.7, 1.1, 0.4], colors: [MINT, BLUE, MINT], intensity: 0.88, speed: -0.028, tail: 0.34, floor: 0.09, white: 0.35, width: 0.0052 },
-  { radius: 1.1, wobble: 0.24, lift: 0.7, seed: 3.7, tilt: [1.2, -0.5, 0.8], colors: [LIME, LIME, MINT], intensity: 0.95, speed: 0.022, tail: 0.46, floor: 0.08, white: 0.5, width: 0.0055 },
-  { radius: 0.78, wobble: 0.42, lift: 0.44, seed: 5.2, tilt: [0.2, 0.9, 1.3], colors: [BLUE, VIOLET, BLUE], intensity: 0.72, speed: -0.034, tail: 0.3, floor: 0.08, white: 0.22, width: 0.0046 },
-  { radius: 0.96, wobble: 0.33, lift: 0.58, seed: 6.6, tilt: [-0.4, -1.0, -0.6], colors: [MINT, WHITE, LIME], intensity: 0.85, speed: 0.03, tail: 0.38, floor: 0.09, white: 0.45, width: 0.005 },
+  { radius: 1.26, wobble: 0.05, lift: 0.32, seed: 0.4, tilt: [0.5, 0.2, -0.3], colors: [LIME, WHITE, MINT], intensity: 1.05, speed: 0.035, tail: 0.4, floor: 0.1, white: 0.55, width: 0.0058 },
+  { radius: 1.22, wobble: 0.05, lift: 0.3, seed: 2.1, tilt: [-0.7, 1.1, 0.4], colors: [MINT, BLUE, MINT], intensity: 0.88, speed: -0.028, tail: 0.34, floor: 0.09, white: 0.35, width: 0.0052 },
+  { radius: 1.32, wobble: 0.04, lift: 0.34, seed: 3.7, tilt: [1.2, -0.5, 0.8], colors: [LIME, LIME, MINT], intensity: 0.95, speed: 0.022, tail: 0.46, floor: 0.08, white: 0.5, width: 0.0055 },
+  { radius: 1.2, wobble: 0.05, lift: 0.28, seed: 5.2, tilt: [0.2, 0.9, 1.3], colors: [BLUE, VIOLET, BLUE], intensity: 0.72, speed: -0.034, tail: 0.3, floor: 0.08, white: 0.22, width: 0.0046 },
+  { radius: 1.24, wobble: 0.05, lift: 0.3, seed: 6.6, tilt: [-0.4, -1.0, -0.6], colors: [MINT, WHITE, LIME], intensity: 0.85, speed: 0.03, tail: 0.38, floor: 0.09, white: 0.45, width: 0.005 },
 ];
 
-// Perfect circles (rx === rz) with clearance past the outer glass so tubes
-// never intersect the orb volume. Tilts still give 3D elliptical silhouettes.
+// Perfect circles (rx === rz). Radii stay well clear of the outer shell:
+// max shell ≈ 1.0 * (1 + 0.008) * 1.005 ≈ 1.013, plus tube glow ≈ 0.02 →
+// clearance floor ~1.12. Every orbit sits above that so paths never enter
+// the glass volume; tilts still read as ellipses in perspective.
 const ORBITS = [
-  { rx: 1.38, rz: 1.38, tilt: [0.2, 0.1, -0.36], colors: [LIME, WHITE, LIME], intensity: 1.5, speed: 0.012, dash: 0, pearls: 3, tints: [LIME, WHITE, MINT], white: 0.6, width: 0.0048 },
-  { rx: 1.46, rz: 1.46, tilt: [-1.18, 0.55, 0.2], colors: [MINT, MINT, BLUE], intensity: 1.15, speed: -0.009, dash: 0, pearls: 2, tints: [MINT, BLUE], white: 0.4, width: 0.0044 },
-  { rx: 1.42, rz: 1.42, tilt: [0.78, -0.86, 0.55], colors: [LIME, LIME, WHITE], intensity: 1.3, speed: 0.015, dash: 0, pearls: 2, tints: [LIME, WHITE], white: 0.5, width: 0.0046 },
-  { rx: 1.34, rz: 1.34, tilt: [-0.35, 1.25, -0.72], colors: [BLUE, MINT, BLUE], intensity: 0.62, speed: -0.011, dash: 118, pearls: 1, tints: [BLUE], white: 0.3, width: 0.0042 },
-  { rx: 1.5, rz: 1.5, tilt: [1.34, 0.3, 0.15], colors: [VIOLET, BLUE, VIOLET], intensity: 0.82, speed: 0.008, dash: 0, pearls: 2, tints: [VIOLET, BLUE], white: 0.2, width: 0.004 },
-  { rx: 1.3, rz: 1.3, tilt: [0.45, -0.3, 1.1], colors: [MINT, BLUE, MINT], intensity: 0.58, speed: -0.014, dash: 136, pearls: 2, tints: [MINT, WHITE], white: 0.25, width: 0.004 },
-  { rx: 1.54, rz: 1.54, tilt: [-0.62, -1.05, -0.25], colors: [LIME, MINT, LIME], intensity: 0.88, speed: 0.01, dash: 0, pearls: 2, tints: [LIME, MINT], white: 0.35, width: 0.0042 },
+  { rx: 1.68, rz: 1.68, tilt: [0.2, 0.1, -0.36], colors: [LIME, WHITE, LIME], intensity: 1.5, speed: 0.012, dash: 0, pearls: 3, tints: [LIME, WHITE, MINT], white: 0.6, width: 0.0048 },
+  { rx: 1.78, rz: 1.78, tilt: [-1.18, 0.55, 0.2], colors: [MINT, MINT, BLUE], intensity: 1.15, speed: -0.009, dash: 0, pearls: 2, tints: [MINT, BLUE], white: 0.4, width: 0.0044 },
+  { rx: 1.72, rz: 1.72, tilt: [0.78, -0.86, 0.55], colors: [LIME, LIME, WHITE], intensity: 1.3, speed: 0.015, dash: 0, pearls: 2, tints: [LIME, WHITE], white: 0.5, width: 0.0046 },
+  { rx: 1.62, rz: 1.62, tilt: [-0.35, 1.25, -0.72], colors: [BLUE, MINT, BLUE], intensity: 0.62, speed: -0.011, dash: 118, pearls: 1, tints: [BLUE], white: 0.3, width: 0.0042 },
+  { rx: 1.85, rz: 1.85, tilt: [1.34, 0.3, 0.15], colors: [VIOLET, BLUE, VIOLET], intensity: 0.82, speed: 0.008, dash: 0, pearls: 2, tints: [VIOLET, BLUE], white: 0.2, width: 0.004 },
+  { rx: 1.58, rz: 1.58, tilt: [0.45, -0.3, 1.1], colors: [MINT, BLUE, MINT], intensity: 0.58, speed: -0.014, dash: 136, pearls: 2, tints: [MINT, WHITE], white: 0.25, width: 0.004 },
+  { rx: 1.9, rz: 1.9, tilt: [-0.62, -1.05, -0.25], colors: [LIME, MINT, LIME], intensity: 0.88, speed: 0.01, dash: 0, pearls: 2, tints: [LIME, MINT], white: 0.35, width: 0.0042 },
 ];
 
 // Distinct orbital speeds so the beads never march in lockstep. All stay
@@ -267,11 +269,12 @@ class OrganicCurve extends THREE.Curve {
   getPoint(t, target = new THREE.Vector3()) {
     const { radius, wobble, lift, seed } = this;
     const a = t * Math.PI * 2;
-    const r = radius * (1 + Math.sin(a * 1.7 + seed) * wobble + Math.cos(a * 2.6 - seed * 1.4) * wobble * 0.4);
+    // Keep radial variation gentle so surface trails stay outside the glass.
+    const r = radius * (1 + Math.sin(a * 1.7 + seed) * wobble * 0.55 + Math.cos(a * 2.6 - seed * 1.4) * wobble * 0.2);
     return target.set(
       Math.cos(a) * r,
-      Math.sin(a * 0.8 + seed * 1.3) * radius * lift * 0.55,
-      Math.sin(a) * r * (0.82 + Math.cos(a * 1.3 + seed) * 0.16),
+      Math.sin(a * 0.8 + seed * 1.3) * radius * lift * 0.45,
+      Math.sin(a) * r * (0.92 + Math.cos(a * 1.3 + seed) * 0.08),
     );
   }
 }
@@ -641,10 +644,9 @@ export class HeroOrb {
     });
   }
 
-  // Invisible depth-only sphere for the orbital system. Transparent additive
-  // shells cannot occlude tubes reliably; this writes depth after the glass
-  // has drawn so front orbit segments stay sharp while back segments hide
-  // cleanly behind the orb — no slicing through the glass volume.
+  // Invisible depth-only sphere. Drawn after the additive glass shells write
+  // colour (but no depth), then before any orbital tubes — so back arcs fail
+  // the depth test and front arcs stay fully visible outside the volume.
   initOrbitOccluder() {
     const segs = this.lowPower ? 56 : 72;
     const geo = new THREE.SphereGeometry(1, segs, Math.round(segs * 0.75));
@@ -652,15 +654,15 @@ export class HeroOrb {
       colorWrite: false,
       depthWrite: true,
       depthTest: true,
-      // Stay in the transparent pass so renderOrder runs after the glass
-      // shells; an opaque depth mesh would draw first and punch holes in them.
+      // Transparent pass so renderOrder is respected relative to the shells.
       transparent: true,
       opacity: 1,
     });
     const occluder = new THREE.Mesh(geo, mat);
-    // Snug to the polished outer shell so orbits clear the volume outside.
-    occluder.scale.setScalar(1.03);
-    occluder.renderOrder = 28;
+    // Covers outer shell + residual displacement + tube glow margin.
+    occluder.scale.setScalar(1.08);
+    // After shells (2…), before filaments (20…) and orbits (40…).
+    occluder.renderOrder = 15;
     this.spin.add(occluder);
     this.orbitOccluder = occluder;
     this.disposables.push(geo, mat);
@@ -680,11 +682,13 @@ export class HeroOrb {
       group.rotation.set(...cfg.tilt);
       this.spin.add(group);
 
+      // Orbits draw after the depth occluder so they wrap outside the orb
+      // instead of compositing through the additive glass.
       const layers = this.buildTrail(
         new EllipsePath(cfg.rx, cfg.rz),
         { ...cfg, speed: cfg.speed * 1.6, floor: cfg.floor ?? 0.62 },
         group,
-        30 + i * 2,
+        40 + i * 2,
         { orbit: true },
       );
 
