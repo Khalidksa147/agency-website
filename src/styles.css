@@ -725,7 +725,10 @@ html[dir='rtl'] .mobile-nav__indicator {
 }
 
 .page-hero .hero-copy h1 {
-  font-size: clamp(2.2rem, 4.6vw, 4.25rem);
+  font-size: clamp(1.85rem, 6.2vw, 4.25rem);
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: normal;
   overflow: visible;
 }
 
@@ -737,7 +740,9 @@ html[dir='rtl'] .mobile-nav__indicator {
 
 .page-hero .hero-copy h1 .hero-title-line {
   display: block;
-  white-space: nowrap;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .page-hero .hero-copy h1 .accent {
@@ -749,19 +754,32 @@ html[dir='rtl'] .mobile-nav__indicator {
 .page-hero .hero-copy h1 > .line-mask {
   display: block !important;
   width: 100% !important;
-  max-width: none !important;
+  max-width: 100% !important;
   overflow: visible !important;
   text-align: center;
 }
 
 .page-hero .hero-copy h1 > .line-mask > .line {
   display: block !important;
-  width: max-content !important;
-  max-width: none !important;
+  width: 100% !important;
+  max-width: 100% !important;
   margin-inline: auto;
   overflow: visible !important;
-  white-space: nowrap !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere;
   text-align: center;
+}
+
+@media (min-width: 768px) {
+  .page-hero .hero-copy h1 .hero-title-line {
+    white-space: nowrap;
+  }
+
+  .page-hero .hero-copy h1 > .line-mask > .line {
+    width: max-content !important;
+    max-width: 100% !important;
+    white-space: nowrap !important;
+  }
 }
 
 /* ——— Animated editorial orbit section ——— */
@@ -4192,6 +4210,13 @@ html[dir='rtl'] .process-line::after {
 
   .page-hero .hero > .hero-copy {
     margin-bottom: 0;
+    padding-inline: 0.75rem;
+    max-width: min(58rem, 100%);
+    width: 100%;
+  }
+
+  .page-hero .hero-copy h1 {
+    font-size: clamp(1.7rem, 7.5vw, 2.45rem);
   }
 
   .hero-copy h1 {
