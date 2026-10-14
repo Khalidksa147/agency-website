@@ -6,8 +6,8 @@
 const DEFAULT_CARDS = [
   {
     id: 'portrait',
-    type: 'video',
-    src: '/videos/editorial-01.mp4',
+    type: 'image',
+    src: '/videos/editorial-01.gif',
     mono: true,
     contrast: 1.15,
   },
@@ -40,15 +40,15 @@ const DEFAULT_CARDS = [
   },
   {
     id: 'cinematic',
-    type: 'video',
-    src: '/videos/editorial-02.mp4',
+    type: 'image',
+    src: '/videos/editorial-02.gif',
     mono: true,
     contrast: 1.25,
   },
   {
     id: 'detail',
-    type: 'video',
-    src: '/videos/editorial-04.mp4',
+    type: 'image',
+    src: '/videos/editorial-04.gif',
     mono: true,
     contrast: 1.2,
   },
@@ -110,27 +110,32 @@ function createCard(card, index) {
   const inner = document.createElement('div');
   inner.className = 'editorial-card__inner';
 
-  if (card.type === 'video') {
-    const video = document.createElement('video');
-    video.className = 'editorial-card__media';
-    video.src = card.src;
-    video.muted = true;
-    video.defaultMuted = true;
-    video.volume = 0;
-    video.loop = true;
-    video.playsInline = true;
-    video.autoplay = true;
-    video.setAttribute('muted', '');
-    video.setAttribute('autoplay', '');
-    video.setAttribute('playsinline', '');
-    video.setAttribute('webkit-playsinline', '');
-    video.preload = 'auto';
-    if (card.mono) {
-      video.style.filter = `grayscale(1) contrast(${card.contrast || 1.1})`;
-    } else if (card.darken) {
-      video.style.filter = 'brightness(0.72) contrast(1.12) saturate(0.75)';
+  if (card.type === 'image' || card.type === 'video') {
+    const media = document.createElement(card.type === 'video' ? 'video' : 'img');
+    media.className = 'editorial-card__media';
+    media.src = card.src;
+    media.alt = '';
+    media.decoding = 'async';
+    media.loading = index < 3 ? 'eager' : 'lazy';
+    if (media.tagName === 'VIDEO') {
+      media.muted = true;
+      media.defaultMuted = true;
+      media.volume = 0;
+      media.loop = true;
+      media.playsInline = true;
+      media.autoplay = true;
+      media.preload = 'metadata';
+      media.setAttribute('muted', '');
+      media.setAttribute('playsinline', '');
+    } else {
+      media.setAttribute('draggable', 'false');
     }
-    inner.append(video);
+    if (card.mono) {
+      media.style.filter = `grayscale(1) contrast(${card.contrast || 1.1})`;
+    } else if (card.darken) {
+      media.style.filter = 'brightness(0.72) contrast(1.12) saturate(0.75)';
+    }
+    inner.append(media);
   } else {
     inner.append(createGraphic(card));
   }
@@ -141,7 +146,7 @@ function createCard(card, index) {
 
 /**
  * @param {HTMLElement} root
- * @param {{ cards?: typeof DEFAULT_CARDS }} [options]
+ * @param {{ cards?: typeof DEFAULT_CARDS, direction?: 1|-1 }} [options]
  */
 export function initAnimatedEditorialSection(root, options = {}) {
   if (!root) return null;
@@ -171,92 +176,54 @@ export function initAnimatedEditorialSection(root, options = {}) {
     return el;
   });
 
-  const foreground = document.createElement('div');
-  foreground.className = 'editorial-orbit__foreground';
-  foreground.setAttribute('aria-hidden', 'true');
-  foreground.innerHTML = `
-    <svg class="editorial-orbit__curve" viewBox="0 0 1440 220" preserveAspectRatio="none">
-      <path d="M0 220 V118 C 240 28, 520 8, 720 8 S 1200 28, 1440 118 V220 Z"/>
-    </svg>`;
-
-  stage.append(track, foreground);
+  stage.append(track);
   root.replaceChildren(stage);
 
-  const videos = [...root.querySelectorAll('video')];
   const n = cardEls.length;
+  const twoPi = Math.PI * 2;
   let angle = 0;
   let raf = 0;
   let last = 0;
   let running = false;
   let destroyed = false;
+  let radiusX = Math.max(460, root.clientWidth * 0.44);
+  let radiusZ = Math.max(220, root.clientWidth * 0.2);
+  // Orbit pace — calm enough to read, still continuous.
+  let speed = reduced ? 0.14 : 0.26;
 
-  const state = {
-    get radiusX() {
-      return Math.max(460, root.clientWidth * 0.44);
-    },
-    get radiusZ() {
-      return Math.max(220, root.clientWidth * 0.2);
-    },
-    // Orbit always runs; reduced-motion only softens speed (this section is the motion).
-    get speed() {
-      return reduced ? 0.1 : 0.18;
-    },
-  };
+  function measure() {
+    radiusX = Math.max(460, root.clientWidth * 0.44);
+    radiusZ = Math.max(220, root.clientWidth * 0.2);
+  }
 
   function layoutCard(el, t) {
-    // t in [0, 1) around the ring
-    const theta = t * Math.PI * 2;
-    // Front of ring faces camera at theta ≈ 0
-    const x = Math.sin(theta) * state.radiusX;
-    const z = Math.cos(theta) * state.radiusZ;
-    // Depth factor: 1 at front, 0 at back
-    const depth = (z + state.radiusZ) / (state.radiusZ * 2);
+    const theta = t * twoPi;
+    const sinT = Math.sin(theta);
+    const cosT = Math.cos(theta);
+    const x = sinT * radiusX;
+    const z = cosT * radiusZ;
+    const depth = (z + radiusZ) / (radiusZ * 2);
     const scale = 0.58 + depth * 0.52;
-    // Face toward camera / fan outward
-    const rotateY = -Math.sin(theta) * 42;
+    const rotateY = -sinT * 42;
     const rotateX = 3 + (1 - depth) * 5;
-    const y = Math.sin(theta) * 6 - depth * 22;
+    const y = sinT * 6 - depth * 22;
+    const opacity = clamp(0.08 + depth ** 1.35 * 0.92, 0, 1);
 
     el.style.transform =
-      `translate(-50%, -50%) translate3d(${x}px, ${y}px, ${z}px) ` +
-      `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(${scale})`;
-    el.style.zIndex = String(Math.round(100 + depth * 100));
-    // Softly hide the rear of the ring so the fan reads as a shallow front arc
-    const opacity = clamp(0.08 + depth ** 1.35 * 0.92, 0, 1);
-    el.style.opacity = String(opacity);
+      `translate(-50%, -50%) translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, ${z.toFixed(2)}px) ` +
+      `rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale(${scale.toFixed(3)})`;
+    el.style.zIndex = String((100 + depth * 100) | 0);
+    el.style.opacity = opacity.toFixed(3);
     el.style.visibility = opacity < 0.12 ? 'hidden' : 'visible';
   }
 
   function render(offsetRad) {
+    const offset = offsetRad / twoPi;
     for (let i = 0; i < n; i += 1) {
-      const t = ((i / n) + offsetRad / (Math.PI * 2)) % 1;
-      layoutCard(cardEls[i], t < 0 ? t + 1 : t);
+      let t = (i / n + offset) % 1;
+      if (t < 0) t += 1;
+      layoutCard(cardEls[i], t);
     }
-  }
-
-  function tryPlay(video) {
-    video.muted = true;
-    video.defaultMuted = true;
-    video.volume = 0;
-    const p = video.play();
-    if (p && typeof p.catch === 'function') {
-      p.catch(() => {
-        // Retry once media is ready (autoplay policies / late decode)
-        const retry = () => {
-          video.muted = true;
-          video.play()?.catch?.(() => {});
-        };
-        video.addEventListener('canplay', retry, { once: true });
-        video.addEventListener('loadeddata', retry, { once: true });
-      });
-    }
-  }
-
-  function playVideos(shouldPlay) {
-    videos.forEach((video) => {
-      if (shouldPlay) tryPlay(video);
-      else video.pause();
-    });
   }
 
   function tick(ts) {
@@ -264,8 +231,9 @@ export function initAnimatedEditorialSection(root, options = {}) {
     if (!last) last = ts;
     const dt = Math.min(0.05, (ts - last) / 1000);
     last = ts;
-    angle = (angle + state.speed * direction * dt) % (Math.PI * 2);
-    if (angle < 0) angle += Math.PI * 2;
+    angle += speed * direction * dt;
+    if (angle >= twoPi || angle <= -twoPi) angle %= twoPi;
+    if (angle < 0) angle += twoPi;
     render(angle);
     raf = requestAnimationFrame(tick);
   }
@@ -274,8 +242,6 @@ export function initAnimatedEditorialSection(root, options = {}) {
     if (running || destroyed) return;
     running = true;
     last = 0;
-    // Always play muted loops while the section is visible
-    playVideos(true);
     raf = requestAnimationFrame(tick);
   }
 
@@ -283,7 +249,6 @@ export function initAnimatedEditorialSection(root, options = {}) {
     running = false;
     if (raf) cancelAnimationFrame(raf);
     raf = 0;
-    playVideos(false);
   }
 
   function isInView() {
@@ -292,7 +257,7 @@ export function initAnimatedEditorialSection(root, options = {}) {
     return rect.bottom > vh * 0.08 && rect.top < vh * 0.92;
   }
 
-  // Initial pose, then start as soon as the section is on screen
+  measure();
   render(0);
 
   const io = new IntersectionObserver(
@@ -301,43 +266,34 @@ export function initAnimatedEditorialSection(root, options = {}) {
       if (entry.isIntersecting) start();
       else stop();
     },
-    { threshold: [0, 0.05, 0.15, 0.35], rootMargin: '10% 0px' },
+    { threshold: 0.05, rootMargin: '12% 0px' },
   );
   io.observe(root);
 
-  // IntersectionObserver can miss the first callback if already visible
   if (isInView()) start();
-  else requestAnimationFrame(() => {
-    if (!destroyed && isInView()) start();
-  });
+  else {
+    requestAnimationFrame(() => {
+      if (!destroyed && isInView()) start();
+    });
+  }
 
   let resizeTimer = 0;
   const onResize = () => {
     window.clearTimeout(resizeTimer);
     resizeTimer = window.setTimeout(() => {
+      measure();
       render(angle);
-    }, 100);
+    }, 120);
   };
   window.addEventListener('resize', onResize, { passive: true });
 
   const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
   const onMotion = (e) => {
     reduced = e.matches;
+    speed = reduced ? 0.14 : 0.26;
     if (!running && isInView()) start();
-    else if (running) playVideos(true);
   };
   mq.addEventListener('change', onMotion);
-
-  // Kick play after decode in case IntersectionObserver fired before sources loaded
-  videos.forEach((video) => {
-    video.addEventListener(
-      'loadeddata',
-      () => {
-        if (running) tryPlay(video);
-      },
-      { once: true },
-    );
-  });
 
   return {
     destroy() {

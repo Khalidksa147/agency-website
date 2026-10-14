@@ -110,7 +110,7 @@ function bootLines() {
 function bootEditorialOrbit() {
   const root = document.querySelector('[data-editorial-orbit]');
   if (!root) return;
-  import('./editorial/AnimatedEditorialSection.js?v=20261014i')
+  import('./editorial/AnimatedEditorialSection.js?v=20261014k')
     .then(({ initAnimatedEditorialSection }) => {
       initAnimatedEditorialSection(root);
     })

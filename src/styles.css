@@ -767,22 +767,30 @@ html[dir='rtl'] .mobile-nav__indicator {
 /* ——— Animated editorial orbit section ——— */
 .page-hero .editorial-section,
 .page-hero .editorial-orbit {
+  position: relative;
+  z-index: 4;
   width: 100vw;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
-  margin-top: 1.5rem;
-  height: min(52vh, 520px);
-  min-height: 340px;
+  margin-top: 1.25rem;
+  margin-bottom: 1.5rem;
+  height: min(68vh, 720px);
+  min-height: 420px;
+  /* Allow the front card to breathe; clip only horizontal bleed */
+  overflow-x: clip;
+  overflow-y: visible;
 }
 
 .editorial-orbit {
   position: relative;
+  z-index: 4;
   width: 100vw;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
   height: min(100vh, 920px);
   min-height: 640px;
-  overflow: hidden;
+  overflow-x: clip;
+  overflow-y: visible;
   background: transparent;
   isolation: isolate;
   color: #0a0a0a;
@@ -792,14 +800,15 @@ html[dir='rtl'] .mobile-nav__indicator {
   position: absolute;
   inset: 0;
   perspective: 1600px;
-  perspective-origin: 50% 42%;
+  perspective-origin: 50% 48%;
   transform-style: preserve-3d;
+  overflow: visible;
 }
 
 .editorial-orbit__track {
   position: absolute;
   left: 50%;
-  top: 40%;
+  top: 50%;
   width: 0;
   height: 0;
   transform-style: preserve-3d;
@@ -963,8 +972,8 @@ body:has(.editorial-orbit) {
 
   .page-hero .editorial-section,
   .page-hero .editorial-orbit {
-    height: min(48vh, 460px);
-    min-height: 300px;
+    height: min(58vh, 580px);
+    min-height: 360px;
   }
 
   .editorial-orbit {
@@ -980,8 +989,8 @@ body:has(.editorial-orbit) {
 @media (max-width: 650px) {
   .page-hero .editorial-section,
   .page-hero .editorial-orbit {
-    height: min(42vh, 380px);
-    min-height: 260px;
+    height: min(52vh, 460px);
+    min-height: 320px;
   }
 
   .editorial-orbit {
