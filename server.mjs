@@ -24,6 +24,7 @@ const types = {
   '.jpeg': 'image/jpeg',
   '.webp': 'image/webp',
   '.ico': 'image/x-icon',
+  '.mp4': 'video/mp4',
 };
 
 function cacheControl(file, url) {
@@ -75,17 +76,42 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  fs.readFile(file, (err, data) => {
-    if (err) {
+  fs.stat(file, (statErr, stat) => {
+    if (statErr || !stat.isFile()) {
       res.writeHead(404, { 'content-type': 'text/plain; charset=utf-8' });
       res.end('Not found');
       return;
     }
+
+    const ext = path.extname(file);
+    const type = types[ext] || 'application/octet-stream';
+    const total = stat.size;
+    const range = req.headers.range;
+
+    // Support byte-range requests so <video> can seek / autoplay reliably
+    if (range && /^bytes=/.test(range)) {
+      const parts = range.replace(/bytes=/, '').split('-');
+      const start = Number(parts[0]) || 0;
+      const end = parts[1] ? Number(parts[1]) : total - 1;
+      const chunk = Math.max(0, end - start + 1);
+      res.writeHead(206, {
+        'content-type': type,
+        'content-length': chunk,
+        'content-range': `bytes ${start}-${end}/${total}`,
+        'accept-ranges': 'bytes',
+        'cache-control': cacheControl(file, raw),
+      });
+      fs.createReadStream(file, { start, end }).pipe(res);
+      return;
+    }
+
     res.writeHead(200, {
-      'content-type': types[path.extname(file)] || 'application/octet-stream',
+      'content-type': type,
+      'content-length': total,
+      'accept-ranges': 'bytes',
       'cache-control': cacheControl(file, raw),
     });
-    res.end(data);
+    fs.createReadStream(file).pipe(res);
   });
 });
 

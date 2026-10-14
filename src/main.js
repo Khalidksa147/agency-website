@@ -107,10 +107,21 @@ function bootLines() {
       .catch(() => {});
 }
 
+function bootEditorialOrbit() {
+  const root = document.querySelector('[data-editorial-orbit]');
+  if (!root) return;
+  import('./editorial/AnimatedEditorialSection.js?v=20261014i')
+    .then(({ initAnimatedEditorialSection }) => {
+      initAnimatedEditorialSection(root);
+    })
+    .catch(() => {});
+}
+
 function bootVisuals() {
   afterFirstPaint(() => {
     whenIdle(bootOrb, 160);
     whenIdle(bootLines, 480);
+    whenIdle(bootEditorialOrbit, 100);
   });
 }
 

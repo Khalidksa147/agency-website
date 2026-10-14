@@ -1,0 +1,20 @@
+node_modules
+dist
+.git
+.github
+.vite
+*.local
+.DS_Store
+.env
+.env.*
+
+# Dev / unused source media (runtime uses videos/editorial-*.mp4)
+Animations
+Images/*.mp4
+Images/hero-workspace.svg
+
+# WordPress / Apache leftovers not needed in the Node image
+public
+index.php
+.htaccess
+scripts
