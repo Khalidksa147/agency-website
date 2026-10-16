@@ -790,10 +790,10 @@ html[dir='rtl'] .mobile-nav__indicator {
   width: 100vw;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
-  margin-top: 1.25rem;
-  margin-bottom: 1.5rem;
-  height: min(68vh, 720px);
-  min-height: 420px;
+  margin-top: 0.75rem;
+  margin-bottom: 1rem;
+  height: min(52vh, 560px);
+  min-height: 340px;
   /* Allow the front card to breathe; clip only horizontal bleed */
   overflow-x: clip;
   overflow-y: visible;
@@ -863,6 +863,16 @@ html[dir='rtl'] .mobile-nav__indicator {
   height: 100%;
   object-fit: cover;
   object-position: center;
+}
+
+/* The Line: fill empty left margin by scaling from the left */
+.editorial-card[data-id='project-line'] .editorial-card__media {
+  width: 118%;
+  height: 118%;
+  max-width: none;
+  object-fit: cover;
+  object-position: left center;
+  transform: translate(-2%, -8%);
 }
 
 .editorial-card__graphic {
@@ -990,8 +1000,8 @@ body:has(.editorial-orbit) {
 
   .page-hero .editorial-section,
   .page-hero .editorial-orbit {
-    height: min(58vh, 580px);
-    min-height: 360px;
+    height: min(48vh, 480px);
+    min-height: 300px;
   }
 
   .editorial-orbit {
@@ -1007,8 +1017,8 @@ body:has(.editorial-orbit) {
 @media (max-width: 650px) {
   .page-hero .editorial-section,
   .page-hero .editorial-orbit {
-    height: min(52vh, 460px);
-    min-height: 320px;
+    height: min(44vh, 400px);
+    min-height: 280px;
   }
 
   .editorial-orbit {

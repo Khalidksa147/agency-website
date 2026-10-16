@@ -1,56 +1,39 @@
 /**
- * AnimatedEditorialSection — shallow 3D orbiting editorial card fan
+ * AnimatedEditorialSection - shallow 3D orbiting editorial card fan
  * Inspired by orbit poster-board compositions (continuous, seamless loop).
  */
 
 const DEFAULT_CARDS = [
   {
-    id: 'portrait',
-    type: 'image',
-    src: '/videos/editorial-01.gif',
-    mono: true,
-    contrast: 1.15,
+    id: 'project-3d',
+    type: 'video',
+    src: '/videos/3D%20Project%20vid.webm',
   },
   {
-    id: 'sphere',
-    type: 'graphic',
-    variant: 'sphere',
+    id: 'project-farmers',
+    type: 'video',
+    src: '/videos/Farmers%20Project%20Vid.webm',
   },
   {
-    id: 'type-light',
-    type: 'graphic',
-    variant: 'type-light',
-    lines: ['AB', '01', 'NW'],
+    id: 'project-logo',
+    type: 'video',
+    src: '/videos/Logo%20animation%20vid.webm',
+  },
+  // Halfway around the ring = back of the fan at start
+  {
+    id: 'project-valorat',
+    type: 'video',
+    src: '/videos/Valorat%20project%20vid.webm',
   },
   {
-    id: 'mono-mark',
-    type: 'graphic',
-    variant: 'mark',
+    id: 'project-parenting',
+    type: 'video',
+    src: '/videos/Parenting%20Project%20Vid.webm',
   },
   {
-    id: 'type-yellow',
-    type: 'graphic',
-    variant: 'type-yellow',
-    lines: ['FORM', '92'],
-  },
-  {
-    id: 'rings',
-    type: 'graphic',
-    variant: 'rings',
-  },
-  {
-    id: 'cinematic',
-    type: 'image',
-    src: '/videos/editorial-02.gif',
-    mono: true,
-    contrast: 1.25,
-  },
-  {
-    id: 'detail',
-    type: 'image',
-    src: '/videos/editorial-04.gif',
-    mono: true,
-    contrast: 1.2,
+    id: 'project-line',
+    type: 'video',
+    src: '/videos/The%20line%20Project%20Vid.webm',
   },
 ];
 
@@ -116,7 +99,6 @@ function createCard(card, index) {
     media.src = card.src;
     media.alt = '';
     media.decoding = 'async';
-    media.loading = index < 3 ? 'eager' : 'lazy';
     if (media.tagName === 'VIDEO') {
       media.muted = true;
       media.defaultMuted = true;
@@ -124,10 +106,13 @@ function createCard(card, index) {
       media.loop = true;
       media.playsInline = true;
       media.autoplay = true;
-      media.preload = 'metadata';
+      media.preload = 'auto';
       media.setAttribute('muted', '');
+      media.setAttribute('autoplay', '');
       media.setAttribute('playsinline', '');
+      media.setAttribute('webkit-playsinline', '');
     } else {
+      media.loading = index < 3 ? 'eager' : 'lazy';
       media.setAttribute('draggable', 'false');
     }
     if (card.mono) {
@@ -179,6 +164,7 @@ export function initAnimatedEditorialSection(root, options = {}) {
   stage.append(track);
   root.replaceChildren(stage);
 
+  const videos = [...root.querySelectorAll('video')];
   const n = cardEls.length;
   const twoPi = Math.PI * 2;
   let angle = 0;
@@ -188,7 +174,6 @@ export function initAnimatedEditorialSection(root, options = {}) {
   let destroyed = false;
   let radiusX = Math.max(460, root.clientWidth * 0.44);
   let radiusZ = Math.max(220, root.clientWidth * 0.2);
-  // Orbit pace — calm enough to read, still continuous.
   let speed = reduced ? 0.14 : 0.26;
 
   function measure() {
@@ -226,6 +211,30 @@ export function initAnimatedEditorialSection(root, options = {}) {
     }
   }
 
+  function tryPlay(video) {
+    video.muted = true;
+    video.defaultMuted = true;
+    video.volume = 0;
+    const p = video.play();
+    if (p && typeof p.catch === 'function') {
+      p.catch(() => {
+        const retry = () => {
+          video.muted = true;
+          video.play()?.catch?.(() => {});
+        };
+        video.addEventListener('canplay', retry, { once: true });
+        video.addEventListener('loadeddata', retry, { once: true });
+      });
+    }
+  }
+
+  function playVideos(shouldPlay) {
+    videos.forEach((video) => {
+      if (shouldPlay) tryPlay(video);
+      else video.pause();
+    });
+  }
+
   function tick(ts) {
     if (destroyed || !running) return;
     if (!last) last = ts;
@@ -242,6 +251,7 @@ export function initAnimatedEditorialSection(root, options = {}) {
     if (running || destroyed) return;
     running = true;
     last = 0;
+    playVideos(true);
     raf = requestAnimationFrame(tick);
   }
 
@@ -249,6 +259,7 @@ export function initAnimatedEditorialSection(root, options = {}) {
     running = false;
     if (raf) cancelAnimationFrame(raf);
     raf = 0;
+    playVideos(false);
   }
 
   function isInView() {
@@ -292,8 +303,19 @@ export function initAnimatedEditorialSection(root, options = {}) {
     reduced = e.matches;
     speed = reduced ? 0.14 : 0.26;
     if (!running && isInView()) start();
+    else if (running) playVideos(true);
   };
   mq.addEventListener('change', onMotion);
+
+  videos.forEach((video) => {
+    video.addEventListener(
+      'loadeddata',
+      () => {
+        if (running) tryPlay(video);
+      },
+      { once: true },
+    );
+  });
 
   return {
     destroy() {

@@ -25,6 +25,8 @@ const types = {
   '.webp': 'image/webp',
   '.ico': 'image/x-icon',
   '.mp4': 'video/mp4',
+  '.webm': 'video/webm',
+  '.gif': 'image/gif',
 };
 
 function cacheControl(file, url) {
@@ -89,11 +91,21 @@ const server = http.createServer((req, res) => {
     const range = req.headers.range;
 
     // Support byte-range requests so <video> can seek / autoplay reliably
-    if (range && /^bytes=/.test(range)) {
+    if (range && /^bytes=/.test(range) && total > 0) {
       const parts = range.replace(/bytes=/, '').split('-');
-      const start = Number(parts[0]) || 0;
-      const end = parts[1] ? Number(parts[1]) : total - 1;
-      const chunk = Math.max(0, end - start + 1);
+      let start = Number(parts[0]) || 0;
+      let end = parts[1] ? Number(parts[1]) : total - 1;
+      if (Number.isNaN(start) || start < 0) start = 0;
+      if (Number.isNaN(end) || end >= total) end = total - 1;
+      if (start > end || start >= total) {
+        res.writeHead(416, {
+          'content-range': `bytes */${total}`,
+          'accept-ranges': 'bytes',
+        });
+        res.end();
+        return;
+      }
+      const chunk = end - start + 1;
       res.writeHead(206, {
         'content-type': type,
         'content-length': chunk,
