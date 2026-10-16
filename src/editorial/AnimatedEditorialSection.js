@@ -174,11 +174,28 @@ export function initAnimatedEditorialSection(root, options = {}) {
   let destroyed = false;
   let radiusX = Math.max(460, root.clientWidth * 0.44);
   let radiusZ = Math.max(220, root.clientWidth * 0.2);
-  let speed = reduced ? 0.14 : 0.26;
+  let isMobile = false;
+  let speed = 0.26;
+
+  function syncSpeed() {
+    if (reduced) {
+      speed = isMobile ? 0.09 : 0.14;
+    } else {
+      speed = isMobile ? 0.16 : 0.26;
+    }
+  }
 
   function measure() {
-    radiusX = Math.max(460, root.clientWidth * 0.44);
-    radiusZ = Math.max(220, root.clientWidth * 0.2);
+    isMobile = window.matchMedia('(max-width: 650px)').matches;
+    if (isMobile) {
+      // Tighter ring so cards sit closer on small screens
+      radiusX = Math.max(200, root.clientWidth * 0.3);
+      radiusZ = Math.max(110, root.clientWidth * 0.14);
+    } else {
+      radiusX = Math.max(460, root.clientWidth * 0.44);
+      radiusZ = Math.max(220, root.clientWidth * 0.2);
+    }
+    syncSpeed();
   }
 
   function layoutCard(el, t) {
@@ -301,7 +318,7 @@ export function initAnimatedEditorialSection(root, options = {}) {
   const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
   const onMotion = (e) => {
     reduced = e.matches;
-    speed = reduced ? 0.14 : 0.26;
+    syncSpeed();
     if (!running && isInView()) start();
     else if (running) playVideos(true);
   };
