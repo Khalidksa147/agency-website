@@ -1067,8 +1067,10 @@ body:has(.editorial-orbit) {
 
   .page-hero .editorial-section,
   .page-hero .editorial-orbit {
-    height: min(48vh, 480px);
-    min-height: 300px;
+    /* Was min(48vh, 480px) / 300px — cut ~80px of bottom slack */
+    height: min(40vh, 400px);
+    min-height: 255px;
+    margin-bottom: 0.4rem;
   }
 
   .editorial-orbit {
@@ -1084,8 +1086,10 @@ body:has(.editorial-orbit) {
 @media (max-width: 650px) {
   .page-hero .editorial-section,
   .page-hero .editorial-orbit {
-    height: min(44vh, 400px);
-    min-height: 280px;
+    /* Was min(44vh, 400px) / 280px — cut ~60px of bottom slack */
+    height: min(36vh, 340px);
+    min-height: 240px;
+    margin-bottom: 0.25rem;
   }
 
   .editorial-orbit {
