@@ -188,9 +188,9 @@ export function initAnimatedEditorialSection(root, options = {}) {
   function measure() {
     isMobile = window.matchMedia('(max-width: 650px)').matches;
     if (isMobile) {
-      // Tighter ring so cards sit closer on small screens
-      radiusX = Math.max(200, root.clientWidth * 0.3);
-      radiusZ = Math.max(110, root.clientWidth * 0.14);
+      // Mobile ring: ~20% wider than previous tight spacing
+      radiusX = Math.max(240, root.clientWidth * 0.36);
+      radiusZ = Math.max(130, root.clientWidth * 0.17);
     } else {
       radiusX = Math.max(460, root.clientWidth * 0.44);
       radiusZ = Math.max(220, root.clientWidth * 0.2);
