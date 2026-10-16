@@ -5,7 +5,7 @@ import { initMobileMenu } from './nav/MobileMenu.js';
 import { initCopy, playHeroCopy, prepareHeroCopy } from './text/Copy.js';
 import { initSmoothScroll } from './scroll/smooth.js';
 import { initPreloader, markPageReady } from './preloader/Preloader.js';
-import { initWorkStack } from './work/WorkStack.js?v=20261017a';
+import { initWorkStack } from './work/WorkStack.js?v=20261017c';
 import { initContactPage } from './contact/ContactPage.js?v=20260921c';
 import { initAboutPage } from './about/AboutPage.js?v=20260921c';
 import { initWorkPage } from './work/WorkPage.js?v=20260921c';

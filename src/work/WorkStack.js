@@ -3,6 +3,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
+const STACK_MQ = '(min-width: 1024px)';
+
 function getWorkCards(section) {
   return [...section.children].filter((el) => el.classList.contains('work-showcase'));
 }
@@ -49,8 +51,8 @@ export function initWorkStack() {
   const { stack, track } = wrapCards(section, cards);
   const mm = gsap.matchMedia();
 
-  // Sticky stack on all viewports (desktop, tablet, mobile)
-  mm.add('all', () => {
+  // Sticky stack on desktop only — tablet/mobile stay a normal scroll list
+  mm.add(STACK_MQ, () => {
     stack.classList.add('is-stacked');
 
     const total = cards.length;
