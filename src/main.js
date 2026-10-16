@@ -5,12 +5,12 @@ import { initMobileMenu } from './nav/MobileMenu.js';
 import { initCopy, playHeroCopy, prepareHeroCopy } from './text/Copy.js';
 import { initSmoothScroll } from './scroll/smooth.js';
 import { initPreloader, markPageReady } from './preloader/Preloader.js';
-import { initWorkStack } from './work/WorkStack.js?v=20261016k';
+import { initWorkStack } from './work/WorkStack.js?v=20261017a';
 import { initContactPage } from './contact/ContactPage.js?v=20260921c';
 import { initAboutPage } from './about/AboutPage.js?v=20260921c';
 import { initWorkPage } from './work/WorkPage.js?v=20260921c';
 import { initServicesPage } from './services/ServicesPage.js?v=20260921c';
-import { initFloatingLines } from './lines/FloatingLines.js?v=20261016q';
+import { initFloatingLines } from './lines/FloatingLines.js?v=20261017b';
 import { initPageWaves } from './lines/PageWaves.js';
 
 window.__qiramPreloader ??= initPreloader();
@@ -109,7 +109,7 @@ function bootLines() {
 function bootEditorialOrbit() {
   const root = document.querySelector('[data-editorial-orbit]');
   if (!root) return;
-  import('./editorial/AnimatedEditorialSection.js?v=20261016g')
+  import('./editorial/AnimatedEditorialSection.js?v=20261017b')
     .then(({ initAnimatedEditorialSection }) => {
       initAnimatedEditorialSection(root);
     })

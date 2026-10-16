@@ -165,6 +165,9 @@ export function initAnimatedEditorialSection(root, options = {}) {
   root.replaceChildren(stage);
 
   const videos = [...root.querySelectorAll('video')];
+  const cardVideos = cardEls.map((el) => el.querySelector('video'));
+  const lastZ = new Array(cardEls.length).fill(-1);
+  const lastHidden = new Array(cardEls.length).fill(null);
   const n = cardEls.length;
   const twoPi = Math.PI * 2;
   let angle = 0;
@@ -198,7 +201,7 @@ export function initAnimatedEditorialSection(root, options = {}) {
     syncSpeed();
   }
 
-  function layoutCard(el, t) {
+  function layoutCard(el, t, i) {
     const theta = t * twoPi;
     const sinT = Math.sin(theta);
     const cosT = Math.cos(theta);
@@ -214,9 +217,24 @@ export function initAnimatedEditorialSection(root, options = {}) {
     el.style.transform =
       `translate(-50%, -50%) translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, ${z.toFixed(2)}px) ` +
       `rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale(${scale.toFixed(3)})`;
-    el.style.zIndex = String((100 + depth * 100) | 0);
     el.style.opacity = opacity.toFixed(3);
-    el.style.visibility = opacity < 0.12 ? 'hidden' : 'visible';
+
+    // Style writes for z-index/visibility force restyle; only touch them on change
+    const zIndex = (100 + depth * 100) | 0;
+    if (zIndex !== lastZ[i]) {
+      lastZ[i] = zIndex;
+      el.style.zIndex = String(zIndex);
+    }
+    const hidden = opacity < 0.12;
+    if (hidden !== lastHidden[i]) {
+      lastHidden[i] = hidden;
+      el.style.visibility = hidden ? 'hidden' : 'visible';
+      const video = cardVideos[i];
+      if (video && running) {
+        if (hidden) video.pause();
+        else tryPlay(video);
+      }
+    }
   }
 
   function render(offsetRad) {
@@ -224,7 +242,7 @@ export function initAnimatedEditorialSection(root, options = {}) {
     for (let i = 0; i < n; i += 1) {
       let t = (i / n + offset) % 1;
       if (t < 0) t += 1;
-      layoutCard(cardEls[i], t);
+      layoutCard(cardEls[i], t, i);
     }
   }
 
@@ -246,8 +264,10 @@ export function initAnimatedEditorialSection(root, options = {}) {
   }
 
   function playVideos(shouldPlay) {
-    videos.forEach((video) => {
-      if (shouldPlay) tryPlay(video);
+    cardVideos.forEach((video, i) => {
+      if (!video) return;
+      // Cards hidden at the back of the ring don't need to decode
+      if (shouldPlay && !lastHidden[i]) tryPlay(video);
       else video.pause();
     });
   }
@@ -328,7 +348,8 @@ export function initAnimatedEditorialSection(root, options = {}) {
     video.addEventListener(
       'loadeddata',
       () => {
-        if (running) tryPlay(video);
+        const i = cardVideos.indexOf(video);
+        if (running && !lastHidden[i]) tryPlay(video);
       },
       { once: true },
     );

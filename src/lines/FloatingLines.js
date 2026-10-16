@@ -264,7 +264,7 @@ export function initFloatingLines(root, options = {}) {
     }
     sizeW = width;
     sizeH = height;
-    const dpr = Math.min(window.devicePixelRatio || 1, 1.75);
+    const dpr = Math.min(window.devicePixelRatio || 1, mqMobile.matches ? 1.25 : 1.75);
     canvas.width = Math.max(1, Math.round(width * dpr));
     canvas.height = Math.max(1, Math.round(height * dpr));
     render(performance.now());
