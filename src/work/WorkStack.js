@@ -52,23 +52,29 @@ export function initWorkStack() {
 
       const next = cards[i + 1];
 
-      // Outgoing card: slowly scales to 0 as the next card becomes sticky on top.
-      const outgoing = gsap.to(card, {
-        scale: 0,
-        opacity: 0,
-        ease: 'none',
-        scrollTrigger: {
-          id: `work-stack-out-${i}`,
-          trigger: next,
-          start: 'top bottom',
-          end: 'top top',
-          scrub: true,
-          invalidateOnRefresh: true,
-        },
-      });
+      // Outgoing card: shrink + fade together (opacity drops earlier so the
+      // dissolve is obvious while scale is still reducing).
+      const outgoing = gsap
+        .timeline({
+          scrollTrigger: {
+            id: `work-stack-out-${i}`,
+            trigger: next,
+            start: 'top bottom',
+            end: 'top top',
+            scrub: true,
+            invalidateOnRefresh: true,
+          },
+        })
+        .fromTo(
+          card,
+          { scale: 1, opacity: 1 },
+          { scale: 0.72, opacity: 0, ease: 'none', duration: 0.62 },
+          0,
+        )
+        .to(card, { scale: 0, ease: 'none', duration: 0.38 }, 0.62);
 
       // Incoming card: settles from a slight offset into full focus.
-      gsap.set(next, { yPercent: 8, scale: 0.96 });
+      gsap.set(next, { yPercent: 8, scale: 0.96, opacity: 0.35 });
       const incoming = gsap.to(next, {
         yPercent: 0,
         scale: 1,

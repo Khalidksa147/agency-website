@@ -19,6 +19,7 @@ export default defineConfig({
     target: 'es2020',
     assetsInlineLimit: 0,
     sourcemap: false,
+    modulePreload: { polyfill: false },
     rollupOptions: {
       input: {
         main: resolve(root, 'index.html'),
@@ -34,4 +35,6 @@ export default defineConfig({
       },
     },
   },
+  // Production builds bundle gsap/lenis from node_modules; importmap is for serve:src only.
+  // Vite injects modulepreload + hashed assets into dist HTML automatically.
 });

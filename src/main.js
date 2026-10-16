@@ -1,25 +1,25 @@
+import './motionPrefs.js';
+import { lowPower } from './motionPrefs.js';
 import { initGooeyNav } from './nav/GooeyNav.js';
 import { initMobileMenu } from './nav/MobileMenu.js';
 import { initCopy, playHeroCopy, prepareHeroCopy } from './text/Copy.js';
 import { initSmoothScroll } from './scroll/smooth.js';
 import { initPreloader, markPageReady } from './preloader/Preloader.js';
-import { initWorkStack } from './work/WorkStack.js?v=20260915ag';
+import { initWorkStack } from './work/WorkStack.js?v=20261016k';
 import { initContactPage } from './contact/ContactPage.js?v=20260921c';
 import { initAboutPage } from './about/AboutPage.js?v=20260921c';
 import { initWorkPage } from './work/WorkPage.js?v=20260921c';
 import { initServicesPage } from './services/ServicesPage.js?v=20260921c';
+import { initFloatingLines } from './lines/FloatingLines.js?v=20261016q';
+import { initPageWaves } from './lines/PageWaves.js';
 
 window.__qiramPreloader ??= initPreloader();
 
 const gooeyNavs = [initGooeyNav(document.querySelector('.nav-links'))];
 const navEl = document.querySelector('.nav');
 const navLinks = [...document.querySelectorAll('.nav-links a')];
-const canvas = document.querySelector('#orb-canvas');
-const hero = document.querySelector('.hero');
-const linesEl = document.querySelector('.page-lines');
 
-let orb = null;
-let lines = null;
+let waves = null;
 let lastHref = '';
 let lastScrolled = null;
 let sections = [];
@@ -89,22 +89,21 @@ function afterFirstPaint(fn) {
   requestAnimationFrame(() => requestAnimationFrame(fn));
 }
 
-function bootOrb() {
-  if (!canvas || orb) return;
-  import('./orb/HeroOrb.js')
-    .then(({ HeroOrb }) => {
-      orb = new HeroOrb(canvas, { hero });
-    })
-    .catch(() => {});
-}
-
 function bootLines() {
-  if (!linesEl || lines) return;
-    import('./lines/FloatingLines.js?v=20260916a')
-      .then(({ FloatingLines }) => {
-        lines = new FloatingLines(linesEl);
-      })
-      .catch(() => {});
+  if (waves) return;
+  const el = document.querySelector('.page-lines');
+  if (!el) return;
+  // Prefer React Bits WebGL2 floating lines; SVG waves as fallback
+  waves = initFloatingLines(el, {
+    lineDistance: 9,
+    animationSpeed: 0.48,
+    brightness: 0.85,
+    opacity: 0.75,
+  });
+  if (!waves) {
+    delete el.dataset.wavesReady;
+    waves = initPageWaves(el);
+  }
 }
 
 function bootEditorialOrbit() {
@@ -117,11 +116,27 @@ function bootEditorialOrbit() {
     .catch(() => {});
 }
 
+function bootGrain() {
+  const grain = document.querySelector('.grain');
+  if (!grain) return;
+  if (lowPower) {
+    grain.classList.add('is-paused');
+    return;
+  }
+  const io = new IntersectionObserver(
+    ([entry]) => {
+      grain.classList.toggle('is-paused', !entry.isIntersecting);
+    },
+    { threshold: 0 },
+  );
+  io.observe(document.body);
+}
+
 function bootVisuals() {
+  bootLines();
   afterFirstPaint(() => {
-    whenIdle(bootOrb, 160);
-    whenIdle(bootLines, 480);
     whenIdle(bootEditorialOrbit, 100);
+    whenIdle(bootGrain, 200);
   });
 }
 
@@ -220,6 +235,7 @@ contactForm?.addEventListener('submit', (event) => {
 });
 
 function initServiceGlow() {
+  if (lowPower || window.matchMedia('(pointer: coarse)').matches) return;
   const cards = document.querySelectorAll('.service-card');
   cards.forEach((card) => {
     if (!card.querySelector('.edge-light')) {
@@ -281,6 +297,7 @@ function initServiceSvgPause() {
   if (!cards.length) return;
 
   const setPlaying = (card, play) => {
+    card.classList.toggle('is-svg-paused', !play);
     card.querySelectorAll('svg').forEach((svg) => {
       if (play) svg.unpauseAnimations?.();
       else svg.pauseAnimations?.();
@@ -291,11 +308,13 @@ function initServiceSvgPause() {
     (entries) => {
       entries.forEach((entry) => setPlaying(entry.target, entry.isIntersecting));
     },
-    { rootMargin: '20% 0px', threshold: 0.01 },
+    { rootMargin: '35% 0px', threshold: 0.01 },
   );
 
   cards.forEach((card) => {
-    setPlaying(card, false);
+    const rect = card.getBoundingClientRect();
+    const inView = rect.bottom > 0 && rect.top < (window.innerHeight || 800);
+    setPlaying(card, inView);
     observer.observe(card);
   });
 }
@@ -308,7 +327,7 @@ const lenis = initSmoothScroll({
 });
 
 if (document.documentElement.classList.contains('is-preloading')) {
-  lenis.stop();
+  lenis?.stop?.();
 }
 
 initNav();
@@ -334,7 +353,7 @@ function revealPage() {
   try {
     prepareHeroCopy();
   } catch {
-    /* SplitText unavailable — startCopy will reveal instead */
+    /* SplitText unavailable */
   }
   markPageReady();
 }
@@ -344,7 +363,7 @@ const preloaderReady = window.__qiramPreloader ?? Promise.resolve();
 document.addEventListener(
   'qiram:reveal',
   () => {
-    lenis.start();
+    lenis?.start?.();
     bootVisuals();
     workStack?.refresh();
   },
@@ -352,6 +371,7 @@ document.addEventListener(
 );
 
 function initMagneticButtons() {
+  if (lowPower || window.matchMedia('(pointer: coarse)').matches) return;
   document.querySelectorAll('[data-magnetic]').forEach((el) => {
     if (el.dataset.magneticBound) return;
     el.dataset.magneticBound = '1';
@@ -374,26 +394,26 @@ initAboutPage();
 initWorkPage();
 initServicesPage();
 initMagneticButtons();
+bootLines();
 
 preloaderReady
   .then(() => {
     startCopy();
-    lenis.start();
+    lenis?.start?.();
     bootVisuals();
     workStack?.refresh();
   })
   .catch(() => {
     startCopy();
-    lenis.start();
+    lenis?.start?.();
     bootVisuals();
     workStack?.refresh();
   });
 
 if (import.meta.hot) {
   import.meta.hot.dispose(() => {
-    orb?.dispose();
-    lines?.dispose();
+    waves?.destroy?.();
     workStack?.destroy();
-    lenis?.destroy();
+    lenis?.destroy?.();
   });
 }

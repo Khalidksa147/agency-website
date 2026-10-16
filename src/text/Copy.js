@@ -1,6 +1,7 @@
 import { gsap } from 'gsap';
 import { SplitText } from 'gsap/SplitText';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { lowPower, reducedMotion } from '../motionPrefs.js';
 
 gsap.registerPlugin(SplitText, ScrollTrigger);
 
@@ -10,12 +11,21 @@ const splits = [];
 const heroPlayers = new Map();
 let observer = null;
 
+function revealElement(element) {
+  element.classList.add('is-copy-ready');
+}
+
 function animateElement(element, { deferHero = false } = {}) {
   const animateOnScroll = element.dataset.copyScroll !== 'false';
   const delay = Number(element.dataset.copyDelay || 0);
   const targets = element.hasAttribute('data-copy-wrapper')
     ? [...element.children]
     : [element];
+
+  // Always animate; reduced-motion / low-power only softens timing.
+  const soft = reducedMotion || lowPower;
+  const duration = soft ? 0.9 : 1.55;
+  const stagger = soft ? 0.08 : 0.16;
 
   targets.forEach((target) => {
     const split = SplitText.create(target, {
@@ -31,25 +41,28 @@ function animateElement(element, { deferHero = false } = {}) {
           target.style.textIndent = '0';
         }
 
-        element.classList.add('is-copy-ready');
-        if (!self.lines.length) return;
+        if (!self.lines.length) {
+          revealElement(element);
+          return;
+        }
+
+        // Hide lines inside the mask before revealing the element,
+        // so H1 (and all copy) never flash at rest before the lift.
+        gsap.set(self.lines, { yPercent: 100 });
+        revealElement(element);
 
         const props = {
-          yPercent: 100,
-          duration: 1.55,
-          stagger: 0.16,
+          yPercent: 0,
+          duration,
+          stagger,
           ease: 'power4.out',
           delay,
         };
 
         if (!animateOnScroll && deferHero) {
-          gsap.set(self.lines, { yPercent: 100 });
           heroPlayers.set(element, () =>
             gsap.to(self.lines, {
-              yPercent: 0,
-              duration: props.duration,
-              stagger: props.stagger,
-              ease: props.ease,
+              ...props,
               delay: delay + HERO_LIFT_DELAY,
             }),
           );
@@ -57,7 +70,7 @@ function animateElement(element, { deferHero = false } = {}) {
         }
 
         if (animateOnScroll) {
-          return gsap.from(self.lines, {
+          return gsap.to(self.lines, {
             ...props,
             scrollTrigger: {
               trigger: element,
@@ -67,7 +80,7 @@ function animateElement(element, { deferHero = false } = {}) {
           });
         }
 
-        return gsap.from(self.lines, {
+        return gsap.to(self.lines, {
           ...props,
           delay: delay + HERO_LIFT_DELAY,
         });
@@ -110,11 +123,9 @@ export function revertCopy() {
 
 export function prepareHeroCopy() {
   if (heroPlayers.size) return;
-  document
-    .querySelectorAll('[data-copy]')
-    .forEach((el) => {
-      if (el.dataset.copyScroll === 'false') animateElement(el, { deferHero: true });
-    });
+  document.querySelectorAll('[data-copy]').forEach((el) => {
+    if (el.dataset.copyScroll === 'false') animateElement(el, { deferHero: true });
+  });
 }
 
 export function playHeroCopy() {

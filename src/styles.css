@@ -213,16 +213,7 @@ p {
   overflow: hidden;
 }
 
-.page-lines {
-  pointer-events: none;
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  opacity: 0.36;
-  mix-blend-mode: screen;
-}
-
-/* Keep the wave canvas on the largest viewport height so URL-bar
+/* Keep waves on the largest viewport height so URL-bar
    show/hide does not resize the composition on real phones. */
 @media (max-width: 767px) {
   .page-lines {
@@ -237,12 +228,6 @@ p {
   }
 }
 
-.page-lines canvas {
-  width: 100%;
-  height: 100%;
-  max-width: none;
-}
-
 .grain {
   pointer-events: none;
   position: fixed;
@@ -250,8 +235,102 @@ p {
   z-index: 8;
   opacity: 0.045;
   mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
+  animation: grain-shift 1.2s steps(4) infinite;
 }
+
+.grain.is-paused,
+html.is-low-power .grain,
+html.is-reduced-motion .grain {
+  animation: none;
+}
+
+@keyframes grain-shift {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(-2%, 1%); }
+  50% { transform: translate(1%, -2%); }
+  75% { transform: translate(-1%, -1%); }
+  100% { transform: translate(0, 0); }
+}
+
+.page-lines {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  opacity: 1;
+}
+
+.floating-lines-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* SVG wave fallback when WebGL2 is unavailable */
+.page-waves {
+  position: absolute;
+  inset: -10% -50%;
+  width: 200%;
+  height: 120%;
+}
+
+.page-waves__layer path {
+  fill: none;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+.page-waves__layer--a {
+  animation: waves-drift-a 36s linear infinite;
+}
+
+.page-waves__layer--b {
+  animation: waves-drift-b 48s linear infinite reverse;
+  opacity: 0.9;
+}
+
+.page-waves__blob {
+  fill: rgba(100, 240, 221, 0.14);
+  filter: blur(48px);
+  transform-origin: center;
+}
+
+.page-waves__blob--a {
+  animation: shade-drift-a 16s ease-in-out infinite alternate;
+}
+
+.page-waves__blob--b {
+  fill: rgba(152, 119, 255, 0.12);
+  animation: shade-drift-b 20s ease-in-out infinite alternate;
+}
+
+@keyframes waves-drift-a {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-25%, 0, 0); }
+}
+
+@keyframes waves-drift-b {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-20%, 0, 0); }
+}
+
+@keyframes shade-drift-a {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(-6%, 4%, 0) scale(1.08); }
+}
+
+@keyframes shade-drift-b {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(5%, -3%, 0) scale(1.06); }
+}
+
+/* Keep floating lines moving even when OS “reduce motion” is on —
+   this background is ambient brand motion, not essential UI. */
 
 .atmosphere {
   pointer-events: none;
@@ -259,8 +338,16 @@ p {
   inset: 0;
   z-index: 0;
   background:
-    radial-gradient(ellipse 46% 40% at 74% 50%, rgba(96, 132, 112, 0.05), transparent 68%),
-    radial-gradient(ellipse 28% 22% at 78% 44%, rgba(140, 125, 255, 0.022), transparent 72%);
+    radial-gradient(ellipse 52% 44% at 72% 48%, rgba(100, 240, 221, 0.1), transparent 70%),
+    radial-gradient(ellipse 36% 30% at 28% 58%, rgba(152, 119, 255, 0.07), transparent 72%),
+    radial-gradient(ellipse 28% 22% at 78% 36%, rgba(215, 255, 77, 0.05), transparent 70%);
+}
+
+.page-hero .atmosphere {
+  background:
+    radial-gradient(ellipse 58% 48% at 50% 42%, rgba(100, 240, 221, 0.09), transparent 72%),
+    radial-gradient(ellipse 40% 34% at 78% 58%, rgba(152, 119, 255, 0.06), transparent 70%),
+    radial-gradient(ellipse 32% 26% at 22% 48%, rgba(215, 255, 77, 0.045), transparent 68%);
 }
 
 .nav {
@@ -658,25 +745,6 @@ html[dir='rtl'] .mobile-nav__indicator {
   isolation: isolate;
 }
 
-.hero-orb {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.hero-orb canvas {
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  transition: opacity 0.7s var(--ease);
-}
-
-.hero-orb.is-live canvas {
-  opacity: 1;
-}
-
 /* Hero page: copy high, orbit cards directly under CTAs */
 .page-hero .hero {
   display: flex;
@@ -750,12 +818,12 @@ html[dir='rtl'] .mobile-nav__indicator {
   color: var(--lime);
 }
 
-/* SplitText wraps each title line — keep them as full-width centered rows without clipping */
+/* SplitText wraps each title line — mask must clip so lift-in stays hidden until play */
 .page-hero .hero-copy h1 > .line-mask {
   display: block !important;
   width: 100% !important;
   max-width: 100% !important;
-  overflow: visible !important;
+  overflow: hidden !important;
   text-align: center;
 }
 
@@ -764,7 +832,7 @@ html[dir='rtl'] .mobile-nav__indicator {
   width: 100% !important;
   max-width: 100% !important;
   margin-inline: auto;
-  overflow: visible !important;
+  overflow: hidden !important;
   white-space: normal !important;
   overflow-wrap: anywhere;
   text-align: center;
@@ -865,14 +933,13 @@ html[dir='rtl'] .mobile-nav__indicator {
   object-position: center;
 }
 
-/* The Line: fill empty left margin by scaling from the left */
+/* The Line: keep framed and centered in the card */
 .editorial-card[data-id='project-line'] .editorial-card__media {
-  width: 118%;
-  height: 118%;
-  max-width: none;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  object-position: left center;
-  transform: translate(-2%, -8%);
+  object-position: center center;
+  transform: none;
 }
 
 .editorial-card__graphic {
@@ -1209,6 +1276,8 @@ body:has(.editorial-orbit) {
   position: relative;
   z-index: 2;
   padding: 7.5rem var(--page-x);
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 720px;
 }
 
 .section-head {
@@ -1299,6 +1368,7 @@ body:has(.editorial-orbit) {
   --gradient-base: linear-gradient(#d7ff4d 0 100%);
   position: relative;
   isolation: isolate;
+  contain: paint;
   display: flex;
   flex-direction: column;
   padding: 1.35rem 1.25rem 1.4rem;
@@ -1563,9 +1633,30 @@ body:has(.editorial-orbit) {
 .work-showcase__noise {
   z-index: 2;
   opacity: 0.35;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 160px 160px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
   mix-blend-mode: soft-light;
+}
+
+html.is-low-power .work-showcase__noise {
+  display: none;
+}
+
+html.is-low-power .work-showcase__bg img {
+  filter: none;
+  transform: scale(1.15);
+  opacity: 0.35;
+}
+
+html.is-low-power .work-showcase__blur {
+  background: rgba(8, 10, 10, 0.72);
+}
+
+.service-card.is-svg-paused .web-svg *,
+.service-card.is-svg-paused .plat-svg *,
+.service-card.is-svg-paused .ux-svg *,
+.service-card.is-svg-paused .brand-svg * {
+  animation-play-state: paused !important;
 }
 
 .work-showcase__container {
@@ -4024,11 +4115,6 @@ html[dir='rtl'] .about-aside h2 > span {
   display: block;
 }
 
-html[dir='rtl'] .hero-orb {
-  right: auto;
-  left: 0;
-}
-
 html[dir='rtl'] .atmosphere {
   background:
     radial-gradient(ellipse 62% 52% at 28% 48%, rgba(88, 140, 70, 0.11), transparent 64%),
@@ -4149,10 +4235,6 @@ html[dir='rtl'] .process-line::after {
     padding-top: 6.5rem;
   }
 
-  .hero-orb {
-    opacity: 0.9;
-  }
-
   .hero-copy {
     max-width: 50rem;
   }
@@ -4192,15 +4274,6 @@ html[dir='rtl'] .process-line::after {
     padding-bottom: 5.5rem;
     display: flex;
     flex-direction: column;
-  }
-
-  .hero-orb {
-    position: absolute;
-    inset: 0;
-    width: auto;
-    height: auto;
-    margin: 0;
-    opacity: 1;
   }
 
   .page-hero .hero-copy {
