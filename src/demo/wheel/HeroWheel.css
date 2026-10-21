@@ -151,9 +151,44 @@
   overflow: visible;
 }
 
+/* Kill horizontal page scroll from the wide card fan / 100vw section. */
+html:has(body.page-demo),
+body.page-demo {
+  overflow-x: clip;
+  max-width: 100%;
+}
+
+body.page-demo main,
+body.page-demo .hero {
+  max-width: 100%;
+}
+
+@media (max-width: 1024px) {
+  body.page-demo .hero,
+  body.page-demo .editorial-section#hero-wheel-root,
+  body.page-demo #hero-wheel-root.editorial-section,
+  body.page-demo .hero-wheel,
+  body.page-demo .hero-wheel__stage {
+    overflow-x: clip;
+    overflow-y: visible;
+  }
+
+  /* 100vw + scrollbar gutters often cause sideways scroll on tablet/mobile. */
+  body.page-demo .editorial-section#hero-wheel-root,
+  body.page-demo #hero-wheel-root.editorial-section {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
 @media (max-width: 720px) {
   .hero-wheel {
-    --hw-card-w: 200px;
-    --hw-card-h: 112px;
+    --hw-card-w: 350px;
+    --hw-card-h: 197px;
+  }
+
+  .hero-wheel__deck {
+    top: 5%;
   }
 }

@@ -11,6 +11,8 @@ import {
   VELOCITY_PAUSE_MS,
   VIDEO_HALF_DEG,
 } from './constants.js';
+import { markPageReady } from '../../preloader/Preloader.js';
+import { initCopy, playHeroCopy, prepareHeroCopy } from '../../text/Copy.js';
 import { buildCards, prepareCardThumbnails } from './cards.js';
 import { computeCardPose, computeWorldPose, wrap180 } from './pose.js';
 import './HeroWheel.css';
@@ -28,6 +30,16 @@ function setCached(el, cache, prop, value) {
 function nextFrame() {
   return new Promise((resolve) => {
     requestAnimationFrame(() => requestAnimationFrame(resolve));
+  });
+}
+
+/** Wait until the site preloader finishes lifting (or skip if none). */
+function waitForPreloaderReveal() {
+  if (!document.documentElement.classList.contains('is-preloading')) {
+    return Promise.resolve();
+  }
+  return new Promise((resolve) => {
+    document.addEventListener('qiram:reveal', () => resolve(), { once: true });
   });
 }
 
@@ -77,7 +89,7 @@ export default function HeroWheel() {
     const blobUrls = [];
 
     (async () => {
-      // Thumbnails must match each card's video before the deal starts.
+      // Load hero media under the preloader before anything reveals.
       const prepared = await prepareCardThumbnails(seed);
       if (cancelled) return;
       prepared.forEach((card) => {
@@ -85,7 +97,30 @@ export default function HeroWheel() {
       });
       setCards(prepared);
       await nextFrame();
+      if (cancelled) return;
+
+      try {
+        prepareHeroCopy();
+      } catch {
+        document
+          .querySelectorAll('[data-copy]')
+          .forEach((el) => el.classList.add('is-copy-ready'));
+      }
+
+      // Listen before marking ready so we never miss qiram:reveal.
+      const revealPromise = waitForPreloaderReveal();
+      markPageReady();
+      await revealPromise;
       if (cancelled || finished.current) return;
+
+      try {
+        const played = playHeroCopy();
+        initCopy({ skipHero: played });
+      } catch {
+        document
+          .querySelectorAll('[data-copy]')
+          .forEach((el) => el.classList.add('is-copy-ready'));
+      }
 
       const forceInstant =
         prefersReducedMotion() &&
@@ -228,7 +263,8 @@ export default function HeroWheel() {
 
     if (Math.abs(dx) > 2) dragMoved.current = true;
 
-    const deg = dx * 0.22;
+    // Follow the finger: swipe left → cards move left (and vice versa).
+    const deg = -dx * 0.12;
     targetAngle.current += deg;
     velocity.current = (deg / dt) * 1000;
 
