@@ -113,6 +113,7 @@ export default function HeroWheel() {
       await revealPromise;
       if (cancelled || finished.current) return;
 
+      // Text starts as the curtain lifts; cards wait 1s more.
       try {
         const played = playHeroCopy();
         initCopy({ skipHero: played });
@@ -121,6 +122,9 @@ export default function HeroWheel() {
           .querySelectorAll('[data-copy]')
           .forEach((el) => el.classList.add('is-copy-ready'));
       }
+
+      await new Promise((r) => window.setTimeout(r, 1000));
+      if (cancelled || finished.current) return;
 
       const forceInstant =
         prefersReducedMotion() &&

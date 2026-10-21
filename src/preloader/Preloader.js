@@ -126,24 +126,36 @@ function playIntro(wordEl, wordText) {
   return timeToLast + HOLD_MS;
 }
 
-export function initPreloader() {
+/**
+ * @param {{ forceIntro?: boolean }} [options]
+ * `forceIntro` always plays the multilingual Hello cycle (used on /demo).
+ */
+export function initPreloader({ forceIntro: force = false } = {}) {
   const root = document.getElementById('preloader');
   const wordEl = document.getElementById('preloader-word');
   const wordText = document.getElementById('preloader-word-text');
   const path = document.getElementById('preloader-path');
-  const intro = shouldPlayIntro();
+  const intro = force || shouldPlayIntro();
 
   if (!root) {
     return Promise.resolve(false);
   }
 
+  // Fresh gate each page load / call — don't inherit a prior markPageReady.
+  boot.ready = false;
+  boot.resolveReady = null;
+
   document.documentElement.classList.add('is-preloading');
   document.documentElement.classList.toggle('is-intro', intro);
   root.hidden = false;
+  root.style.display = '';
   root.removeAttribute('aria-hidden');
+  root.classList.remove('is-leaving');
 
-  if (wordEl && !intro) {
-    wordEl.hidden = true;
+  if (wordEl) {
+    wordEl.hidden = !intro;
+    wordEl.style.opacity = '';
+    wordEl.style.visibility = intro ? '' : 'hidden';
   }
 
   if (path) {
@@ -164,7 +176,8 @@ export function initPreloader() {
     const done = (played) => {
       if (settled) return;
       settled = true;
-      if (intro) markIntroSeen();
+      // Demo force-plays every visit; only mark session for the normal home flow.
+      if (intro && !force) markIntroSeen();
       if (wordEl) wordEl.style.opacity = '0';
       flattenCurtain(path);
       root.classList.add('is-leaving');
