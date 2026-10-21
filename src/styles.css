@@ -4406,6 +4406,14 @@ html[dir='rtl'] .process-line::after {
 }
 
 @media (max-width: 767px) {
+  .hero-actions .btn {
+    font-size: 0.875rem;
+  }
+
+  .hero-actions .btn-arrow {
+    font-size: 0.9rem;
+  }
+
   .bilingual {
     background-image: var(--bilingual-mobile);
     background-position: center 36%;
