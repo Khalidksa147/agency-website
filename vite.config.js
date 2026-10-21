@@ -7,6 +7,9 @@ const root = dirname(fileURLToPath(import.meta.url));
 export default defineConfig({
   appType: 'mpa',
   base: '/',
+  esbuild: {
+    jsx: 'automatic',
+  },
   server: {
     host: true,
     port: 5173,
@@ -32,9 +35,9 @@ export default defineConfig({
         arAbout: resolve(root, 'ar/about/index.html'),
         contact: resolve(root, 'contact/index.html'),
         arContact: resolve(root, 'ar/contact/index.html'),
+        demo: resolve(root, 'demo/index.html'),
+        arDemo: resolve(root, 'ar/demo/index.html'),
       },
     },
   },
-  // Production builds bundle gsap/lenis from node_modules; importmap is for serve:src only.
-  // Vite injects modulepreload + hashed assets into dist HTML automatically.
 });

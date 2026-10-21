@@ -69,7 +69,11 @@ const server = http.createServer((req, res) => {
                       ? 'contact/index.html'
                       : urlPath === '/ar/contact' || urlPath === '/ar/contact/'
                         ? 'ar/contact/index.html'
-                        : urlPath.replace(/^\/+/, '');
+                        : urlPath === '/demo' || urlPath === '/demo/'
+                          ? 'demo/index.html'
+                          : urlPath === '/ar/demo' || urlPath === '/ar/demo/'
+                            ? 'ar/demo/index.html'
+                            : urlPath.replace(/^\/+/, '');
   const file = path.normalize(path.join(root, relative));
 
   if (!file.startsWith(root)) {

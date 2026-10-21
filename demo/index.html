@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      document.documentElement.classList.add('js');
+    </script>
+    <title>Demo - QIRAM</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14.5' fill='none' stroke='%23D7FF4D' stroke-width='1.4'/%3E%3Ctext x='16' y='21' text-anchor='middle' font-size='14' fill='%23D7FF4D' font-family='Georgia,serif'%3EQ%3C/text%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="/src/styles.css?v=20261021b" />
+    <meta
+      name="description"
+      content="QIRAM demo playground - hero wheel experiment."
+    />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&family=Outfit:wght@200;300;400;500&family=Tajawal:wght@300;400;500;700&display=swap"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&family=Outfit:wght@200;300;400;500&family=Tajawal:wght@300;400;500;700&display=swap"
+      />
+    </noscript>
+    <style>
+      html, body { background: #080a0a; }
+    </style>
+  </head>
+  <body class="page-hero page-demo">
+    <div class="grain" aria-hidden="true"></div>
+    <svg class="gooey-svg" aria-hidden="true" focusable="false">
+      <filter id="gooey-nav" x="-80%" y="-80%" width="260%" height="260%">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur" />
+        <feColorMatrix
+          in="blur"
+          mode="matrix"
+          values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7"
+        />
+      </filter>
+    </svg>
+
+    <header class="nav">
+      <a class="logo" href="/" aria-label="QIRAM home">
+        <span class="logo-mark" aria-hidden="true">Q</span>
+        <span class="logo-word">QIRAM</span>
+      </a>
+      <nav class="nav-links" aria-label="Primary">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/services/">Services</a></li>
+          <li><a href="/work/">Work</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="/contact/">Contact</a></li>
+          <li class="is-active"><a href="/demo/" class="is-active">Demo</a></li>
+        </ul>
+        <span class="gooey-effect gooey-filter" aria-hidden="true"></span>
+        <span class="gooey-effect gooey-text" aria-hidden="true"></span>
+      </nav>
+      <div class="nav-end">
+        <div class="lang" role="group" aria-label="Language">
+          <a class="lang-btn is-active" href="/demo/" hreflang="en">EN</a>
+          <span class="lang-sep">/</span>
+          <a class="lang-btn" href="/ar/demo/" hreflang="ar">العربية</a>
+        </div>
+        <button
+          class="menu-btn"
+          type="button"
+          aria-label="Open menu"
+          aria-expanded="false"
+          data-label-open="Open menu"
+          data-label-close="Close menu"
+        >
+          <span class="menu-btn__burger" aria-hidden="true"></span>
+        </button>
+      </div>
+    </header>
+
+    <div class="mobile-menu" hidden data-lenis-prevent>
+      <div class="mobile-menu__body">
+        <nav class="mobile-nav" aria-label="Mobile">
+          <div class="mobile-nav__header"><p>Navigation</p></div>
+          <div class="mobile-nav__link" data-href="/"><div class="mobile-nav__indicator"></div><a href="/">Home</a></div>
+          <div class="mobile-nav__link" data-href="/services/"><div class="mobile-nav__indicator"></div><a href="/services/">Services</a></div>
+          <div class="mobile-nav__link" data-href="/work/"><div class="mobile-nav__indicator"></div><a href="/work/">Work</a></div>
+          <div class="mobile-nav__link" data-href="/about/"><div class="mobile-nav__indicator"></div><a href="/about/">About</a></div>
+          <div class="mobile-nav__link" data-href="/contact/"><div class="mobile-nav__indicator"></div><a href="/contact/">Contact</a></div>
+          <div class="mobile-nav__link is-active" data-href="/demo/"><div class="mobile-nav__indicator"></div><a href="/demo/">Demo</a></div>
+        </nav>
+      </div>
+      <svg class="mobile-menu__curve" aria-hidden="true"><path class="mobile-menu__curve-path"></path></svg>
+    </div>
+
+    <main>
+      <section class="hero" id="top">
+        <div class="atmosphere" aria-hidden="true"></div>
+
+        <div class="hero-copy">
+          <p class="eyebrow">
+            <span>Digital studio for Saudi Arabia</span>
+          </p>
+          <h1 data-copy data-copy-scroll="false" data-copy-delay="0.15">
+            <span class="hero-title-line">We build <span class="accent">digital experiences</span></span>
+            <span class="hero-title-line">made for Saudi Arabia.</span>
+          </h1>
+          <p class="lede" data-copy data-copy-scroll="false" data-copy-delay="0.5">
+            QIRAM is a boutique agency for websites, web apps, UX/UI and brand systems - designed with the same level of detail in Arabic and English.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="/contact/" data-magnetic="14">
+              <span>Tell us what you’re building</span>
+              <span class="btn-arrow" aria-hidden="true">→</span>
+            </a>
+            <a class="btn btn-ghost" href="/work/" data-magnetic="10">See our work</a>
+          </div>
+        </div>
+
+        <div
+          class="editorial-section"
+          id="hero-wheel-root"
+          aria-label="Project wheel"
+        ></div>
+
+        <aside class="hero-meta" aria-hidden="true">
+          <span>Web</span>
+          <span>Apps</span>
+          <span>UX/UI</span>
+          <span>Brand</span>
+        </aside>
+      </section>
+
+      <section class="section section-process" id="process">
+        <div class="process-head">
+          <div>
+            <p class="eyebrow">
+              <span>Our process</span>
+              <span class="eyebrow-line"></span>
+            </p>
+            <h2>
+              <span>A clear path from idea to </span>
+              <span class="accent">impact.</span>
+            </h2>
+          </div>
+          <p class="process-lede">
+            We shape ideas into digital experiences through a structured, collaborative and human-centered process.
+          </p>
+        </div>
+        <ol class="process-steps">
+          <li>
+            <div class="process-rail" aria-hidden="true">
+              <span class="process-num">01</span>
+              <span class="process-line"></span>
+            </div>
+            <h3>Discover</h3>
+            <p>We learn about your goals, audience and market.</p>
+          </li>
+          <li>
+            <div class="process-rail" aria-hidden="true">
+              <span class="process-num">02</span>
+              <span class="process-line"></span>
+            </div>
+            <h3>Shape</h3>
+            <p>We define the strategy, structure and design.</p>
+          </li>
+          <li>
+            <div class="process-rail" aria-hidden="true">
+              <span class="process-num">03</span>
+              <span class="process-line"></span>
+            </div>
+            <h3>Build</h3>
+            <p>We develop, test and bring it to life.</p>
+          </li>
+          <li>
+            <div class="process-rail" aria-hidden="true">
+              <span class="process-num">04</span>
+              <span class="process-line"></span>
+            </div>
+            <h3>Launch</h3>
+            <p>We go live and support your continued growth.</p>
+          </li>
+        </ol>
+      </section>
+    </main>
+
+    <footer class="about-footer">
+      <div class="about-footer__top">
+        <a class="logo" href="/" aria-label="QIRAM home">
+          <span class="logo-mark" aria-hidden="true">Q</span>
+          <span class="logo-word">QIRAM</span>
+        </a>
+        <nav class="about-footer__nav" aria-label="Footer">
+          <a href="/">Home</a>
+          <a href="/services/">Services</a>
+          <a href="/work/">Work</a>
+          <a href="/about/">About</a>
+          <a href="/contact/">Contact</a>
+          <a href="/demo/">Demo</a>
+        </nav>
+      </div>
+      <div class="about-footer__bottom">
+        <span>© QIRAM</span>
+        <span>Demo playground</span>
+        <span>Riyadh · Jeddah · Dammam</span>
+      </div>
+    </footer>
+
+    <script type="module" src="/src/demo/wheel/mount.jsx"></script>
+    <script type="module">
+      import { initMobileMenu } from '/src/nav/MobileMenu.js';
+      import { initCopy } from '/src/text/Copy.js';
+      initMobileMenu?.();
+      initCopy?.();
+    </script>
+  </body>
+</html>

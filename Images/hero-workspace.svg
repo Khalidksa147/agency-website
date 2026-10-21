@@ -1,0 +1,209 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 680" fill="none" aria-hidden="true">
+  <defs>
+    <linearGradient id="hw-floor" x1="120" y1="560" x2="760" y2="300" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0b1410"/>
+      <stop offset="1" stop-color="#15241c"/>
+    </linearGradient>
+    <linearGradient id="hw-panel" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#eaf8f1"/>
+      <stop offset="1" stop-color="#c9e9db"/>
+    </linearGradient>
+    <linearGradient id="hw-screen" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#dff3ea"/>
+      <stop offset="1" stop-color="#b9dfd0"/>
+    </linearGradient>
+    <filter id="hw-shadow" x="-25%" y="-25%" width="150%" height="150%">
+      <feDropShadow dx="0" dy="14" stdDeviation="14" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Soft split backdrop -->
+  <rect x="0" y="0" width="900" height="340" fill="#f3fff1" opacity="0.03"/>
+  <rect x="0" y="340" width="900" height="340" fill="#08110e" opacity="0.55"/>
+
+  <g filter="url(#hw-shadow)">
+    <animateTransform attributeName="transform" type="translate" values="0 0; 0 -8; 0 0" dur="5s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.2 1; 0.42 0 0.2 1"/>
+
+    <!-- Floor plane -->
+    <path d="M110 455 L450 295 L790 455 L450 615 Z" fill="url(#hw-floor)"/>
+    <path d="M110 455 L450 615 L450 638 L110 478 Z" fill="#070e0b"/>
+    <path d="M790 455 L450 615 L450 638 L790 478 Z" fill="#0d1814"/>
+    <!-- Dashed L / border on floor -->
+    <path d="M170 470 L450 340 L730 470 L450 600 Z" stroke="#64f0dd" stroke-opacity="0.4" stroke-width="2" stroke-dasharray="6 8" fill="none">
+      <animate attributeName="stroke-dashoffset" from="0" to="-42" dur="2.4s" repeatCount="indefinite"/>
+    </path>
+
+    <!-- ===== Servers (back-left) ===== -->
+    <g transform="translate(175 330)">
+      <!-- bottom unit -->
+      <path d="M0 70 L60 42 L120 70 L60 98 Z" fill="#1c2c24"/>
+      <path d="M0 70 L0 98 L60 126 L60 98 Z" fill="#101a16"/>
+      <path d="M120 70 L120 98 L60 126 L60 98 Z" fill="#25382e"/>
+      <circle cx="30" cy="76" r="3.2" fill="#d7ff4d"><animate attributeName="opacity" values="1;0.3;1" dur="1.5s" repeatCount="indefinite"/></circle>
+      <circle cx="42" cy="82" r="3.2" fill="#64f0dd"><animate attributeName="opacity" values="1;0.3;1" dur="1.5s" begin="-0.4s" repeatCount="indefinite"/></circle>
+      <circle cx="54" cy="88" r="3.2" fill="#79cfff"><animate attributeName="opacity" values="1;0.3;1" dur="1.5s" begin="-0.9s" repeatCount="indefinite"/></circle>
+      <!-- middle -->
+      <g transform="translate(0 -32)">
+        <path d="M0 70 L60 42 L120 70 L60 98 Z" fill="#22352c"/>
+        <path d="M0 70 L0 98 L60 126 L60 98 Z" fill="#14201a"/>
+        <path d="M120 70 L120 98 L60 126 L60 98 Z" fill="#2c4338"/>
+        <circle cx="30" cy="76" r="3.2" fill="#d7ff4d"><animate attributeName="opacity" values="1;0.3;1" dur="1.5s" begin="-0.2s" repeatCount="indefinite"/></circle>
+        <circle cx="42" cy="82" r="3.2" fill="#64f0dd"><animate attributeName="opacity" values="1;0.3;1" dur="1.5s" begin="-0.7s" repeatCount="indefinite"/></circle>
+        <circle cx="54" cy="88" r="3.2" fill="#9877ff"><animate attributeName="opacity" values="1;0.3;1" dur="1.5s" begin="-1.1s" repeatCount="indefinite"/></circle>
+      </g>
+      <!-- top -->
+      <g transform="translate(0 -64)">
+        <path d="M0 70 L60 42 L120 70 L60 98 Z" fill="#284036"/>
+        <path d="M0 70 L0 98 L60 126 L60 98 Z" fill="#17241e"/>
+        <path d="M120 70 L120 98 L60 126 L60 98 Z" fill="#335244"/>
+        <circle cx="30" cy="76" r="3.2" fill="#d7ff4d"><animate attributeName="opacity" values="1;0.3;1" dur="1.5s" begin="-0.6s" repeatCount="indefinite"/></circle>
+        <circle cx="42" cy="82" r="3.2" fill="#64f0dd"><animate attributeName="opacity" values="1;0.3;1" dur="1.5s" begin="-1s" repeatCount="indefinite"/></circle>
+        <circle cx="54" cy="88" r="3.2" fill="#79cfff"><animate attributeName="opacity" values="1;0.3;1" dur="1.5s" begin="-0.3s" repeatCount="indefinite"/></circle>
+      </g>
+    </g>
+
+    <!-- ===== API cloud ===== -->
+    <g>
+      <animateTransform attributeName="transform" type="translate" values="0 0; 0 -7; 0 0" dur="4.6s" begin="-1s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.2 1; 0.42 0 0.2 1"/>
+      <g transform="translate(175 220)">
+        <path d="M60 92 L60 128" stroke="#64f0dd" stroke-opacity="0.75" stroke-width="2.2" stroke-dasharray="5 7">
+          <animate attributeName="stroke-dashoffset" from="0" to="-24" dur="1.2s" repeatCount="indefinite"/>
+        </path>
+        <ellipse cx="60" cy="48" rx="52" ry="30" fill="#eaf8f1"/>
+        <ellipse cx="30" cy="54" rx="28" ry="20" fill="#f3fff1"/>
+        <ellipse cx="88" cy="54" rx="32" ry="22" fill="#d0ecdf"/>
+        <text x="60" y="56" text-anchor="middle" fill="#10231d" font-family="Outfit, Manrope, sans-serif" font-size="18" font-weight="600">API</text>
+      </g>
+    </g>
+
+    <!-- ===== Admin dashboard (front-left) ===== -->
+    <g>
+      <animateTransform attributeName="transform" type="translate" values="0 0; 0 -6; 0 0" dur="5.4s" begin="-2s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.2 1; 0.42 0 0.2 1"/>
+      <g transform="translate(200 430)">
+        <path d="M0 78 L130 18 L260 78 L130 138 Z" fill="url(#hw-panel)"/>
+        <path d="M0 78 L0 94 L130 154 L130 138 Z" fill="#95c4b2"/>
+        <path d="M260 78 L260 94 L130 154 L130 138 Z" fill="#74a794"/>
+        <text x="58" y="62" fill="#10231d" font-family="Outfit, Manrope, sans-serif" font-size="15" font-weight="600">Admin</text>
+        <!-- avatar -->
+        <circle cx="48" cy="88" r="14" fill="#10231d" opacity="0.16"/>
+        <circle cx="48" cy="84" r="6" fill="#10231d" opacity="0.35"/>
+        <path d="M40 94 A10 8 0 0 0 56 94" stroke="#10231d" stroke-opacity="0.35" stroke-width="2" fill="none"/>
+        <line x1="70" y1="82" x2="108" y2="64" stroke="#10231d" stroke-opacity="0.2" stroke-width="3" stroke-linecap="round"/>
+        <line x1="72" y1="90" x2="118" y2="68" stroke="#10231d" stroke-opacity="0.15" stroke-width="3" stroke-linecap="round"/>
+        <!-- pie -->
+        <circle cx="128" cy="96" r="16" fill="#64f0dd" opacity="0.3"/>
+        <path d="M128 96 L128 80 A16 16 0 0 1 142 104 Z" fill="#d7ff4d"/>
+        <path d="M128 96 L142 104 A16 16 0 0 1 114 106 Z" fill="#79cfff"/>
+        <!-- line chart -->
+        <polyline points="158,108 172,96 186,100 200,86 214,92" fill="none" stroke="#10231d" stroke-opacity="0.35" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="158" cy="108" r="2.5" fill="#d7ff4d"/>
+        <circle cx="172" cy="96" r="2.5" fill="#64f0dd"/>
+        <circle cx="186" cy="100" r="2.5" fill="#79cfff"/>
+        <circle cx="200" cy="86" r="2.5" fill="#d7ff4d"/>
+        <circle cx="214" cy="92" r="2.5" fill="#64f0dd"/>
+        <!-- grid -->
+        <g opacity="0.28" fill="#10231d">
+          <rect x="168" y="112" width="22" height="5" transform="skewY(-26)"/>
+          <rect x="196" y="100" width="22" height="5" transform="skewY(-26)"/>
+          <rect x="174" y="120" width="22" height="5" transform="skewY(-26)"/>
+          <rect x="202" y="108" width="22" height="5" transform="skewY(-26)"/>
+        </g>
+      </g>
+    </g>
+
+    <!-- ===== Monitor (center) ===== -->
+    <g transform="translate(350 230)">
+      <!-- bezel -->
+      <path d="M0 120 L170 40 L340 120 L170 200 Z" fill="#1a2a22"/>
+      <path d="M0 120 L0 136 L170 216 L170 200 Z" fill="#0f1915"/>
+      <path d="M340 120 L340 136 L170 216 L170 200 Z" fill="#24362c"/>
+      <!-- screen -->
+      <path d="M20 120 L170 50 L320 120 L170 190 Z" fill="url(#hw-screen)"/>
+      <!-- window dots -->
+      <circle cx="70" cy="92" r="4" fill="#ff6b6b" opacity="0.7"/>
+      <circle cx="82" cy="86" r="4" fill="#d7ff4d" opacity="0.85"/>
+      <circle cx="94" cy="80" r="4" fill="#64f0dd" opacity="0.85"/>
+      <!-- globe -->
+      <g>
+        <animate attributeName="opacity" values="0.7;1;0.7" dur="3.4s" repeatCount="indefinite"/>
+        <circle cx="170" cy="108" r="22" fill="none" stroke="#10231d" stroke-opacity="0.4" stroke-width="2.2"/>
+        <ellipse cx="170" cy="108" rx="22" ry="9" fill="none" stroke="#10231d" stroke-opacity="0.35" stroke-width="1.6"/>
+        <ellipse cx="170" cy="108" rx="9" ry="22" fill="none" stroke="#10231d" stroke-opacity="0.28" stroke-width="1.6"/>
+        <line x1="148" y1="108" x2="192" y2="108" stroke="#10231d" stroke-opacity="0.28" stroke-width="1.4"/>
+      </g>
+      <text x="170" y="156" text-anchor="middle" fill="#10231d" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="30" font-weight="700">
+        &lt;code/&gt;
+        <animate attributeName="opacity" values="0.8;1;0.8" dur="3.6s" repeatCount="indefinite"/>
+      </text>
+      <!-- stand -->
+      <path d="M152 198 L188 198 L178 248 L162 248 Z" fill="#1a2a22"/>
+      <ellipse cx="170" cy="252" rx="42" ry="11" fill="#0a1410"/>
+    </g>
+
+    <!-- ===== Floating UI layouts (right) ===== -->
+    <g>
+      <animateTransform attributeName="transform" type="translate" values="0 0; 0 -9; 0 0" dur="4.4s" begin="-0.6s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.2 1; 0.42 0 0.2 1"/>
+      <!-- back page (peach/lime accent) -->
+      <g transform="translate(575 250)">
+        <path d="M20 78 L150 18 L280 78 L150 138 Z" fill="#e8f7f0"/>
+        <path d="M20 78 L20 90 L150 150 L150 138 Z" fill="#9fc9b8"/>
+        <path d="M280 78 L280 90 L150 150 L150 138 Z" fill="#7eae9b"/>
+        <path d="M70 78 L150 42 L210 70 L130 106 Z" fill="#d7ff4d" opacity="0.9"/>
+        <path d="M60 100 L140 62 L200 90 L120 128 Z" fill="#10231d" opacity="0.1"/>
+      </g>
+      <!-- front page -->
+      <g transform="translate(555 210)">
+        <path d="M0 78 L130 18 L260 78 L130 138 Z" fill="url(#hw-panel)"/>
+        <path d="M0 78 L0 90 L130 150 L130 138 Z" fill="#95c4b2"/>
+        <path d="M260 78 L260 90 L130 150 L130 138 Z" fill="#74a794"/>
+        <path d="M36 72 L110 38 L150 56 L76 90 Z" fill="#79cfff" opacity="0.65"/>
+        <circle cx="58" cy="92" r="10" fill="#10231d" opacity="0.18"/>
+        <line x1="78" y1="88" x2="140" y2="58" stroke="#10231d" stroke-opacity="0.22" stroke-width="3" stroke-linecap="round"/>
+        <line x1="82" y1="96" x2="160" y2="60" stroke="#10231d" stroke-opacity="0.16" stroke-width="3" stroke-linecap="round"/>
+        <line x1="86" y1="104" x2="170" y2="66" stroke="#10231d" stroke-opacity="0.12" stroke-width="3" stroke-linecap="round"/>
+        <rect x="150" y="88" width="36" height="22" rx="3" fill="#64f0dd" opacity="0.55" transform="skewY(-26)"/>
+      </g>
+    </g>
+
+    <!-- ===== Keyboard + mouse ===== -->
+    <g transform="translate(500 455)">
+      <path d="M0 40 L100 0 L190 40 L90 80 Z" fill="#eaf8f1"/>
+      <path d="M0 40 L0 50 L90 90 L90 80 Z" fill="#95c4b2"/>
+      <path d="M190 40 L190 50 L90 90 L90 80 Z" fill="#74a794"/>
+      <g stroke="#10231d" stroke-opacity="0.28" stroke-width="1.2">
+        <line x1="30" y1="30" x2="52" y2="20"/>
+        <line x1="50" y1="38" x2="72" y2="28"/>
+        <line x1="70" y1="46" x2="92" y2="36"/>
+        <line x1="42" y1="42" x2="64" y2="32"/>
+        <line x1="62" y1="50" x2="84" y2="40"/>
+        <line x1="82" y1="58" x2="104" y2="48"/>
+        <line x1="36" y1="52" x2="58" y2="42"/>
+        <line x1="56" y1="60" x2="78" y2="50"/>
+      </g>
+      <!-- mouse -->
+      <ellipse cx="230" cy="42" rx="20" ry="13" fill="#f3fff1"/>
+      <ellipse cx="230" cy="48" rx="20" ry="9" fill="#95c4b2"/>
+      <line x1="230" y1="36" x2="230" y2="46" stroke="#10231d" stroke-opacity="0.25" stroke-width="1.6"/>
+    </g>
+
+    <!-- ===== Database cylinders ===== -->
+    <g transform="translate(410 505)">
+      <ellipse cx="40" cy="14" rx="40" ry="13" fill="#7ad9c8"/>
+      <rect x="0" y="14" width="80" height="18" fill="#3aa897"/>
+      <ellipse cx="40" cy="32" rx="40" ry="13" fill="#64f0dd"/>
+      <rect x="0" y="32" width="80" height="18" fill="#2f8f80"/>
+      <ellipse cx="40" cy="50" rx="40" ry="13" fill="#4ec4b2"/>
+      <rect x="0" y="50" width="80" height="18" fill="#27786c"/>
+      <ellipse cx="40" cy="68" rx="40" ry="13" fill="#64f0dd"/>
+    </g>
+
+    <!-- ===== Documents ===== -->
+    <g transform="translate(520 540)">
+      <path d="M0 28 L34 12 L62 28 L28 44 Z" fill="#d0ecdf"/>
+      <path d="M6 22 L40 6 L68 22 L34 38 Z" fill="#d7ff4d" opacity="0.88"/>
+      <path d="M12 16 L46 0 L74 16 L40 32 Z" fill="#f3fff1"/>
+      <line x1="28" y1="12" x2="56" y2="26" stroke="#10231d" stroke-opacity="0.18" stroke-width="1.5"/>
+      <line x1="26" y1="18" x2="54" y2="32" stroke="#10231d" stroke-opacity="0.18" stroke-width="1.5"/>
+    </g>
+  </g>
+</svg>
