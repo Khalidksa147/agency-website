@@ -8,32 +8,38 @@ const DEFAULT_CARDS = [
     id: 'project-3d',
     type: 'video',
     src: '/videos/3D%20Project%20vid.webm',
+    poster: '/videos/3D%20Project%20thumbnail.webp',
   },
   {
     id: 'project-farmers',
     type: 'video',
     src: '/videos/Farmers%20Project%20Vid.webm',
+    poster: '/videos/Farmers%20Project%20thumbnail.webp',
   },
   {
     id: 'project-logo',
     type: 'video',
     src: '/videos/Logo%20animation%20vid.webm',
+    poster: '/videos/Logo%20animation%20thumbnail.webp',
   },
   // Halfway around the ring = back of the fan at start
   {
     id: 'project-valorat',
     type: 'video',
     src: '/videos/Valorat%20project%20vid.webm',
+    poster: '/videos/Valorat%20project%20thumbnail.webp',
   },
   {
     id: 'project-parenting',
     type: 'video',
     src: '/videos/Parenting%20Project%20Vid.webm',
+    poster: '/videos/Parenting%20Project%20Thumbnail.webp',
   },
   {
     id: 'project-line',
     type: 'video',
-    src: '/videos/The%20line%20Project%20Vid.webm',
+    src: '/videos/The%20line%20Project%20Vid.webm?v=20261021',
+    poster: '/videos/The%20line%20Project%20thumbnail.webp',
   },
 ];
 
@@ -106,7 +112,8 @@ function createCard(card, index) {
       media.loop = true;
       media.playsInline = true;
       media.autoplay = true;
-      media.preload = 'auto';
+      media.preload = 'metadata';
+      if (card.poster) media.poster = card.poster;
       media.setAttribute('muted', '');
       media.setAttribute('autoplay', '');
       media.setAttribute('playsinline', '');

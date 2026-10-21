@@ -86,17 +86,11 @@ export default function HeroWheel() {
 
   useEffect(() => {
     let cancelled = false;
-    const blobUrls = [];
 
     (async () => {
-      // Capture covers in the background — don't block the preloader on video decode.
-      const thumbsPromise = prepareCardThumbnails(seed).then((prepared) => {
-        if (cancelled) return prepared;
-        prepared.forEach((card) => {
-          if (card.cover?.startsWith('blob:')) blobUrls.push(card.cover);
-        });
-        setCards(prepared);
-        return prepared;
+      // Static WebP covers are already on seed — decode them without blocking reveal.
+      prepareCardThumbnails(seed).then((prepared) => {
+        if (!cancelled) setCards(prepared);
       });
 
       await nextFrame();
@@ -128,7 +122,6 @@ export default function HeroWheel() {
 
       await new Promise((r) => window.setTimeout(r, 1000));
       if (cancelled || finished.current) return;
-      // Covers may still be decoding; setCards updates them when ready.
 
       const forceInstant =
         prefersReducedMotion() &&
@@ -163,7 +156,6 @@ export default function HeroWheel() {
       cancelled = true;
       controlsRef.current.deal?.stop();
       controlsRef.current.lift?.stop();
-      blobUrls.forEach((url) => URL.revokeObjectURL(url));
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [seed, deal, lift]);
