@@ -248,6 +248,8 @@ export default function HeroWheel() {
 
   const onPointerDown = (e) => {
     if (e.button != null && e.button !== 0) return;
+    // Only swipe when the press lands on a card — empty stage space scrolls the page.
+    if (!e.target.closest?.('.hw-card')) return;
     dragging.current = true;
     dragMoved.current = false;
     suppressClick.current = false;

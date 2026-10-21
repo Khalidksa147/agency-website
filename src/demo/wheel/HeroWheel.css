@@ -44,6 +44,8 @@
 }
 
 .hw-card {
+  /* Own the gesture on the card so swipe rotates the wheel, not the page. */
+  touch-action: none;
   position: absolute;
   left: 0;
   top: 0;
