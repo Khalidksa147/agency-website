@@ -2,8 +2,6 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { animate, useMotionValue } from 'motion/react';
 import {
   CARD_COUNT,
-  CARD_HEIGHT,
-  CARD_WIDTH,
   DEAL_DURATION,
   DRIFT_DEG_PER_SEC,
   FOLLOW_LAMBDA,
@@ -269,19 +267,10 @@ export default function HeroWheel() {
       ref={rootRef}
       className="hero-wheel"
       aria-label="Project wheel"
-      style={{
-        '--hw-card-w': `${CARD_WIDTH}px`,
-        '--hw-card-h': `${CARD_HEIGHT}px`,
-      }}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={endDrag}
       onPointerCancel={endDrag}
-      onWheel={(e) => {
-        e.preventDefault();
-        targetAngle.current -= e.deltaY * 0.04;
-        velocity.current = 0;
-      }}
     >
       <div className="hero-wheel__stage">
         <div className="hero-wheel__world" ref={worldRef}>

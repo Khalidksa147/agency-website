@@ -1,6 +1,8 @@
 .hero-wheel {
   --hw-ink: #1a1410;
   --hw-accent: #c4a574;
+  --hw-card-w: 416px;
+  --hw-card-h: 234px;
   position: relative;
   isolation: isolate;
   width: 100%;
@@ -10,7 +12,8 @@
   background: transparent;
   color: #f6f1ea;
   font-family: Outfit, Manrope, sans-serif;
-  touch-action: none;
+  /* Allow page scroll over the fan; drag still rotates via pointer events. */
+  touch-action: pan-y;
   user-select: none;
 }
 
@@ -150,7 +153,7 @@
 
 @media (max-width: 720px) {
   .hero-wheel {
-    --hw-card-w: 310px;
-    --hw-card-h: 174px;
+    --hw-card-w: 200px;
+    --hw-card-h: 112px;
   }
 }
