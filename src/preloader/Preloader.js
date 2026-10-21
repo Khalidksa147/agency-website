@@ -79,24 +79,6 @@ function curtainPath(width, height, dip) {
   return `M0 0 L${width} 0 L${width} ${height} Q${width / 2} ${height + dip} 0 ${height} L0 0`;
 }
 
-function flattenCurtain(path) {
-  if (!path) return;
-  const width = window.innerWidth;
-  const height = window.innerHeight;
-  const from = 300;
-  const ms = 700;
-  const started = performance.now();
-  const ease = (t) => (t < 0.5 ? 8 * t ** 4 : 1 - (-2 * t + 2) ** 4 / 2);
-
-  const step = (now) => {
-    const t = Math.min((now - started) / ms, 1);
-    path.setAttribute('d', curtainPath(width, height, from * (1 - ease(t))));
-    if (t < 1) requestAnimationFrame(step);
-  };
-
-  requestAnimationFrame(step);
-}
-
 export function finishPreloader(root = document.getElementById('preloader')) {
   clearTimers();
   document.documentElement.classList.remove('is-preloading', 'is-intro');
@@ -179,7 +161,7 @@ export function initPreloader({ forceIntro: force = false } = {}) {
       // Demo force-plays every visit; only mark session for the normal home flow.
       if (intro && !force) markIntroSeen();
       if (wordEl) wordEl.style.opacity = '0';
-      flattenCurtain(path);
+      // CSS transform alone lifts the curtain — no per-frame SVG path morph.
       root.classList.add('is-leaving');
       document.documentElement.classList.remove('is-preloading', 'is-intro');
       document.dispatchEvent(new Event('qiram:reveal'));

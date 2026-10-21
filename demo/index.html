@@ -293,8 +293,16 @@
 
       initMobileMenu?.();
 
-      const linesRoot = document.querySelector('.page-lines');
-      if (linesRoot) {
+      // Defer WebGL lines until the curtain lifts so they don't fight the intro.
+      const bootLines = () => {
+        const linesRoot = document.querySelector('.page-lines');
+        if (
+          !linesRoot ||
+          linesRoot.dataset.floatingLinesReady ||
+          linesRoot.dataset.wavesReady
+        ) {
+          return;
+        }
         const waves = initFloatingLines(linesRoot, {
           lineDistance: 9,
           animationSpeed: 0.48,
@@ -305,7 +313,9 @@
           delete linesRoot.dataset.wavesReady;
           initPageWaves(linesRoot);
         }
-      }
+      };
+      document.addEventListener('qiram:reveal', bootLines, { once: true });
+      window.__qiramPreloader?.then?.(bootLines).catch?.(() => bootLines());
     </script>
   </body>
 </html>

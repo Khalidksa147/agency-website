@@ -89,13 +89,16 @@ export default function HeroWheel() {
     const blobUrls = [];
 
     (async () => {
-      // Load hero media under the preloader before anything reveals.
-      const prepared = await prepareCardThumbnails(seed);
-      if (cancelled) return;
-      prepared.forEach((card) => {
-        if (card.cover?.startsWith('blob:')) blobUrls.push(card.cover);
+      // Capture covers in the background — don't block the preloader on video decode.
+      const thumbsPromise = prepareCardThumbnails(seed).then((prepared) => {
+        if (cancelled) return prepared;
+        prepared.forEach((card) => {
+          if (card.cover?.startsWith('blob:')) blobUrls.push(card.cover);
+        });
+        setCards(prepared);
+        return prepared;
       });
-      setCards(prepared);
+
       await nextFrame();
       if (cancelled) return;
 
@@ -125,6 +128,7 @@ export default function HeroWheel() {
 
       await new Promise((r) => window.setTimeout(r, 1000));
       if (cancelled || finished.current) return;
+      // Covers may still be decoding; setCards updates them when ready.
 
       const forceInstant =
         prefersReducedMotion() &&

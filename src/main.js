@@ -394,7 +394,7 @@ initAboutPage();
 initWorkPage();
 initServicesPage();
 initMagneticButtons();
-bootLines();
+// Floating lines wait until reveal (bootVisuals) so WebGL doesn't compete with the preloader.
 
 preloaderReady
   .then(() => {
