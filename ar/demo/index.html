@@ -104,6 +104,7 @@
         <path id="preloader-path"></path>
       </svg>
     </div>
+    <div class="page-lines" aria-hidden="true"></div>
     <div class="grain" aria-hidden="true"></div>
     <svg class="gooey-svg" aria-hidden="true" focusable="false">
       <filter id="gooey-nav" x="-80%" y="-80%" width="260%" height="260%">
@@ -287,7 +288,24 @@
     <script type="module" src="/src/demo/wheel/mount.jsx"></script>
     <script type="module">
       import { initMobileMenu } from '/src/nav/MobileMenu.js';
+      import { initFloatingLines } from '/src/lines/FloatingLines.js?v=20261017b';
+      import { initPageWaves } from '/src/lines/PageWaves.js';
+
       initMobileMenu?.();
+
+      const linesRoot = document.querySelector('.page-lines');
+      if (linesRoot) {
+        const waves = initFloatingLines(linesRoot, {
+          lineDistance: 9,
+          animationSpeed: 0.48,
+          brightness: 0.85,
+          opacity: 0.75,
+        });
+        if (!waves) {
+          delete linesRoot.dataset.wavesReady;
+          initPageWaves(linesRoot);
+        }
+      }
     </script>
   </body>
 </html>
