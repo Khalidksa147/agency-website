@@ -13,7 +13,7 @@ const DEFAULT_CARDS = [
   {
     id: 'project-farmers',
     type: 'video',
-    src: '/videos/Farmers%20Project%20Vid.webm',
+    src: '/videos/Farmers%20Project%20Vid.webm?v=20261029',
     poster: '/videos/Farmers%20Project%20thumbnail.webp',
   },
   {

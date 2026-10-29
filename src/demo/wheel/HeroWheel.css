@@ -185,12 +185,26 @@ body.page-demo .hero {
 }
 
 @media (max-width: 720px) {
+  /* Full-bleed past hero page padding so cards reach the screen edges. */
+  body.page-demo .editorial-section#hero-wheel-root,
+  body.page-demo #hero-wheel-root.editorial-section {
+    width: 100vw;
+    max-width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+  }
+
   .hero-wheel {
-    --hw-card-w: 350px;
-    --hw-card-h: 197px;
+    --hw-card-w: 100vw;
+    --hw-card-h: calc(100vw * 9 / 16);
   }
 
   .hero-wheel__deck {
     top: 5%;
+  }
+
+  /* Soften side corners less when cards are edge-to-edge. */
+  .hw-card__face {
+    border-radius: 12px;
   }
 }

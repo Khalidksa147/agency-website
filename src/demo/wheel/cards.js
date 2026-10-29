@@ -13,7 +13,7 @@ const PROJECTS = [
   },
   {
     title: 'Farmers',
-    video: '/videos/Farmers%20Project%20Vid.webm',
+    video: '/videos/Farmers%20Project%20Vid.webm?v=20261029',
     cover: '/videos/Farmers%20Project%20thumbnail.webp',
   },
   {
