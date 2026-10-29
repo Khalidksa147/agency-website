@@ -2165,64 +2165,6 @@ html[dir='rtl'] .work-showcase__brand h3 {
   line-height: 1.5;
 }
 
-.about-trusted {
-  position: relative;
-  z-index: 1;
-  padding-top: 1.6rem;
-  border-top: 1px solid var(--line);
-}
-
-.about-trusted-kicker {
-  margin-bottom: 1.15rem;
-  color: rgba(243, 245, 242, 0.42);
-  font-size: 0.68rem;
-  font-weight: 500;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-}
-
-.about-brands {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  color: rgba(243, 245, 242, 0.82);
-}
-
-.about-brands li {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.15rem 1.15rem 0.15rem 0;
-  margin-inline-end: 1.15rem;
-  border-inline-end: 1px solid rgba(243, 245, 242, 0.14);
-  font-family: Outfit, Manrope, sans-serif;
-  font-size: 1.05rem;
-  letter-spacing: 0.02em;
-}
-
-.about-brands li:last-child {
-  border-inline-end: 0;
-  margin-inline-end: 0;
-  padding-inline-end: 0;
-  color: rgba(243, 245, 242, 0.45);
-  font-size: 0.92rem;
-}
-
-.about-brand-stack {
-  display: grid;
-  gap: 0.1rem;
-  line-height: 1.15;
-}
-
-.about-brand-stack span:last-child {
-  font-size: 0.68rem;
-  letter-spacing: 0.08em;
-  color: rgba(243, 245, 242, 0.48);
-}
-
 .contact-form {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -4544,9 +4486,6 @@ html[dir='rtl'] .process-line::after {
     max-width: none;
   }
 
-  .about-brands li {
-    margin-block: 0.45rem;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

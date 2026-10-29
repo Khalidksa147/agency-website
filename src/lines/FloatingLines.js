@@ -77,12 +77,9 @@ void main() {
   vec3 col = vec3(0.0);
   col += band(uv, uTopPos, 1.0, 0.2, time, 6);
   col += band(uv, uMidPos, 0.0, 0.28, time, 6);
-  col *= uIntensity;
+  col *= uIntensity * uOpacity;
 
-  float edge = smoothstep(0.0, 0.1, gl_FragCoord.x / iResolution.x)
-    * smoothstep(0.0, 0.1, 1.0 - gl_FragCoord.x / iResolution.x);
-  col *= edge * uOpacity;
-
+  // No horizontal edge fade — lines run full-bleed left/right.
   float alpha = clamp(max(col.r, max(col.g, col.b)), 0.0, 1.0);
   outColor = vec4(col, alpha);
 }`;
