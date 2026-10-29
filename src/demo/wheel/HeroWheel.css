@@ -1,8 +1,8 @@
 .hero-wheel {
   --hw-ink: #1a1410;
   --hw-accent: #c4a574;
-  --hw-card-w: 416px;
-  --hw-card-h: 234px;
+  --hw-card-w: 550px;
+  --hw-card-h: 310px;
   position: relative;
   isolation: isolate;
   width: 100%;
@@ -37,7 +37,7 @@
 .hero-wheel__deck {
   position: absolute;
   left: 50%;
-  top: 22%;
+  top: 6%;
   width: 0;
   height: 0;
   transform-style: preserve-3d;
@@ -49,9 +49,9 @@
   position: absolute;
   left: 0;
   top: 0;
-  width: var(--hw-card-w, 416px);
-  height: var(--hw-card-h, 234px);
-  margin: calc(var(--hw-card-h, 234px) / -2) 0 0 calc(var(--hw-card-w, 416px) / -2);
+  width: var(--hw-card-w, 550px);
+  height: var(--hw-card-h, 310px);
+  margin: calc(var(--hw-card-h, 310px) / -2) 0 0 calc(var(--hw-card-w, 550px) / -2);
   transform-style: preserve-3d;
   transform-origin: 50% 50%;
   will-change: transform;
@@ -142,7 +142,7 @@
 .page-demo #hero-wheel-root.editorial-section {
   position: relative;
   z-index: 4;
-  margin-top: -0.75rem;
+  margin-top: 4rem;
   overflow: visible;
   overflow-x: visible;
   overflow-y: visible;

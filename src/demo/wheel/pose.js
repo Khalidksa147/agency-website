@@ -61,7 +61,16 @@ export function dealOrderNorm(i, count = CARD_COUNT) {
  * Tops face the pivot. Depth is a small negative z from distance-to-front
  * so the centre card overlaps neighbours symmetrically.
  */
-export function computeCardPose(i, { deal, lift, wheelAngle }) {
+export function computeCardPose(
+  i,
+  {
+    deal,
+    lift,
+    wheelAngle,
+    radiusEnd = RADIUS_END,
+    pivotEnd = PIVOT_END,
+  },
+) {
   const order = dealOrderNorm(i);
   const p = easeOutCubic((deal - order * 0.6) / 0.4);
 
@@ -70,9 +79,9 @@ export function computeCardPose(i, { deal, lift, wheelAngle }) {
   const angle =
     lerp(home + DEAL_ANGLE_OFFSET, home, p) + liftTurn + wheelAngle;
 
-  const radius = lerp(RADIUS_START, RADIUS_END, lift) * p;
+  const radius = lerp(RADIUS_START, radiusEnd, lift) * p;
   const pivotY = -(
-    lerp(PIVOT_START, PIVOT_END, lift) +
+    lerp(PIVOT_START, pivotEnd, lift) +
     DEAL_START_DROP * (1 - p)
   );
 

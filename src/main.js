@@ -358,6 +358,7 @@ function revealPage() {
   markPageReady();
 }
 
+const hasHeroWheel = Boolean(document.getElementById('hero-wheel-root'));
 const preloaderReady = window.__qiramPreloader ?? Promise.resolve();
 
 document.addEventListener(
@@ -388,7 +389,16 @@ function initMagneticButtons() {
   });
 }
 
-revealPage();
+// Hero wheel owns copy + markPageReady when present (same as /demo).
+if (hasHeroWheel) {
+  import('./demo/wheel/mount.jsx').catch(() => {
+    revealPage();
+    startCopy();
+  });
+} else {
+  revealPage();
+}
+
 initContactPage();
 initAboutPage();
 initWorkPage();
@@ -398,13 +408,13 @@ initMagneticButtons();
 
 preloaderReady
   .then(() => {
-    startCopy();
+    if (!hasHeroWheel) startCopy();
     lenis?.start?.();
     bootVisuals();
     workStack?.refresh();
   })
   .catch(() => {
-    startCopy();
+    if (!hasHeroWheel) startCopy();
     lenis?.start?.();
     bootVisuals();
     workStack?.refresh();

@@ -7,6 +7,10 @@ import {
   FOLLOW_LAMBDA,
   LIFT_DURATION,
   LIFT_EASE,
+  PIVOT_END,
+  PIVOT_END_MOBILE,
+  RADIUS_END,
+  RADIUS_END_MOBILE,
   VELOCITY_DECAY,
   VELOCITY_PAUSE_MS,
   VIDEO_HALF_DEG,
@@ -173,6 +177,7 @@ export default function HeroWheel() {
 
       const dealV = deal.get();
       const liftV = lift.get();
+      const mobile = window.matchMedia('(max-width: 720px)').matches;
 
       if (!dragging.current && !skipDrift && liftV > 0) {
         targetAngle.current -= DRIFT_DEG_PER_SEC * liftV * dt;
@@ -201,6 +206,8 @@ export default function HeroWheel() {
         const pose = computeCardPose(i, {
           deal: dealV,
           lift: liftV,
+          radiusEnd: mobile ? RADIUS_END_MOBILE : RADIUS_END,
+          pivotEnd: mobile ? PIVOT_END_MOBILE : PIVOT_END,
           wheelAngle: visibleAngle.current,
         });
 
