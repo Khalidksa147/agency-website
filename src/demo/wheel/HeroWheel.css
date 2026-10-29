@@ -74,6 +74,14 @@
   outline-offset: 4px;
 }
 
+.hw-video-pool {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
 .hw-card__face {
   position: absolute;
   inset: 0;
@@ -81,7 +89,7 @@
   overflow: hidden;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  box-shadow: 0 12px 28px rgba(8, 10, 12, 0.28);
+  box-shadow: none;
 }
 
 .hw-card__front {
@@ -92,11 +100,9 @@
 .hw-card__back {
   display: grid;
   place-items: center;
-  background:
-    radial-gradient(120% 80% at 50% 0%, #2a221c 0%, transparent 60%),
-    linear-gradient(160deg, #1c1612 0%, #0e0b09 100%);
+  background: #14110e;
   transform: rotateY(180deg);
-  border: 1px solid rgba(196, 165, 116, 0.35);
+  border: 1px solid rgba(196, 165, 116, 0.28);
 }
 
 .hw-card__monogram {

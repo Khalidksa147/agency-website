@@ -24,6 +24,8 @@ import { buildCards, prepareCardThumbnails } from './cards.js';
 import { computeCardPose, computeWorldPose, wrap180 } from './pose.js';
 import './HeroWheel.css';
 
+const VIDEO_POOL_SIZE = 3;
+
 function prefersReducedMotion() {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
@@ -54,19 +56,41 @@ function waitForPreloaderReveal() {
   });
 }
 
+function createPoolVideo() {
+  const vid = document.createElement('video');
+  vid.className = 'hw-card__video';
+  vid.muted = true;
+  vid.defaultMuted = true;
+  vid.loop = true;
+  vid.playsInline = true;
+  vid.preload = 'none';
+  vid.setAttribute('muted', '');
+  vid.setAttribute('playsinline', '');
+  vid.setAttribute('webkit-playsinline', '');
+  vid.addEventListener('playing', () => {
+    vid.classList.add('is-on');
+  });
+  return vid;
+}
+
 export default function HeroWheel() {
   const seed = useMemo(() => buildCards(CARD_COUNT), []);
   const [cards, setCards] = useState(seed);
+  const [showBacks, setShowBacks] = useState(true);
   const cardsRef = useRef(cards);
   cardsRef.current = cards;
 
   const rootRef = useRef(null);
   const worldRef = useRef(null);
+  const poolHostRef = useRef(null);
   const cardRefs = useRef([]);
-  const videoRefs = useRef([]);
+  const frontRefs = useRef([]);
   const styleCache = useRef([]);
   const worldCache = useRef({});
-  const videoArmed = useRef(new Set());
+  /** @type {React.MutableRefObject<HTMLVideoElement[]>} */
+  const poolVids = useRef([]);
+  /** Card index assigned to each pool slot, or -1. */
+  const poolCard = useRef(Array.from({ length: VIDEO_POOL_SIZE }, () => -1));
 
   const deal = useMotionValue(0);
   const lift = useMotionValue(0);
@@ -88,11 +112,22 @@ export default function HeroWheel() {
     rootRef.current?.classList.toggle('is-entering', on);
   };
 
+  const releasePoolSlot = (slot) => {
+    const vid = poolVids.current[slot];
+    if (!vid) return;
+    vid.pause();
+    vid.classList.remove('is-on');
+    const host = poolHostRef.current;
+    if (host && vid.parentElement !== host) host.appendChild(vid);
+    poolCard.current[slot] = -1;
+  };
+
   const finishEntrance = () => {
     if (finished.current) {
       deal.set(1);
       lift.set(1);
       setEntering(false);
+      setShowBacks(false);
       return;
     }
     finished.current = true;
@@ -101,7 +136,28 @@ export default function HeroWheel() {
     deal.set(1);
     lift.set(1);
     setEntering(false);
+    setShowBacks(false);
   };
+
+  useEffect(() => {
+    const host = poolHostRef.current;
+    if (!host) return undefined;
+    poolVids.current = Array.from({ length: VIDEO_POOL_SIZE }, () => {
+      const vid = createPoolVideo();
+      host.appendChild(vid);
+      return vid;
+    });
+    return () => {
+      poolVids.current.forEach((vid) => {
+        vid.pause();
+        vid.removeAttribute('src');
+        vid.load();
+        vid.remove();
+      });
+      poolVids.current = [];
+      poolCard.current = Array.from({ length: VIDEO_POOL_SIZE }, () => -1);
+    };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -161,6 +217,7 @@ export default function HeroWheel() {
       controlsRef.current.deal = dealAnim;
       await dealAnim;
       if (cancelled || finished.current) return;
+      setShowBacks(false);
 
       await nextFrame();
       if (cancelled || finished.current) return;
@@ -226,6 +283,8 @@ export default function HeroWheel() {
       }
 
       const list = cardsRef.current;
+      const nearFront = [];
+
       for (let i = 0; i < list.length; i += 1) {
         const el = cardRefs.current[i];
         if (!el) continue;
@@ -247,27 +306,62 @@ export default function HeroWheel() {
           el.style.visibility = vis;
         }
 
-        // Videos stay inert until lift is mostly done — covers carry the entrance.
-        if (!videosLive) continue;
+        if (
+          videosLive &&
+          pose.visible &&
+          Math.abs(wrap180(pose.angle)) <= VIDEO_HALF_DEG
+        ) {
+          nearFront.push({
+            i,
+            dist: Math.abs(wrap180(pose.angle)),
+          });
+        }
+      }
 
-        const vid = videoRefs.current[i];
-        if (!vid) continue;
-        const nearTop = Math.abs(wrap180(pose.angle)) <= VIDEO_HALF_DEG;
-        const shouldPlay = nearTop && pose.visible;
-        if (shouldPlay) {
-          if (!videoArmed.current.has(i)) {
-            const src = list[i]?.video;
-            if (src) {
-              vid.src = src;
-              videoArmed.current.add(i);
-            }
+      if (videosLive) {
+        nearFront.sort((a, b) => a.dist - b.dist);
+        const wanted = nearFront.slice(0, VIDEO_POOL_SIZE).map((x) => x.i);
+        const wantedSet = new Set(wanted);
+
+        for (let slot = 0; slot < VIDEO_POOL_SIZE; slot += 1) {
+          const assigned = poolCard.current[slot];
+          if (assigned >= 0 && !wantedSet.has(assigned)) {
+            releasePoolSlot(slot);
           }
-          if (vid.paused && vid.src) {
+        }
+
+        for (const cardIndex of wanted) {
+          let slot = poolCard.current.findIndex((c) => c === cardIndex);
+          if (slot < 0) {
+            slot = poolCard.current.findIndex((c) => c < 0);
+          }
+          if (slot < 0) continue;
+
+          const vid = poolVids.current[slot];
+          const front = frontRefs.current[cardIndex];
+          const src = list[cardIndex]?.video;
+          if (!vid || !front || !src) continue;
+
+          if (poolCard.current[slot] !== cardIndex) {
+            poolCard.current[slot] = cardIndex;
+            if (vid.parentElement !== front) front.appendChild(vid);
+          }
+
+          if (vid.dataset.src !== src) {
+            vid.classList.remove('is-on');
+            vid.src = src;
+            vid.dataset.src = src;
+            if (list[cardIndex]?.cover) vid.poster = list[cardIndex].cover;
+          }
+
+          if (vid.paused) {
             const play = vid.play();
             if (play?.catch) play.catch(() => {});
           }
-        } else if (!vid.paused) {
-          vid.pause();
+        }
+      } else {
+        for (let slot = 0; slot < VIDEO_POOL_SIZE; slot += 1) {
+          if (poolCard.current[slot] >= 0) releasePoolSlot(slot);
         }
       }
 
@@ -343,11 +437,6 @@ export default function HeroWheel() {
     }
   };
 
-  const onVideoPlaying = (i) => {
-    const vid = videoRefs.current[i];
-    if (vid) vid.classList.add('is-on');
-  };
-
   return (
     <div
       ref={rootRef}
@@ -358,6 +447,7 @@ export default function HeroWheel() {
       onPointerUp={endDrag}
       onPointerCancel={endDrag}
     >
+      <div ref={poolHostRef} className="hw-video-pool" aria-hidden="true" />
       <div className="hero-wheel__stage">
         <div className="hero-wheel__world" ref={worldRef}>
           <div className="hero-wheel__deck">
@@ -373,7 +463,13 @@ export default function HeroWheel() {
                 draggable={false}
               >
                 <span className="hw-card__label">{card.title}</span>
-                <div className="hw-card__face hw-card__front" aria-hidden="true">
+                <div
+                  className="hw-card__face hw-card__front"
+                  aria-hidden="true"
+                  ref={(el) => {
+                    frontRefs.current[i] = el;
+                  }}
+                >
                   {card.cover ? (
                     <img
                       className="hw-card__cover"
@@ -383,22 +479,12 @@ export default function HeroWheel() {
                       decoding="async"
                     />
                   ) : null}
-                  <video
-                    ref={(el) => {
-                      videoRefs.current[i] = el;
-                    }}
-                    className="hw-card__video"
-                    poster={card.cover || undefined}
-                    muted
-                    loop
-                    playsInline
-                    preload="none"
-                    onPlaying={() => onVideoPlaying(i)}
-                  />
                 </div>
-                <div className="hw-card__face hw-card__back" aria-hidden="true">
-                  <span className="hw-card__monogram">Q</span>
-                </div>
+                {showBacks ? (
+                  <div className="hw-card__face hw-card__back" aria-hidden="true">
+                    <span className="hw-card__monogram">Q</span>
+                  </div>
+                ) : null}
               </a>
             ))}
           </div>
