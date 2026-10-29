@@ -3,10 +3,13 @@ import { animate, useMotionValue } from 'motion/react';
 import {
   CARD_COUNT,
   DEAL_DURATION,
+  DEAL_DURATION_MOBILE,
   DRIFT_DEG_PER_SEC,
   FOLLOW_LAMBDA,
   LIFT_DURATION,
+  LIFT_DURATION_MOBILE,
   LIFT_EASE,
+  POST_REVEAL_DELAY_MS,
   PIVOT_END,
   PIVOT_END_MOBILE,
   RADIUS_END,
@@ -23,6 +26,10 @@ import './HeroWheel.css';
 
 function prefersReducedMotion() {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+function isMobileViewport() {
+  return window.matchMedia('(max-width: 720px)').matches;
 }
 
 function setCached(el, cache, prop, value) {
@@ -59,6 +66,7 @@ export default function HeroWheel() {
   const videoRefs = useRef([]);
   const styleCache = useRef([]);
   const worldCache = useRef({});
+  const videoArmed = useRef(new Set());
 
   const deal = useMotionValue(0);
   const lift = useMotionValue(0);
@@ -74,11 +82,17 @@ export default function HeroWheel() {
   const suppressClick = useRef(false);
   const finished = useRef(false);
   const controlsRef = useRef({ deal: null, lift: null });
+  const mobileRef = useRef(isMobileViewport());
+
+  const setEntering = (on) => {
+    rootRef.current?.classList.toggle('is-entering', on);
+  };
 
   const finishEntrance = () => {
     if (finished.current) {
       deal.set(1);
       lift.set(1);
+      setEntering(false);
       return;
     }
     finished.current = true;
@@ -86,6 +100,7 @@ export default function HeroWheel() {
     controlsRef.current.lift?.stop();
     deal.set(1);
     lift.set(1);
+    setEntering(false);
   };
 
   useEffect(() => {
@@ -114,7 +129,7 @@ export default function HeroWheel() {
       await revealPromise;
       if (cancelled || finished.current) return;
 
-      // Text starts as the curtain lifts; cards wait 1s more.
+      // Text starts as the curtain lifts; cards wait briefly more.
       try {
         const played = playHeroCopy();
         initCopy({ skipHero: played });
@@ -124,7 +139,7 @@ export default function HeroWheel() {
           .forEach((el) => el.classList.add('is-copy-ready'));
       }
 
-      await new Promise((r) => window.setTimeout(r, 1000));
+      await new Promise((r) => window.setTimeout(r, POST_REVEAL_DELAY_MS));
       if (cancelled || finished.current) return;
 
       const forceInstant =
@@ -136,8 +151,11 @@ export default function HeroWheel() {
         return;
       }
 
+      const mobile = isMobileViewport();
+      setEntering(true);
+
       const dealAnim = animate(deal, 1, {
-        duration: DEAL_DURATION,
+        duration: mobile ? DEAL_DURATION_MOBILE : DEAL_DURATION,
         ease: 'linear',
       });
       controlsRef.current.deal = dealAnim;
@@ -148,12 +166,15 @@ export default function HeroWheel() {
       if (cancelled || finished.current) return;
 
       const liftAnim = animate(lift, 1, {
-        duration: LIFT_DURATION,
+        duration: mobile ? LIFT_DURATION_MOBILE : LIFT_DURATION,
         ease: LIFT_EASE,
       });
       controlsRef.current.lift = liftAnim;
       await liftAnim;
-      if (!cancelled) finished.current = true;
+      if (!cancelled) {
+        finished.current = true;
+        setEntering(false);
+      }
     })();
 
     return () => {
@@ -171,13 +192,21 @@ export default function HeroWheel() {
       prefersReducedMotion() &&
       new URLSearchParams(window.location.search).has('reduced');
 
+    const mq = window.matchMedia('(max-width: 720px)');
+    const syncMobile = () => {
+      mobileRef.current = mq.matches;
+    };
+    syncMobile();
+    mq.addEventListener?.('change', syncMobile);
+
     const tick = (now) => {
       const dt = Math.min(0.05, (now - lastT) / 1000);
       lastT = now;
 
       const dealV = deal.get();
       const liftV = lift.get();
-      const mobile = window.matchMedia('(max-width: 720px)').matches;
+      const mobile = mobileRef.current;
+      const videosLive = liftV >= 0.6;
 
       if (!dragging.current && !skipDrift && liftV > 0) {
         targetAngle.current -= DRIFT_DEG_PER_SEC * liftV * dt;
@@ -218,18 +247,27 @@ export default function HeroWheel() {
           el.style.visibility = vis;
         }
 
+        // Videos stay inert until lift is mostly done — covers carry the entrance.
+        if (!videosLive) continue;
+
         const vid = videoRefs.current[i];
-        if (vid) {
-          const nearTop = Math.abs(wrap180(pose.angle)) <= VIDEO_HALF_DEG;
-          const shouldPlay = liftV >= 0.6 && nearTop && pose.visible;
-          if (shouldPlay) {
-            if (vid.paused) {
-              const play = vid.play();
-              if (play?.catch) play.catch(() => {});
+        if (!vid) continue;
+        const nearTop = Math.abs(wrap180(pose.angle)) <= VIDEO_HALF_DEG;
+        const shouldPlay = nearTop && pose.visible;
+        if (shouldPlay) {
+          if (!videoArmed.current.has(i)) {
+            const src = list[i]?.video;
+            if (src) {
+              vid.src = src;
+              videoArmed.current.add(i);
             }
-          } else if (!vid.paused) {
-            vid.pause();
           }
+          if (vid.paused && vid.src) {
+            const play = vid.play();
+            if (play?.catch) play.catch(() => {});
+          }
+        } else if (!vid.paused) {
+          vid.pause();
         }
       }
 
@@ -237,7 +275,10 @@ export default function HeroWheel() {
     };
 
     raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
+    return () => {
+      cancelAnimationFrame(raf);
+      mq.removeEventListener?.('change', syncMobile);
+    };
   }, [deal, lift]);
 
   useEffect(() => {
@@ -347,7 +388,6 @@ export default function HeroWheel() {
                       videoRefs.current[i] = el;
                     }}
                     className="hw-card__video"
-                    src={card.video}
                     poster={card.cover || undefined}
                     muted
                     loop
