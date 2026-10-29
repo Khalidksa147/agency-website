@@ -10,6 +10,7 @@ import {
   LIFT_DURATION_MOBILE,
   LIFT_EASE,
   POST_REVEAL_DELAY_MS,
+  POST_REVEAL_DELAY_MS_MOBILE,
   PIVOT_END,
   PIVOT_END_MOBILE,
   RADIUS_END,
@@ -195,7 +196,13 @@ export default function HeroWheel() {
           .forEach((el) => el.classList.add('is-copy-ready'));
       }
 
-      await new Promise((r) => window.setTimeout(r, POST_REVEAL_DELAY_MS));
+      const mobile = isMobileViewport();
+      await new Promise((r) =>
+        window.setTimeout(
+          r,
+          mobile ? POST_REVEAL_DELAY_MS_MOBILE : POST_REVEAL_DELAY_MS,
+        ),
+      );
       if (cancelled || finished.current) return;
 
       const forceInstant =
@@ -207,7 +214,6 @@ export default function HeroWheel() {
         return;
       }
 
-      const mobile = isMobileViewport();
       setEntering(true);
 
       const dealAnim = animate(deal, 1, {

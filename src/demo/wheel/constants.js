@@ -22,12 +22,14 @@ export const PIVOT_END = 2900;
 export const PIVOT_END_MOBILE = 2000;
 
 export const DEAL_DURATION = 2.2;
-export const DEAL_DURATION_MOBILE = 1.7;
+/** Match desktop pace — shorter mobile timings felt rushed. */
+export const DEAL_DURATION_MOBILE = 2.2;
 export const LIFT_DURATION = 1.55;
-export const LIFT_DURATION_MOBILE = 1.2;
+export const LIFT_DURATION_MOBILE = 1.55;
 export const LIFT_EASE = [0.5, 0, 0.15, 1];
 /** Pause after curtain before the deal starts. */
 export const POST_REVEAL_DELAY_MS = 450;
+export const POST_REVEAL_DELAY_MS_MOBILE = 650;
 
 export const DEAL_ANGLE_OFFSET = 70;
 export const DEAL_START_DROP = 140;
